@@ -1,7 +1,7 @@
 /*
 TODO:
-- Winner with 10
-- Increase ball speed with round (?)
+- Enter names with text fields rather than prompts
+- When game ends ask if new game should be started (rather than reload page)
 */
 
 /* ************************************************************************** */
@@ -43,6 +43,7 @@ const GAME_NEW = 0;
 const GAME_STARTED = 1;
 const GAME_PAUSED = 2;
 const GAME_BALLOUT = 3;
+const GAME_ENDED = 4;
 
 // direction constants
 const LEFT = 0;
@@ -88,6 +89,7 @@ let paddleRightBottom;
 let game_status = GAME_NEW;
 
 // score properties
+const score_winning = 4;
 let score_cnt_left = 0;
 let score_cnt_right = 0;
 
@@ -199,6 +201,11 @@ function changeStartMessageText(newText)
     msg_start.textContent = newText;
 }
 
+function changePressSpaceText(newText)
+{
+    msg_pressSpace.textContent = newText;
+}
+
 function changeStartMessageColor(newColor)
 {
     msg_start.style.color = newColor;
@@ -284,12 +291,34 @@ function balloutGame()
     showMessages();
     initializeBall();
     initializePaddles();
+    if (score_cnt_left == score_winning || score_cnt_right == score_winning)
+    {
+        restartGame()
+        endGame()
+    }
 }
 
 function unpauseGame()
 {
     changeGameStatus(GAME_STARTED);
     hideMessages();
+}
+
+function endGame()
+{
+    changeGameStatus(GAME_ENDED);
+    if (score_cnt_left > score_cnt_right)
+    {
+        changeStartMessageText(name_left.textContent + " WINS!!");
+        changeStartMessageColor("cyan");
+    }
+    else
+    {
+        changeStartMessageText(name_right.textContent + " WINS!!");
+        changeStartMessageColor("yellow");
+    }
+    changePressSpaceText("Reload page to start new game")
+    showMessages();
 }
 
 function pressSpace()
@@ -302,6 +331,8 @@ function pressSpace()
         unpauseGame();
     else if (game_status == GAME_NEW)
         startGame();
+    else if (game_status == GAME_ENDED)
+    {}
 }
 
 
@@ -389,7 +420,11 @@ function ballHitsRightPaddle()
 function ballHitsPaddle()
 {
     if (ballHitsLeftPaddle() == true || ballHitsRightPaddle() == true)
+    {
+        ballSpeedX *= 1.1;
+        ballSpeedY *= 1.1;
         return (true);
+    }
     return (false);
 }
 
@@ -487,6 +522,10 @@ function update()
     else if (game_status == GAME_BALLOUT)
     {
 
+    }
+    else if (game_status == GAME_ENDED)
+    {
+    
     }
     requestAnimationFrame(update);
 }
