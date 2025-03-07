@@ -1,3 +1,19 @@
+/*
+    - *: universal selector (to be applied on all elements of the page)
+    - div, p, h1, etc.: type selector (select elements by their type)
+    - a[href*="example.com"], etc: attribute selector (apply to all types with specified attribute)
+    - .: class selector (refers to defined classes)
+    - #: id selector (refers to defined ids)
+    - descendant selector: separated by space (e.g.: div p selects all p inside div)
+    - child selector: separated by > (e.g.: div > p selects all p at first level inside div)
+    - adjacent sibling selector: separated by + (e.g. h1 + p selects first p after an h1)
+    - general sibling selector: separated by ~ (e.g. h1 ~ p selects all p which are sibling of h1)
+    - pseudo classes: connected with : (e.g. a:hover selects a link when it is hovered)
+    - pseudo elements: connected with :: (e.g. h2::before selects content before an element: ::first-letter: selects first letter of an element)
+    - grouping selector: separated by , (e.g. p, h1 selects all p and h1)
+*/
+
+
 html
 {
     width: 100%;
@@ -16,6 +32,35 @@ body
     
     background-color: darkblue;
     color: white;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.inputName
+{
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#btnSubmitName
+{
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btnSubmitName:hover
+{
+    background-color: #45a049;
 }
 
 .board

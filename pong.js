@@ -1,8 +1,8 @@
 /*
 TODO:
-- Enter names with text fields rather than prompts
 - When game ends ask if new game should be started (rather than reload page)
 */
+
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -24,6 +24,13 @@ const score_right = document.getElementById("score_right");
 const name_left = document.getElementById("name_left");
 const name_right = document.getElementById("name_right");
 
+const formNames = document.getElementById("formNames");
+const inputNameLeft = document.getElementById("inputNameLeft");
+const inputNameRight = document.getElementById("inputNameRight");
+
+const containerNameInput = document.getElementById("containerNameInput");
+const containerGame = document.getElementById("containerGame");
+
 /*
 const middleline = document.getElementById("middleline");
 const scores = document.getElementById("scores");
@@ -44,6 +51,7 @@ const GAME_STARTED = 1;
 const GAME_PAUSED = 2;
 const GAME_BALLOUT = 3;
 const GAME_ENDED = 4;
+const GAME_INSERT_NAME = 5;
 
 // direction constants
 const LEFT = 0;
@@ -86,7 +94,7 @@ let paddleRightTop;
 let paddleRightBottom;
 
 // game properties
-let game_status = GAME_NEW;
+let game_status = GAME_INSERT_NAME;
 
 // score properties
 const score_winning = 4;
@@ -98,6 +106,18 @@ let score_cnt_right = 0;
 /* Event listeners                                                            */
 /*                                                                            */
 /* ************************************************************************** */
+window.onload = function()
+{
+    if (inputNameLeft)
+    {
+        inputNameLeft.value = "";
+    }
+    if (inputNameRight)
+    {
+        inputNameRight.value = "";
+    }
+}
+
 function getPaddlePositionY(leftOrRightPaddle)
 {
     if (leftOrRightPaddle == LEFT)
@@ -178,6 +198,24 @@ document.addEventListener
                 break ;
             default:
         }
+    }
+);
+
+formNames.addEventListener
+(
+    "submit", function(event)
+    {
+        // Clicking on a "Submit" button, prevent it from submitting a form
+        event.preventDefault();
+    
+        name_left.textContent = inputNameLeft.value;
+        name_right.textContent = inputNameRight.value;
+    
+        containerNameInput.classList.add("hidden");
+        containerGame.classList.remove("hidden");
+        
+        changeGameStatus(GAME_NEW);
+        update();
     }
 );
 
@@ -332,6 +370,8 @@ function pressSpace()
     else if (game_status == GAME_NEW)
         startGame();
     else if (game_status == GAME_ENDED)
+    {}
+    else if (game_status == GAME_INSERT_NAME)
     {}
 }
 
@@ -511,6 +551,10 @@ function update()
             balloutGame();
         }
     }
+    else if (game_status == GAME_INSERT_NAME)
+    {
+    
+    }
     else if (game_status == GAME_NEW)
     {
         loadGame();
@@ -529,48 +573,3 @@ function update()
     }
     requestAnimationFrame(update);
 }
-
-
-
-
-
-
-/* ************************************************************************** */
-/*                                                                            */
-/* Get names                                                                  */
-/*                                                                            */
-/* ************************************************************************** */
-function getAndCheckName(side)
-{
-   let name = "";
-   let promptText = "\nEnter the " + side + " player's name: \n\n";
-   
-   promptText += "    Name can not be empty!\n";
-   promptText += "    Name can have maximum 10 characters!\n";
-   promptText += "    Name must start with letter or digit!\n";
-   
-   while (name == "")
-   {
-       name = prompt(promptText);
-       if (name == null || name == "")
-           name = "";
-       else if (name.length > 10)
-           name = "";
-       else if (name.charAt(0) < '0' 
-       || (name.charAt(0) > '9' && name.charAt(0) < 'A') 
-       || (name.charAt(0) > 'Z' && name.charAt(0) < 'a')
-       || name.charAt(0) > 'z')
-           name = "";
-       else
-           return (name);
-   }
-}
-
-function getNames()
-{
-    name_left.textContent = getAndCheckName("LEFT");
-    name_right.textContent = getAndCheckName("RIGHT");
-}
-
-getNames();
-update();
