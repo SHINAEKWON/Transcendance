@@ -1,6 +1,7 @@
 /*
 TODO:
 - When game ends ask if new game should be started (rather than reload page)
+- Both players press key at the same time and hold
 */
 
 

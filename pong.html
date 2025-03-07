@@ -19,16 +19,16 @@
 </head>
 
 <body>
-    <div id="containerNameInput" class="container">
-        <h1>Enter two names</h1>
-        <form id="formNames">
-            <input class="inputName" type="text" id="inputNameLeft" placeholder="Enter name of left player" required>
-            <input class="inputName" type="text" id="inputNameRight" placeholder="Enter name of right player" required>
-            <button id="btnSubmitName" type="submit">Submit</button>
+    <div id="containerNameInput" class="containerNameInput">
+        <h1 class="inputNameHeading">Enter names</h1>
+        <form id="formNames" class="formNames">
+            <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>
+            <input class="inputName inputNameRight" type="text" id="inputNameRight" placeholder="Right player" required>
+            <button class="btnSubmitName" id="btnSubmitName" type="submit">Submit</button>
         </form>
     </div>
 
-    <div id="containerGame" class="container hidden">
+    <div id="containerGame" class="containerGame">
         <div id="board" class="board">
             <div id="middleline" class="middleline">
             </div>
@@ -53,7 +53,7 @@
                     0
                 </div>
                 <div id="name_left" class="name name_left">
-                    Cyan
+                    ___
                 </div>
             </div>
         
@@ -66,7 +66,7 @@
                     0
                 </div>
                 <div id="name_right" class="name name_right">
-                    Yellow
+                    ___
                 </div>
             </div>
         </div>
