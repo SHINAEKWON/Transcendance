@@ -31,6 +31,9 @@ const inputNameRight = document.getElementById("inputNameRight");
 
 const containerNameInput = document.getElementById("containerNameInput");
 const containerGame = document.getElementById("containerGame");
+const containerPlayAgain = document.getElementById("containerPlayAgain");
+
+const btnRevanche = document.getElementById("btnRevanche");
 
 /*
 const middleline = document.getElementById("middleline");
@@ -98,7 +101,7 @@ let paddleRightBottom;
 let game_status = GAME_INSERT_NAME;
 
 // score properties
-const score_winning = 4;
+const score_winning = 5;
 let score_cnt_left = 0;
 let score_cnt_right = 0;
 
@@ -219,6 +222,28 @@ formNames.addEventListener
         update();
     }
 );
+
+btnRevanche.addEventListener
+(
+    "click", function()
+    {
+        containerPlayAgain.classList.add("hidden");
+        containerGame.classList.remove("hidden");
+        
+        changeStartMessageText("Revanche");
+        
+        changeGameStatus(GAME_NEW);
+        score_cnt_left = 0;
+        score_cnt_right = 0;
+
+        initializeBall();
+        initializePaddles();
+        drawBall();
+        drawPaddles();
+    }
+);
+
+
 
 /* ************************************************************************** */
 /* space key -> game start and pause                                          */
@@ -348,16 +373,17 @@ function endGame()
     changeGameStatus(GAME_ENDED);
     if (score_cnt_left > score_cnt_right)
     {
-        changeStartMessageText(name_left.textContent + " WINS!!");
-        changeStartMessageColor("cyan");
+        //changeStartMessageText(name_left.textContent + " WINS!!");
+        //changeStartMessageColor("cyan");
     }
     else
     {
-        changeStartMessageText(name_right.textContent + " WINS!!");
-        changeStartMessageColor("yellow");
+        //changeStartMessageText(name_right.textContent + " WINS!!");
+        //changeStartMessageColor("yellow");
     }
-    changePressSpaceText("Reload page to start new game")
+    //changePressSpaceText("Reload page to start new game")
     showMessages();
+    containerPlayAgain.classList.remove("hidden");
 }
 
 function pressSpace()

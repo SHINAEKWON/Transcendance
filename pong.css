@@ -135,6 +135,109 @@ body
     cursor: pointer;
 }
 
+.containerPlayAgain
+{
+    width: 80%;
+    height: 80%;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -53%);
+    
+    background-color: black;
+    
+    z-index: 1;
+}
+
+.inputAgainHeading
+{
+    width: 100%;
+    
+    position: absolute;
+    top: 0;
+    
+    text-align: center;
+}
+
+.againButtons
+{
+    width: 90%;
+    height: 70%;
+    
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    
+    transform: translate(-50%, -5%);
+}
+
+.btnRevanche
+{
+    width: 30%;
+    height: 15%;
+    
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnRevanche:hover
+{
+    background-color: #45a049;
+}
+
+.btnNewgame
+{
+    width: 30%;
+    height: 15%;
+    
+    position: absolute;
+    left: 50%;
+    top: 43%;
+    transform: translateX(-50%);
+    
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnNewgame:hover
+{
+    background-color: #45a049;
+}
+
+.btnEnd
+{
+    width: 30%;
+    height: 15%;
+    
+    position: absolute;
+    left: 50%;
+    top: 76%;
+    transform: translateX(-50%);
+    
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnEnd:hover
+{
+    background-color: #45a049;
+}
+
 .containerGame
 {
 
