@@ -1,7 +1,5 @@
 /*
 TODO:
-- When game ends ask if new game should be started (rather than reload page)
-- Both players press key at the same time and hold
 */
 
 
@@ -85,7 +83,7 @@ let ballBottom;
 let paddleHeight;
 let paddleLeftY;
 let paddleRightY;
-const paddleSpeed = 10;
+const paddleSpeed = 1;
 
 let paddleLeftLeft;
 let paddleLeftRight;
@@ -96,6 +94,12 @@ let paddleRightLeft;
 let paddleRightRight;
 let paddleRightTop;
 let paddleRightBottom;
+
+// key pressed
+let upPressed = false;
+let downPressed = false;
+let wPressed = false;
+let sPressed = false;
 
 // game properties
 let game_status = GAME_INSERT_NAME;
@@ -110,6 +114,12 @@ let score_cnt_right = 0;
 /* Event listeners                                                            */
 /*                                                                            */
 /* ************************************************************************** */
+document.addEventListener("keydown", keyDownHandler);
+document.addEventListener("keyup", keyUpHandler);
+formNames.addEventListener("submit", submitNames);
+btnRevanche.addEventListener("click", startRevanche);
+
+// clears name input fields when page is reloaded
 window.onload = function()
 {
     if (inputNameLeft)
@@ -179,71 +189,100 @@ function movePaddle(leftOrRightPaddle, upOrDown)
     }
 }
 
-document.addEventListener
-(
-    "keydown", (event) => 
+function movePaddles()
+{
+    if (upPressed)
     {
-        switch (event.key)
-        {
-            case "ArrowUp":
-                movePaddle(RIGHT, UP);
-                break ;
-            case "ArrowDown":
-                movePaddle(RIGHT, DOWN);
-                break ;
-            case "w":
-                movePaddle(LEFT, UP);
-                break ;
-            case "s":
-                movePaddle(LEFT, DOWN);
-                break ;
-            case " ":
-                pressSpace();
-                break ;
-            default:
-        }
+        movePaddle(RIGHT, UP);
     }
-);
-
-formNames.addEventListener
-(
-    "submit", function(event)
+    if (downPressed)
     {
-        // Clicking on a "Submit" button, prevent it from submitting a form
-        event.preventDefault();
+        movePaddle(RIGHT, DOWN);
+    }
+    if (wPressed)
+    {
+        movePaddle(LEFT, UP);
+    }
+    if (sPressed)
+    {
+        movePaddle(LEFT, DOWN);
+    }
+}
+
+function keyDownHandler(event)
+{
+    switch (event.key)
+    {
+        case "ArrowUp":
+            upPressed = true;
+            break ;
+        case "ArrowDown":
+            downPressed = true;
+            break ;
+        case "w":
+            wPressed = true;
+            break ;
+        case "s":
+            sPressed = true;
+            break ;
+        case " ":
+            pressSpace();
+            break ;
+        default:
+    }
+}
+
+function keyUpHandler(event)
+{
+    switch (event.key)
+    {
+        case "ArrowUp":
+            upPressed = false;
+            break ;
+        case "ArrowDown":
+            downPressed = false;
+            break ;
+        case "w":
+            wPressed = false;
+            break ;
+        case "s":
+            sPressed = false;
+            break ;
+        default:
+    }
+}
+
+function submitNames()
+{
+    // Clicking on a "Submit" button, prevent it from submitting a form
+    event.preventDefault();
     
-        name_left.textContent = inputNameLeft.value;
-        name_right.textContent = inputNameRight.value;
+    name_left.textContent = inputNameLeft.value;
+    name_right.textContent = inputNameRight.value;
     
-        containerNameInput.classList.add("hidden");
-        containerGame.classList.remove("hidden");
+    containerNameInput.classList.add("hidden");
+    containerGame.classList.remove("hidden");
         
-        changeGameStatus(GAME_NEW);
-        update();
-    }
-);
+    changeGameStatus(GAME_NEW);
+    gameLoop();
+}
 
-btnRevanche.addEventListener
-(
-    "click", function()
-    {
-        containerPlayAgain.classList.add("hidden");
-        containerGame.classList.remove("hidden");
+function startRevanche()
+{
+    containerPlayAgain.classList.add("hidden");
+    containerGame.classList.remove("hidden");
         
-        changeStartMessageText("Revanche");
+    changeStartMessageText("Revanche");
         
-        changeGameStatus(GAME_NEW);
-        score_cnt_left = 0;
-        score_cnt_right = 0;
+    changeGameStatus(GAME_NEW);
+    score_cnt_left = 0;
+    score_cnt_right = 0;
 
-        initializeBall();
-        initializePaddles();
-        drawBall();
-        drawPaddles();
-    }
-);
-
-
+    initializeBall();
+    initializePaddles();
+    drawBall();
+    drawPaddles();
+}
 
 /* ************************************************************************** */
 /* space key -> game start and pause                                          */
@@ -560,6 +599,7 @@ function update()
     if (game_status == GAME_STARTED)
     {
         moveBall();
+        movePaddles();
         
         if (ballHitsWall() == true)
             ballSpeedY *= -1;
@@ -596,7 +636,12 @@ function update()
     }
     else if (game_status == GAME_ENDED)
     {
-    
+        return ;
     }
-    requestAnimationFrame(update);
+}
+
+function gameLoop()
+{
+    update();
+    requestAnimationFrame(gameLoop);
 }
