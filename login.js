@@ -4,7 +4,10 @@ function renderLoginPage()
     
     app.innerHTML = `
         <div class="containerNameInput">
-            <h1 class="inputNameHeading">Enter names</h1>
+            <button class="btnCreateAccount" id="btnCreateAccount">Create Account</button>
+            <button class="btnLogin" id="btnLogin">Login</button>
+            
+            <h1 class="inputNameHeading">or enter names for quick game</h1>
             <form id="formNames" class="formNames">
                 <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>
                 <input class="inputName inputNameRight" type="text" id="inputNameRight" placeholder="Right player" required>
