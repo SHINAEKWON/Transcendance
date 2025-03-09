@@ -1,6 +1,3 @@
-/*
-TODO:
-*/
 let playerLeft;
 let playerRight;
 
@@ -38,5 +35,5 @@ function renderRevanchePage(player1, player2, won)
 
 function startRevanche()
 {
-    navigateTo("game", { player1: playerLeft, player2: playerRight });
+    navigateTo("game", true, playerLeft, playerRight);
 }

@@ -400,13 +400,13 @@ function endGame()
     changeGameStatus(GAME_ENDED);
     if (score_cnt_left > score_cnt_right)
     {
-        won = 1;
+        won = "left";
     }
     else
     {
-        won = 2;
+        won = "right";
     }
-    navigateTo("revanche", { player1: name_left.textContent, player2: name_right.textContent, won: won });
+    navigateTo("revanche", true, name_left.textContent, name_right.textContent, won);
 }
 
 function pressSpace()

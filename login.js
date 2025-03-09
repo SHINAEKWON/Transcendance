@@ -28,5 +28,5 @@ function submitNames(event)
     const nameLeft = inputNameLeft.value;
     const nameRight = inputNameRight.value;
 
-    navigateTo("game", { player1: nameLeft, player2: nameRight });
+    navigateTo("game", true, nameLeft, nameRight);
 }
