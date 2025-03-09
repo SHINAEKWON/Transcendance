@@ -2,32 +2,35 @@
 
 <html lang="en-us">
 <head>
-        <title>Pong</title>
-        <meta charset="utf-8">
-        <!-- The viewport is the user's visible area of a web page.
-             width=device-width: width of the page will be adjusted to width of device
-             initial-scale: initial zoom level when page is first loaded
+    <title>Pong</title>
+    <meta charset="utf-8">
+    <!-- The viewport is the user's visible area of a web page.
+         width=device-width: width of the page will be adjusted to width of device
+         initial-scale: initial zoom level when page is first loaded
              
-             Additional:
-             - do not use large fixed width elements
-             - do not let the content rely on particular viewport width
-             - do not use large absolute positioning values
-        -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="pong.css">
-        <script src="pong.js" defer></script>
+         Additional:
+         - do not use large fixed width elements
+         - do not let the content rely on particular viewport width
+         - do not use large absolute positioning values
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pong.css">
 </head>
 
 <body>
-    <div id="containerNameInput" class="containerNameInput">
-        <h1 class="inputNameHeading">Enter names</h1>
-        <form id="formNames" class="formNames">
-            <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>
-            <input class="inputName inputNameRight" type="text" id="inputNameRight" placeholder="Right player" required>
-            <button class="btnSubmitName" id="btnSubmitName" type="submit"></button>
-        </form>
-    </div>
+    <div id="app"></div>
     
+    <script src="login.js"></script>
+    <script src="game.js"></script>
+    <script src="pong.js"></script>
+    
+</body>
+</html>
+
+
+
+
+<!-- 
     <div id="containerPlayAgain" class="containerPlayAgain hidden">
         <h1 class="inputAgainHeading">Do you want to play again?</h1>
         <div id="againButtons" class="againButtons">
@@ -36,49 +39,4 @@
             <button class="btnEnd" id="btnEnd">End</button>
         </div>
     </div>
-
-    <div id="containerGame" class="containerGame hidden">
-        <div id="board" class="board">
-            <div id="middleline" class="middleline">
-            </div>
-            <div id="hor_line" class="hor_line">
-            </div>
-            <div id="ball" class="ball">
-            </div>
-            <div id="paddle_left" class="paddle paddle_left">
-            </div>
-            <div id="paddle_right" class="paddle paddle_right">
-            </div>
-            <div id="msg_start" class="msg_start msg">
-                NEW GAME
-            </div>
-            <div id="msg_pressSpace" class="msg_pressSpace msg">
-                Press SPACE to start...
-            </div>
-        </div>
-        <div id="scores" class="scores">
-            <div id="score_name_left" class="score_name score_name_left">
-                <div id="score_left" class="score score_left">
-                    0
-                </div>
-                <div id="name_left" class="name name_left">
-                    ___
-                </div>
-            </div>
-        
-            <div id="score_separator" class="score_separator">
-                :
-            </div>
-        
-            <div id="score_name_right" class="score_name score_name_right">
-                <div id="score_right" class="score score_right">
-                    0
-                </div>
-                <div id="name_right" class="name name_right">
-                    ___
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+-->
