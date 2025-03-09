@@ -53,6 +53,8 @@ function renderGamePage(player1, player2)
     document.addEventListener("keyup", keyUpHandler);
 
     changeGameStatus(GAME_NEW);
+    score_cnt_left = 0;
+    score_cnt_right = 0;
     gameLoop();
 }
 
@@ -119,9 +121,9 @@ let sPressed = false;
 let game_status = GAME_NEW;
 
 // score properties
-const score_winning = 5;
-let score_cnt_left = 0;
-let score_cnt_right = 0;
+const score_winning = 1;
+let score_cnt_left;
+let score_cnt_right;
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -391,19 +393,20 @@ function unpauseGame()
 
 function endGame()
 {
+    const name_left = document.getElementById("name_left");
+    const name_right = document.getElementById("name_right");
+    let won;
+        
     changeGameStatus(GAME_ENDED);
     if (score_cnt_left > score_cnt_right)
     {
-        //changeStartMessageText(name_left.textContent + " WINS!!");
-        //changeStartMessageColor("cyan");
+        won = 1;
     }
     else
     {
-        //changeStartMessageText(name_right.textContent + " WINS!!");
-        //changeStartMessageColor("yellow");
+        won = 2;
     }
-    //changePressSpaceText("Reload page to start new game")
-    showMessages();
+    navigateTo("revanche", { player1: name_left.textContent, player2: name_right.textContent, won: won });
 }
 
 function pressSpace()
