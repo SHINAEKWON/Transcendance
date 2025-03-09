@@ -3,10 +3,11 @@ function renderLoginPage()
     const app = document.getElementById("app");
     
     app.innerHTML = `
+        <div class="containerAccountButtons">
+            <button class="btnCreateAccount btnAccount" id="btnCreateAccount">Create Account</button>
+            <button class="btnLogin btnAccount" id="btnLogin">Login</button>
+        </div>
         <div class="containerNameInput">
-            <button class="btnCreateAccount" id="btnCreateAccount">Create Account</button>
-            <button class="btnLogin" id="btnLogin">Login</button>
-            
             <h1 class="inputNameHeading">or enter names for quick game</h1>
             <form id="formNames" class="formNames">
                 <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>

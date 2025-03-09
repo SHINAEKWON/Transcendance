@@ -121,7 +121,7 @@ let sPressed = false;
 let game_status = GAME_NEW;
 
 // score properties
-const score_winning = 1;
+const score_winning = 5;
 let score_cnt_left;
 let score_cnt_right;
 

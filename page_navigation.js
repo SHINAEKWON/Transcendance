@@ -132,13 +132,13 @@ instead of throwing an error.
 */
 function render_page_on_load_or_refresh()
 {
-    if (location.hash === "#game" && gameState.playerLeft && gameState.playerRight)
+    if (location.hash === "#game" && history.state?.playerLeft && history.state?.playerRight)
     {
-        navigateTo("game", false, gameState.playerLeft, gameState.playerRight);
+        navigateTo("game", false, history.state?.playerLeft, history.state?.playerRight);
     }
-    else if (location.hash === "#revanche" && gameState.playerLeft && gameState.playerRight && gameState.playerWins)
+    else if (location.hash === "#revanche" && history.state?.playerLeft && history.state?.playerRight && history.state?.playerWins)
     {
-        navigateTo("revanche", false, gameState.playerLeft, gameState.playerRight, gameState.playerWins);
+        navigateTo("revanche", false, history.state?.playerLeft, history.state?.playerRight, history.state?.playerWins);
     }
     else if (location.hash === "#login")
     {

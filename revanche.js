@@ -6,7 +6,7 @@ function renderRevanchePage(player1, player2, won)
     const app = document.getElementById("app");
     
     let playerWon;
-    if (won == 1)
+    if (won == "left")
     {
         playerWon = player1;
     }

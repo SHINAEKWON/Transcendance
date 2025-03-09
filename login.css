@@ -1,12 +1,72 @@
+.containerAccountButtons
+{
+    width: 90%;
+    height: 25%;
+
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background-color: black;
+    
+    z-index: 1;
+}
+
+.btnAccount
+{
+    width: 27%;
+    height: 23.1%;
+
+    position: absolute;
+    top: 20%;
+
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnCreateAccount
+{
+    background-color: #34bcdf;
+    color: black;
+    left: 16%;
+}
+
+.btnCreateAccount:hover
+{
+    background-color: #207a91;
+}
+
+.btnLogin
+{
+    left: 59%;
+    background-color: #232fd8;
+    color: white;
+}
+
+.btnLogin:hover
+{
+    background-color: #101455;
+}
+
+
+
+
+
+
+
 .containerNameInput
 {
     width: 90%;
-    height: 80%;
+    height: 55%;
     
     position: absolute;
-    top: 50%;
+    top: 35%;
     left: 50%;
-    transform: translate(-50%, -53%);
+    transform: translateX(-50%);
     
     background-color: black;
     
@@ -45,11 +105,6 @@
     right: 0;
 }
 
-.btnSubmitName:hover
-{
-    background-color: #45a049;
-}
-
 .formNames
 {
     width: 90%;
@@ -79,36 +134,7 @@
     cursor: pointer;
 }
 
-.btnCreateAccount
+.btnSubmitName:hover
 {
-    width: 30%;
-    height: 15%;
-    
-    position: absolute;
-    left: 25%;
-    top: 20%;
-    transform: translateX(-50%);
-    
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btnLogin
-{
-    width: 30%;
-    height: 15%;
-    
-    position: absolute;
-    left: 60%;
-    top: 20%;
-    transform: translateX(-50%);
-    
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    background-color: #45a049;
 }
