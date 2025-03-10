@@ -1,0 +1,33 @@
+# Utiliser Ubuntu comme base
+FROM ubuntu:22.04
+
+# Installer Node.js et npm
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier package.json et package-lock.json pour optimiser le cache Docker
+COPY package*.json ./
+
+# Installer uniquement les dépendances nécessaires
+RUN npm install --legacy-peer-deps
+
+# Installer Fastify 4 et @fastify/static compatible avec Fastify 4
+RUN npm install fastify@4 @fastify/static@6
+
+# Copier le reste du projet
+COPY . .
+
+# Définir la variable d’environnement
+ENV PORT=3000
+
+# Exposer le port Fastify
+EXPOSE 3000
+
+# Démarrer le serveur
+CMD ["node", "index.js"]
