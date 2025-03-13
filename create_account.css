@@ -1,0 +1,158 @@
+.containerAccountTFs
+{
+    width: 90%;
+    height: 80%;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background-color: black;
+    
+    z-index: 1;
+}
+
+.formAccount
+{
+
+}
+
+.inputAccount 
+{
+    width: 45%;
+    height: 10%;
+    
+    position: absolute;
+    top: 0;
+    
+    border: solid 1px;
+    border-radius: 5px;
+}
+
+.inputAccountName
+{
+
+}
+
+.inputAccountUsername
+{
+
+}
+
+.inputAccountEmail
+{
+
+}
+
+.inputAccountCredit
+{
+
+}
+
+.btnSubmitAccount
+{
+    width: 30%;
+    height: 15%;
+    
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnSubmitAccount:hover
+{
+    background-color: #45a049;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.inputNameHeading
+{
+    width: 100%;
+    
+    position: absolute;
+    top: 0;
+    
+    text-align: center;
+}
+
+.inputName
+{
+    width: 45%;
+    height: 10%;
+    
+    position: absolute;
+    top: 0;
+    
+    border: solid 1px;
+    border-radius: 5px;
+}
+
+.inputNameLeft
+{
+    left: 0;
+}
+
+.inputNameRight
+{
+    right: 0;
+}
+
+.formNames
+{
+    width: 90%;
+    height: 70%;
+    
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    
+    transform: translate(-50%, -5%);
+}
+
+.btnSubmitName
+{
+    width: 30%;
+    height: 15%;
+    
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnSubmitName:hover
+{
+    background-color: #45a049;
+}
