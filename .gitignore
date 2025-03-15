@@ -1,2 +1,4 @@
 .env
 backend/node_modules
+backend/game/typescript/build
+backend/game/typescript/node_modules

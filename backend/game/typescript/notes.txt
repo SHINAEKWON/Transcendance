@@ -4,7 +4,7 @@ https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
 
 
-npm init
+npm init --yes
 npm install --save-dev typescript        - adds typescript.
 npm install --save-dev tsc-watch         - watches for changes to typescript files and reloads them.
 npx tsc --init \                         - creates tsconfig.json with the specified options.
@@ -14,10 +14,13 @@ npx tsc --init \                         - creates tsconfig.json with the specif
         --resolveJsonModule \
         --lib es6 \
         --module commonjs \
-        --allowJs true \
         --noImplicitAny true
+-> manually add DOM to libraries in tsconfig.json
 mkdir src
 touch src/index.ts
+-> manually write into index.ts
+-> manually write into index.html to include build/index.js
+npx tsc                                 - compiles code
 
 ********************************************************************************
 package.json
@@ -37,7 +40,8 @@ Some data stored :
 * keywords
 * author
 * license
-* devDependencies: dependencies that are only used in the deveopment part, not rolled out in production
+* devDependencies: dependencies that are only used in the deveopment part, not 
+  rolled out in production
 
 ********************************************************************************
 package-lock.json
@@ -61,3 +65,31 @@ tsconfig.json
 
 The file is created with the command 'npx tsc [options]'.
 The file defines the typescript options.
+* rootDir: typescript looks here for the code, it includes the typescript files
+* outDir: typescript puts the compiled code here
+* esModuleInterop: if we use commonjs as module system (recommended for 
+  Node.js), this must be true
+* resolveJsonModule: if we use json in the project, this allows typescript to 
+  use it
+* adds ambient types to our project to use libraries, DOM api, etc.
+* module commonjs: standard module for Node.js
+* noImplicitAny: don't allow a type to be implicitly be declared as 'any'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
