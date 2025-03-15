@@ -4,10 +4,10 @@ https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
 
 
-npm init --yes
-npm install --save-dev typescript        - adds typescript.
+npm init --yes                           - initializes package.json (--yes approves all defaults).
+npm install --save-dev typescript        - adds typescript. Now we can use tsc cli.
 npm install --save-dev tsc-watch         - watches for changes to typescript files and reloads them.
-npx tsc --init \                         - creates tsconfig.json with the specified options.
+npx tsc --init \                         - creates tsconfig.json which defines the compiler options.
         --rootDir src \
         --outDir build \
         --esModuleInterop \
@@ -20,7 +20,8 @@ mkdir src
 touch src/index.ts
 -> manually write into index.ts
 -> manually write into index.html to include build/index.js
-npx tsc                                 - compiles code
+npx tsc                                 - compiles code; npx is the Node package executer, 
+                                          tsc reads tsconfig.json and compiles .ts files to .js files
 
 ********************************************************************************
 package.json
