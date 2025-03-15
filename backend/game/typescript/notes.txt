@@ -1,0 +1,63 @@
+https://ellen-park.medium.com/how-to-createyour-first-project-with-typescript-950dcfd77f83
+https://khalilstemmler.com/blogs/typescript/node-starter-project/
+
+
+
+
+npm init
+npm install --save-dev typescript        - adds typescript.
+npm install --save-dev tsc-watch         - watches for changes to typescript files and reloads them.
+npx tsc --init \                         - creates tsconfig.json with the specified options.
+        --rootDir src \
+        --outDir build \
+        --esModuleInterop \
+        --resolveJsonModule \
+        --lib es6 \
+        --module commonjs \
+        --allowJs true \
+        --noImplicitAny true
+mkdir src
+touch src/index.ts
+
+********************************************************************************
+package.json
+- https://www.geeksforgeeks.org/node-js-package-json/
+- https://docs.npmjs.com/cli/v11/configuring-npm/package-json
+
+The file package.json is create when initializing a npm project with 'npm init'.
+It contains dependencies, scripts, metadata for the project.
+Dependencies / devDependencies are added when running e.g. 'npm install --save-dev [module]'.
+
+Some data stored :
+* name
+* version
+* description
+* main: the entry point of the application
+* scripts: the scripts needed to be included in the app
+* keywords
+* author
+* license
+* devDependencies: dependencies that are only used in the deveopment part, not rolled out in production
+
+********************************************************************************
+package-lock.json
+- https://stackoverflow.com/questions/44297803/what-is-the-role-of-the-package-lock-json
+
+The command 'npm install --save-dev [module]' creates the file package-lock.json.
+The command also creates the folder node_modules.
+The file is an exact, versioned dependency tree (see stackoverflow above)
+
+********************************************************************************
+node_modules
+- https://stackoverflow.com/questions/63294260/what-is-the-purpose-of-the-node-modules-folder
+
+The command 'npm install --save-dev [module]' creates the folder node_modules.
+The folder contains all the modules the project depends on.
+
+
+********************************************************************************
+tsconfig.json
+- https://stackoverflow.com/questions/50605219/difference-between-npx-and-npm
+
+The file is created with the command 'npx tsc [options]'.
+The file defines the typescript options.
