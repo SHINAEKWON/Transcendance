@@ -19,9 +19,8 @@ function renderRevanchePage(player1, player2, won)
         <div id="containerPlayAgain" class="containerPlayAgain hidden">
             <h1 class="inputAgainHeading">${playerWon} wins! Do you want to play again?</h1>
             <div id="againButtons" class="againButtons">
-                <button class="btnRevanche" id="btnRevanche">Revanche</button>
-                <button class="btnNewgame" id="btnNewgame">New Game</button>
-                <button class="btnEnd" id="btnEnd">End</button>
+                <button class="btnRevanche btnAgain" id="btnRevanche">Revanche</button>
+                <button class="btnEnd btnAgain" id="btnEnd">Back to welcome</button>
             </div>
         </div>
     `;
@@ -31,9 +30,17 @@ function renderRevanchePage(player1, player2, won)
     
     const btnRevanche = document.getElementById("btnRevanche");
     btnRevanche.addEventListener("click", startRevanche);
+
+    const btnEnd = document.getElementById("btnEnd");
+    btnEnd.addEventListener("click", clickedEnd);
 }
 
 function startRevanche()
 {
     navigateTo("game", true, playerLeft, playerRight);
+}
+
+function clickedEnd()
+{
+    navigateTo("welcome", true);
 }

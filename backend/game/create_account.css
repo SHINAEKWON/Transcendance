@@ -1,4 +1,4 @@
-.containerAccountTFs
+.containerCreateAccountTFs
 {
     width: 90%;
     height: 80%;
@@ -6,144 +6,63 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     
     background-color: black;
-    
-    z-index: 1;
 }
 
-.formAccount
+.formCreateAccount
 {
 
 }
 
-.inputAccount 
+.inputCreateAccount 
 {
     width: 45%;
     height: 10%;
     
     position: absolute;
-    top: 0;
-    
+    left: 50%;
+    transform: translateX(-50%);
+
     border: solid 1px;
     border-radius: 5px;
 }
 
-.inputAccountName
+.inputCreateAccountName
 {
-
+    top: 5%;
 }
 
-.inputAccountUsername
+.inputCreateAccountUsername
 {
-
-}
-
-.inputAccountEmail
-{
-
-}
-
-.inputAccountCredit
-{
-
-}
-
-.btnSubmitAccount
-{
-    width: 30%;
-    height: 15%;
-    
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btnSubmitAccount:hover
-{
-    background-color: #45a049;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.inputNameHeading
-{
-    width: 100%;
-    
-    position: absolute;
-    top: 0;
-    
-    text-align: center;
-}
-
-.inputName
-{
-    width: 45%;
-    height: 10%;
-    
-    position: absolute;
-    top: 0;
-    
-    border: solid 1px;
-    border-radius: 5px;
-}
-
-.inputNameLeft
-{
-    left: 0;
-}
-
-.inputNameRight
-{
-    right: 0;
-}
-
-.formNames
-{
-    width: 90%;
-    height: 70%;
-    
-    position: absolute;
-    left: 50%;
     top: 20%;
-    
-    transform: translate(-50%, -5%);
 }
 
-.btnSubmitName
+.inputCreateAccountPwd
+{
+    top: 35%;
+}
+
+.inputCreateAccountEmail
+{
+    top: 50%;
+}
+
+.inputCreateAccountCredit
+{
+    top: 65%;
+}
+
+.btnSubmitCreateAccount
 {
     width: 30%;
-    height: 15%;
+    height: 10%;
     
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: 80%;
+    transform: translateX(-50%);
     
     background-color: #4CAF50;
     color: white;
@@ -152,7 +71,7 @@
     cursor: pointer;
 }
 
-.btnSubmitName:hover
+.btnSubmitCreateAccount:hover
 {
     background-color: #45a049;
 }

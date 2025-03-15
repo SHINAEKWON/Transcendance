@@ -1,36 +1,34 @@
 function renderLoginPage()
 {
     const app = document.getElementById("app");
-    
+
     app.innerHTML = `
-        <div class="containerAccountButtons">
-            <button class="btnCreateAccount btnAccount" id="btnCreateAccount">Create Account</button>
-            <button class="btnLogin btnAccount" id="btnLogin">Login</button>
-        </div>
-        <div class="containerNameInput">
-            <h1 class="inputNameHeading">or enter names for quick game</h1>
-            <form id="formNames" class="formNames">
-                <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>
-                <input class="inputName inputNameRight" type="text" id="inputNameRight" placeholder="Right player" required>
-                <button class="btnSubmitName" id="btnSubmitName" type="submit">Start Game</button>
+        <div class="containerLoginTFs">
+            <form id="formLogin" class="formLogin">
+                <input class="inputLogin inputLoginUsername" type="text" id="inputLoginUsername" placeholder="Username" required>
+                <input class="inputLogin inputLoginPwd" type="password" id="inputLoginPwd" placeholder="Password" required>
+                <button class="btnSubmitLogin" id="btnSubmitLogin" type="submit">Login</button>
             </form>
         </div>
     `;
     
-    const formNames = document.getElementById("formNames");
-    formNames.addEventListener("submit", submitNames);
+    const formLogin = document.getElementById("formLogin");
+    formLogin.addEventListener("submit", login);
 }
     
-function submitNames(event)
+function login(event)
 {
     // when clicking on a "Submit" button, prevent it from submitting a form
     event.preventDefault();
     
-    const inputNameLeft = document.getElementById("inputNameLeft");
-    const inputNameRight = document.getElementById("inputNameRight");
+    const inputLoginUsername = document.getElementById("inputLoginUsername");
+    const inputLoginPwd = document.getElementById("inputLoginPwd");
 
-    const nameLeft = inputNameLeft.value;
-    const nameRight = inputNameRight.value;
+    const pwd = inputLoginPwd.value;
+    const username = inputLoginUsername.value;
 
-    navigateTo("game", true, nameLeft, nameRight);
+    if (username == "alex" && pwd == "1234")
+        navigateTo("profile", true, playerLeft = username);
+    else
+        alert("Password not correct");
 }

@@ -35,9 +35,9 @@ function pushStateToHistory()
 function navigateTo(page, pushHistory = false, playerLeft = null, playerRight = null, playerWins = null)
 {
     setGameState(page, pushHistory, playerLeft, playerRight, playerWins);
-    if (page === "login")
+    if (page === "welcome")
     {
-        renderLoginPage();
+        renderWelcomePage();
     }
     else if (page === "game")
     {
@@ -46,6 +46,18 @@ function navigateTo(page, pushHistory = false, playerLeft = null, playerRight = 
     else if (page === "revanche")
     {
         renderRevanchePage(playerLeft, playerRight, playerWins);
+    }
+    else if (page === "createAccount")
+    {
+        renderCreateAccountPage();
+    }
+    else if (page === "login")
+    {
+        renderLoginPage();
+    }
+    else if (page === "profile")
+    {
+        renderProfilePage(playerLeft);
     }
     else
     {
@@ -85,7 +97,7 @@ function history_navigation(event)
 {
     if (!event.state)
     {
-        navigateTo("login", false);
+        navigateTo("welcome", false);
     }
     else
     {
@@ -140,17 +152,29 @@ function render_page_on_load_or_refresh()
     {
         navigateTo("revanche", false, history.state?.playerLeft, history.state?.playerRight, history.state?.playerWins);
     }
+    else if (location.hash === "#createAccount")
+    {
+        navigateTo("createAccount", false);
+    }
     else if (location.hash === "#login")
     {
         navigateTo("login", false);
     }
+    else if (location.hash === "#welcome")
+    {
+        navigateTo("welcome", false);
+    }
+    else if (location.hash === "#profile" && history.state?.playerLeft)
+    {
+        navigateTo("profile", false, history.state?.playerLeft);
+    }
     else if (location.hash === "")
     {
-        navigateTo("login", true);
+        navigateTo("welcome", true);
     }
     else
     {
-        navigateTo("login", true);
+        navigateTo("welcome", true);
     }
 }
 

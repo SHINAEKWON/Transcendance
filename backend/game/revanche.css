@@ -35,21 +35,26 @@
     transform: translate(-50%, -5%);
 }
 
-.btnRevanche
+.btnAgain
 {
     width: 30%;
     height: 15%;
-    
+
     position: absolute;
     left: 50%;
-    top: 10%;
+
     transform: translateX(-50%);
-    
+
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.btnRevanche
+{
+    top: 10%;
 }
 
 .btnRevanche:hover
@@ -57,43 +62,9 @@
     background-color: #45a049;
 }
 
-.btnNewgame
-{
-    width: 30%;
-    height: 15%;
-    
-    position: absolute;
-    left: 50%;
-    top: 43%;
-    transform: translateX(-50%);
-    
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btnNewgame:hover
-{
-    background-color: #45a049;
-}
-
 .btnEnd
 {
-    width: 30%;
-    height: 15%;
-    
-    position: absolute;
-    left: 50%;
     top: 76%;
-    transform: translateX(-50%);
-    
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .btnEnd:hover
