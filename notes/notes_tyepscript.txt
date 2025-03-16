@@ -23,6 +23,21 @@ touch src/index.ts
 npx tsc                                 - compiles code; npx is the Node package executer, 
                                           tsc reads tsconfig.json and compiles .ts files to .js files
 
+
+- https://stackoverflow.com/questions/79380514/problem-installing-tailwindcss-with-vite-after-npx-tailwindcss-init-p-comman/79380522#79380522
+- https://github.com/tailwindlabs/tailwindcss/discussions/15791#discussioncomment-11940580
+- https://tailwindcss.com/docs/installation/tailwind-cli
+npm install --save-dev tailwindcss @tailwindcss/cli      - installs tailwindcss to npm project 
+                                                           (after upgrade to tailwind v4 it is 
+                                                           necessary to do it with cli)
+-> manually add @import "tailwindcss";                      - Adding tailwind to main CSS file (for
+                                                           the moment it is page.css)
+npx @tailwindcss/cli -i ./styles/tailwind_in.css -o ./styles/tailwind_out.css     - adds the tailwind
+                                                                                    classes to the 
+                                                                                    css file
+-> manually add css file to html
+
+
 ********************************************************************************
 package.json
 - https://www.geeksforgeeks.org/node-js-package-json/
