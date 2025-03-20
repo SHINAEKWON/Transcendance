@@ -1,23 +1,36 @@
 import { Router } from './router.js';
 import { WelcomePage } from './pages/welcome.js';
 import { ProfilePage } from './pages/profile.js';
-import { GamePage } from './pages/game.js';
+import { GamePage } from './pages/game/game.js';
 import { TournamentsPage } from './pages/tournaments.js';
 import { ChatPage } from './pages/chat.js';
 import { LanguagePage } from './pages/language.js';
 import { Sidebar } from './pages/sidebar.js';
+import { LocalPlayPage } from './pages/game/local-play.js';
+import { AIPlayPage } from './pages/game/ai-play.js';
+import { OnlinePlayPage } from './pages/game/online-play.js';
 
+// ✅ Définir `router` en dehors pour qu'il soit globalement accessible
+const router = new Router({
+    welcome: new WelcomePage(),
+    profile: new ProfilePage(),
+    game: new GamePage(),
+    tournaments: new TournamentsPage(),
+    chat: new ChatPage(),
+    language: new LanguagePage(),
+    localPlay: new LocalPlayPage(),  // 🎮 Mode Local
+    aiPlay: new AIPlayPage(),        // 🤖 Mode IA
+    onlinePlay: new OnlinePlayPage(), // 🌐 Mode Online
+});
+
+// ✅ Rendre `router` accessible dans `window` pour d'autres scripts
+(window as any).router = router;
+
+window.addEventListener('hashchange', () => {
+    console.log("🔄 Détection d'un changement d'URL:", window.location.hash);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    const router = new Router({
-        welcome: new WelcomePage(),
-        profile: new ProfilePage(),
-        game: new GamePage(),
-        tournaments: new TournamentsPage(),
-        chat: new ChatPage(),
-        language: new LanguagePage(),
-    });
-
     function updateSidebar() {
         const appElement: HTMLElement | null = document.getElementById('sidebar');
         const currentPage = window.location.hash.slice(1) || 'welcome';
@@ -52,12 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBackgroundEffect();
     window.addEventListener('hashchange', updateBackgroundEffect);
     
-
     // Mettre à jour la sidebar au chargement
     updateSidebar();
-
-    // Mettre à jour la sidebar à chaque changement de page
     window.addEventListener('hashchange', updateSidebar);
 
-    router.init();
+    router.init(); // ✅ Initialiser `router`
 });
