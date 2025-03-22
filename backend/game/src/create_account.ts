@@ -13,7 +13,7 @@ function renderCreateAccountPage()
                 
                     <div class="w-full px-3">
                         <label class="login_label" for="inputCreateAccountUsername">
-                            First Name
+                            Username
                         </label>
                         <input class="login_textfield" id="inputCreateAccountUsername" type="text" placeholder="CrazyName" required>
                     </div>

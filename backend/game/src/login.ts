@@ -4,14 +4,42 @@ function renderLoginPage()
     
     if (app)
     {
+    
         app.innerHTML = `
-            <div class="containerLoginTFs">
-                <form id="formLogin" class="formLogin">
-                    <input class="inputLogin inputLoginUsername" type="text" id="inputLoginUsername" placeholder="Username" required>
-                    <input class="inputLogin inputLoginPwd" type="password" id="inputLoginPwd" placeholder="Password" required>
-                    <button class="btnSubmitLogin" id="btnSubmitLogin" type="submit">Login</button>
-                </form>
-            </div>
+        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+            <form class="w-full max-w-lg" id="formLogin">
+                <div class="flex flex-wrap">
+                
+                
+                    <div class="w-full px-3">
+                        <label class="login_label" for="inputLoginUsername">
+                            Username
+                        </label>
+                        <input class="login_textfield" id="inputLoginUsername" type="text" placeholder="CrazyName" required>
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="w-full px-3">
+                        <label class="login_label" for="inputLoginPwd">
+                            Password
+                        </label>
+                        <input class="login_textfield" id="inputLoginPwd" type="password" placeholder="******************" required>
+                    </div>
+                    
+                    
+                    
+                    <div class="w-full px-3 flex items-center justify-center">
+                        <button class="login_button" id="btnSubmitLogin" type="submit">
+                            Login
+                        </button>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
         `;
     
         const formLogin: HTMLElement | null = document.getElementById("formLogin");
