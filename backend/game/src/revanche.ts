@@ -15,7 +15,7 @@ function renderRevanchePage(player1: string | null, player2: string | null, won:
     if (app)
     {
         app.innerHTML = `
-            <div id="containerPlayAgain" class="containerPlayAgain hidden">
+            <div id="containerPlayAgain" class="containerPlayAgain">
                 <h1 class="inputAgainHeading">${playerWon} wins! Do you want to play again?</h1>
                 <div id="againButtons" class="againButtons">
                     <button class="btnRevanche btnAgain" id="btnRevanche">Revanche</button>

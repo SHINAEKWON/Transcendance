@@ -2,6 +2,10 @@ https://ellen-park.medium.com/how-to-createyour-first-project-with-typescript-95
 https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
 
+To install npm and nodejs for the latest version:
+sudo apt-get install npm nodejs
+sudo npm install -g n
+sudo n stable
 
 
 npm init --yes                           - initializes package.json (--yes approves all defaults).

@@ -125,7 +125,7 @@ let sPressed: boolean = false;
 let game_status: number = GAME_NEW;
 
 // score properties
-const score_winning: number = 4;
+const score_winning: number = 1;
 let score_cnt_left: number;
 let score_cnt_right: number;
 

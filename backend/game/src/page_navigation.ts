@@ -96,22 +96,22 @@ that history entry is used instead.
 A PopStateEvent inherits from Event. PopStateEvent.state returns a copy of the 
 information that was provided to pushState() or replaceState().
 */
-// function add_history_navigation_to_window()
-// {
-//     window.addEventListener("popstate", history_navigation);
-// }
+function add_history_navigation_to_window()
+{
+    window.addEventListener("popstate", history_navigation);
+}
 
-// function history_navigation(event)
-// {
-//     if (!event.state)
-//     {
-//         navigateTo("welcome", false);
-//     }
-//     else
-//     {
-//         navigateTo(event.state.page, false, event.state.playerLeft, event.state.playerRight, event.state.playerWins);
-//     }
-// }
+function history_navigation(event: PopStateEvent)
+{
+    if (!event.state)
+    {
+        navigateTo("welcome", false);
+    }
+    else
+    {
+        navigateTo(event.state.page, false, event.state.playerLeft, event.state.playerRight, event.state.playerWins);
+    }
+}
 
 
 
@@ -201,7 +201,7 @@ function render_page_on_load_or_refresh(): void
 /* ************************************************************************** */
 function run_when_content_loaded(event: Event): void
 {
-    //add_history_navigation_to_window();
+    add_history_navigation_to_window();
     render_page_on_load_or_refresh();
 }
 
