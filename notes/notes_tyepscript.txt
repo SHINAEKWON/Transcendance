@@ -34,12 +34,14 @@ npx tsc                                 - compiles code; npx is the Node package
 npm install --save-dev tailwindcss @tailwindcss/cli      - installs tailwindcss to npm project 
                                                            (after upgrade to tailwind v4 it is 
                                                            necessary to do it with cli)
--> manually add @import "tailwindcss";                      - Adding tailwind to main CSS file (for
-                                                           the moment it is page.css)
+-> manually add @import "tailwindcss";                   - Adding tailwind to main CSS file (tailwind_in.css)
 npx @tailwindcss/cli -i ./styles/tailwind_in.css -o ./styles/tailwind_out.css     - adds the tailwind
                                                                                     classes to the 
                                                                                     css file
 -> manually add css file to html
+
+--> The above command (npx @tailwindcss/cli ...) searches for all tailwind classes in the .ts files
+    and adds them to tailwind_out.css
 
 
 ********************************************************************************

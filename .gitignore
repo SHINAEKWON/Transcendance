@@ -2,3 +2,4 @@
 backend/node_modules
 backend/game/build
 backend/game/node_modules
+backend/game/styles/tailwind_out.css
