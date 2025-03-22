@@ -5,20 +5,54 @@ function renderWelcomePage()
     if (app)
     {
         app.innerHTML = `
-            <div class="containerAccountButtons">
-                <button class="btnCreateAccount btnAccount" id="btnCreateAccount">Create Account</button>
-                <button class="btnLogin btnAccount" id="btnLogin">Login</button>
+        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+                
+            <div class="w-full px-3 flex items-center justify-center">
+                <button class="login_button" id="btnCreateAccount" type="submit">
+                    Create Account
+                </button>
+                        
+                <button class="login_button" id="btnLogin" type="submit">
+                    Login
+                </button>
             </div>
-            <div class="containerNameInput">
-                <h1 class="inputNameHeading">or enter names for quick game</h1>
-                <form id="formNames" class="formNames">
-                    <input class="inputName inputNameLeft" type="text" id="inputNameLeft" placeholder="Left player" required>
-                    <input class="inputName inputNameRight" type="text" id="inputNameRight" placeholder="Right player" required>
-                    <button class="btnSubmitName" id="btnSubmitName" type="submit">Start Game</button>
-                </form>
-            </div>
+
+            <form class="w-full max-w-lg" id="formNames">
+                <div class="flex flex-wrap">
+
+                    <div class="w-full px-3">
+                        <label class="login_label" for="inputNameLeft">
+                            or enter names for quick game
+                        </label>
+                    </div>                
+                
+                
+                    <div class="w-full px-3">
+                        <label class="login_label" for="inputNameLeft">
+                            Left Player
+                        </label>
+                        <input class="login_textfield" id="inputNameLeft" type="text" placeholder="CrazyName" required>
+                    </div>
+                    
+                    <div class="w-full px-3">
+                        <label class="login_label" for="inputNameRight">
+                            Right Player
+                        </label>
+                        <input class="login_textfield" id="inputNameRight" type="text" placeholder="StunningName" required>
+                    </div>
+                
+                    <div class="w-full px-3">
+                        <button class="login_button" id="btnSubmitName" type="submit">
+                            Start Game
+                        </button>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
         `;
-    
+        
         const formNames: HTMLElement | null = document.getElementById("formNames");
         formNames?.addEventListener("submit", submitNames);
 

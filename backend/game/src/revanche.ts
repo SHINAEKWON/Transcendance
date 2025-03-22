@@ -15,13 +15,24 @@ function renderRevanchePage(player1: string | null, player2: string | null, won:
     if (app)
     {
         app.innerHTML = `
-            <div id="containerPlayAgain" class="containerPlayAgain">
-                <h1 class="inputAgainHeading">${playerWon} wins! Do you want to play again?</h1>
-                <div id="againButtons" class="againButtons">
-                    <button class="btnRevanche btnAgain" id="btnRevanche">Revanche</button>
-                    <button class="btnEnd btnAgain" id="btnEnd">Back to welcome</button>
-                </div>
+        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+            <div class="w-full px-3 flex items-center justify-center">
+            
+                <div class="w-full px-3">
+                    <label class="login_label" for="inputLoginPwd">
+                        ${playerWon} wins! Do you want to play again?
+                    </label>
+                </div>            
+            
+                <button class="login_button" id="btnRevanche">
+                    Revanche
+                </button>
+                        
+                <button class="login_button" id="btnEnd" type="submit">
+                    Back to welcome
+                </button>
             </div>
+        </div>
         `;
     
         const btnRevanche: HTMLButtonElement | null = document.getElementById("btnRevanche") as HTMLButtonElement;

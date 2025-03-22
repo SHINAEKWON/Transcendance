@@ -5,15 +5,31 @@ function renderProfilePage(profilename: string | null)
     if (app)
     {
         app.innerHTML = `
-            <div class="containerProfile">
-                <div id="divWelcomeMessage" class="divWelcomeMessage">
-                    Welcome to Pong !
+        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+                <div class="flex flex-wrap">
+                
+                
+                    <div class="w-full px-3">
+                        <label class="login_label">
+                            Welcome to Pong!
+                        </label>
+                    </div>
+
+                    <div class="w-full px-3">
+                        <label class="login_label" id="divProfileName">
+                            ${profilename}
+                        </label>
+                    </div>                    
+                    
+                    <div class="w-full px-3 flex items-center justify-center">
+                        <button class="login_button" id="btnStartGame">
+                            Start a Game
+                        </button>
+                    </div>
+
+
                 </div>
-                <div id="divProfileName" class="divProfileName">
-                    ${profilename}
-                </div>
-                <button class="btnStartGame" id="btnStartGame" type="submit">Start a Game</button>
-            </div>
+        </div>
         `;
     
         const btnStartGame: HTMLElement | null = document.getElementById("btnStartGame");
