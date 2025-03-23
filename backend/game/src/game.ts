@@ -5,50 +5,33 @@ function renderGamePage(player1: string | null, player2: string | null)
     if (app)
     {
         app.innerHTML = `
-            <div id="containerGame" class="containerGame">
-                <div id="board" class="board">
-                    <div id="middleline" class="middleline">
-                    </div>
-                    <div id="hor_line" class="hor_line">
-                    </div>
-                    <div id="ball" class="ball">
-                    </div>
-                    <div id="paddle_left" class="paddle paddle_left">
-                    </div>
-                    <div id="paddle_right" class="paddle paddle_right">
-                    </div>
-                    <div id="msg_start" class="msg_start msg">
-                        NEW GAME
-                    </div>
-                    <div id="msg_pressSpace" class="msg_pressSpace msg">
-                        Press SPACE to start...
-                    </div>
+        <div class="relative w-full h-screen flex flex-col items-center justify-center bg-black">
+            <div id="board" class="relative w-9/12 h-4/5 border-t border-b border-white">
+                <div class="absolute left-1/2 w-px h-full bg-white"></div>
+                <div class="absolute top-1/2 w-full h-px bg-white"></div>
+                <div id="ball" class="absolute top-1/2 left-1/2 w-[3%] aspect-square bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+                <div id="paddle_left" class="absolute top-1/2 left-0 w-[0.3%] h-[15%] bg-cyan-400 transform -translate-y-1/2"></div>
+                <div id="paddle_right" class="absolute top-1/2 right-0 w-[0.3%] h-[15%] bg-yellow-400 transform -translate-y-1/2"></div>
+                <div id="msg_start" class="absolute left-1/2 top-1/4 w-3/4 h-1/5 text-center text-red-500 text-4xl border-dotted border-2 border-red-500 flex items-center justify-center transform -translate-x-1/2">
+                    NEW GAME
                 </div>
-                <div id="scores" class="scores">
-                    <div id="score_name_left" class="score_name score_name_left">
-                        <div id="score_left" class="score score_left">
-                            0
-                        </div>
-                        <div id="name_left" class="name name_left">
-                            ${player1}
-                        </div>
-                    </div>
-                
-                    <div id="score_separator" class="score_separator">
-                        :
-                    </div>
-                
-                    <div id="score_name_right" class="score_name score_name_right">
-                        <div id="score_right" class="score score_right">
-                            0
-                        </div>
-                        <div id="name_right" class="name name_right">
-                            ${player2}
-                        </div>
-                    </div>
+                <div id="msg_pressSpace" class="absolute left-1/2 top-3/4 w-3/4 h-1/10 text-center text-red-500 text-2xl border-dotted border-2 border-red-500 flex items-center justify-center transform -translate-x-1/2">
+                    Press SPACE to start...
                 </div>
-    
             </div>
+    
+            <div class="absolute top-[90%] left-1/2 w-9/12 h-[7%] text-4xl transform -translate-x-1/2 flex items-center justify-between">
+                <div class="w-[47%] flex items-center">
+                    <div id="score_left" class="text-cyan-400 w-1/5 text-left">0</div>
+                    <div id="name_left" class="text-cyan-400 w-4/5 text-left">${player1}</div>
+                </div>
+                <div class="w-[6%] text-center">:</div>
+                <div class="w-[47%] flex items-center justify-end">
+                    <div id="name_right" class="text-yellow-400 w-4/5 text-right">${player2}</div>
+                    <div id="score_right" class="text-yellow-400 w-1/5 text-right">0</div>
+                </div>
+            </div>
+        </div>
         `;
     
         document.addEventListener("keydown", keyDownHandler);
@@ -309,13 +292,6 @@ function changeStartMessageText(newText: string): void
         msg_start.textContent = newText;
     }
 }
-
-// function changePressSpaceText(newText)
-// {
-//     const msg_pressSpace = document.getElementById("msg_pressSpace");
-    
-//     msg_pressSpace.textContent = newText;
-// }
 
 function changeStartMessageColor(newColor: string): void
 {
