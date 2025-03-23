@@ -14,7 +14,7 @@
   "dependencies": {
     "@fastify/static": "^6.10.1",
     "dotenv": "^16.4.7",
-    "fastify": "^4.23.0",
+    "fastify": "^4.29.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

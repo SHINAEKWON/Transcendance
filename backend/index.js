@@ -1,8 +1,10 @@
 import Fastify from 'fastify';
+import sqlite3 from 'sqlite3';
 import dotenv from 'dotenv';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
+
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -28,6 +30,15 @@ fastify.get('/', async (request, reply) => {
 // Route de test
 fastify.get('/ping', async (request, reply) => {
   return { message: 'pong' };
+});
+
+// Shin Ae : test de creation d'une DB dans le volume de docker
+const db = new sqlite3.Database('./data/user_db.sqlite', (err) => {
+  if (err) {
+    console.error('Failed to connect DB', err.message);
+  } else {
+    console.log('SQLite DB connected successfully!');
+  }
 });
 
 // Lancer le serveur

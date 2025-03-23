@@ -47,6 +47,8 @@ RUN npm install fastify@4 @fastify/static@6
 # - with WORKDIR instruction, it will copy the files to /app in the container.
 COPY . .
 
+VOLUME ["/app/data"]
+
 # Définir la variable d’environnement
 ENV PORT=3000
 

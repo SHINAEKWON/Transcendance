@@ -27,4 +27,4 @@ EXPOSE 3000
 ENV HOST=0.0.0.0
 
 # Démarrer l'application en mode dev
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
