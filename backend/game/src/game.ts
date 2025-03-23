@@ -44,6 +44,193 @@ function renderGamePage(player1: string | null, player2: string | null)
     }
 }
 
+
+
+
+
+class Ball
+{
+    static readonly speed: number = 0.5;
+
+    element: HTMLDivElement;
+
+    x: number = 0;
+    y: number = 0;
+    speedX: number = 0;
+    speedY: number = 0;
+
+    left: number = 0;
+    right: number = 0;
+    top: number = 0;
+    bottom: number = 0;
+
+    constructor()
+    {
+        this.element = document.getElementById("ball") as HTMLDivElement;
+        if (!this.element)
+        {
+            throw new Error('Ball not found');
+        }
+        this.initializePosition();
+        this.initializeSpeed();
+    }
+
+    initializePosition(): void
+    {
+        this.x = 50;
+        this.y = 50;
+    }
+
+    initializeSpeed(): void
+    {
+        // initialize x-speed
+        this.speedX = (Math.random() * 2 - 1) * Ball.speed;
+        if (Math.abs(this.speedX) < 0.3)
+        {
+            this.speedX = this.speedX < 0 ? -0.3 : 0.3;
+        }
+        
+        // initialize y-speed
+        const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
+        this.speedY = Math.sqrt(Ball.speed ** 2 - this.speedX ** 2) * ballDirectionY;
+    }
+    
+    
+    getCurrentGeometry()
+    {
+        this.left = this.element.getBoundingClientRect().left;
+        this.right = this.element.getBoundingClientRect().right;
+        this.top = this.element.getBoundingClientRect().top;
+        this.bottom = this.element.getBoundingClientRect().bottom;
+    }
+
+    move(): void
+    {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.draw();
+    }
+    
+    draw(): void
+    {        
+        this.element.style.left = `${this.x}%`;
+        this.element.style.top = `${this.y}%`;
+    }
+}
+
+class Paddle
+{
+    static readonly speed: number = 1;
+
+    element: HTMLDivElement;
+
+    y: number = 0;
+
+    height: number = 0;
+
+    left: number = 0;
+    right: number = 0;
+    top: number = 0;
+    bottom: number = 0;
+
+    constructor(leftOrRight: number)
+    {
+        if (leftOrRight == LEFT)
+            this.element = document.getElementById("paddle_left") as HTMLDivElement;
+        else if (leftOrRight == RIGHT)
+            this.element = document.getElementById("paddle_right") as HTMLDivElement;
+        else
+            throw new Error('Paddle not found');
+        if (!this.element)
+        {
+            throw new Error('Paddle not found');
+        }
+        this.initializePosition();
+    }
+
+    initializePosition(): void
+    {
+        this.y = 50;
+    }
+
+    getY(): number
+    {
+        return this.y;
+    }
+    
+    setY(newY: number): void
+    {
+        this.y = newY;
+    }
+    
+    getLimitY(upOrDown: number): number
+    {
+        if (upOrDown == DOWN)
+            return (100 - this.height / 2);
+        else if (upOrDown == UP)
+            return (0 + this.height / 2);
+        return 0;
+    }
+
+    draw(): void
+    {
+        this.element.style.top = `${this.y}%`;
+    }
+    
+    move(upOrDown: number)
+    {
+        const limit = this.getLimitY(upOrDown);
+        const sign = upOrDown == UP ? 1 : -1;
+    
+        let newY = this.getY();
+    
+        if (sign * newY > sign * limit)
+        {
+            newY = newY - (sign * Paddle.speed);
+            if (sign * newY < sign * limit)
+                newY = limit;
+                   
+            this.setY(newY);
+            this.draw();
+        }
+    }
+
+    getCurrentGeometry(): void
+    {
+        this.left = this.element.getBoundingClientRect().left;
+        this.right = this.element.getBoundingClientRect().right;
+        this.top = this.element.getBoundingClientRect().top;
+        this.bottom = this.element.getBoundingClientRect().bottom;
+    }
+}
+
+class board
+{
+    element: HTMLDivElement;
+
+    left: number = 0;
+    right: number = 0;
+    top: number = 0;
+    bottom: number = 0;
+
+    constructor()
+    {
+        this.element = document.getElementById("board") as HTMLDivElement;
+        if (!this.element)
+        {
+            throw new Error('Board not found');
+        }
+    }
+
+    getCurrentGeometry(): void
+    {
+        this.left = this.element.getBoundingClientRect().left;
+        this.right = this.element.getBoundingClientRect().right;
+        this.top = this.element.getBoundingClientRect().top;
+        this.bottom = this.element.getBoundingClientRect().bottom;
+    }
+}
+
 /* ************************************************************************** */
 /*                                                                            */
 /* Declare variables and constants                                            */
@@ -64,40 +251,6 @@ const RIGHT: number = 1;
 const UP: number = 0;
 const DOWN: number = 1;
 
-// board properties
-let boardLeft: number;
-let boardRight: number;
-let boardTop: number;
-let boardBottom: number;
-
-// ball properties
-const ballSpeed: number = 0.5;
-let ballX: number;
-let ballY: number;
-let ballSpeedX: number;
-let ballSpeedY: number;
-
-let ballLeft: number;
-let ballRight: number;
-let ballTop: number;
-let ballBottom: number;
-
-// paddle properties
-let paddleHeight: number;
-let paddleLeftY: number;
-let paddleRightY: number;
-const paddleSpeed: number = 1;
-
-let paddleLeftLeft: number;
-let paddleLeftRight: number;
-let paddleLeftTop: number;
-let paddleLeftBottom: number;
-
-let paddleRightLeft: number;
-let paddleRightRight: number;
-let paddleRightTop: number;
-let paddleRightBottom: number;
-
 // key pressed
 let upPressed: boolean = false;
 let downPressed: boolean = false;
@@ -117,74 +270,7 @@ let score_cnt_right: number;
 /* Event listeners                                                            */
 /*                                                                            */
 /* ************************************************************************** */
-function getPaddlePositionY(leftOrRightPaddle: number): number
-{
-    if (leftOrRightPaddle == LEFT)
-        return (paddleLeftY);
-    else if (leftOrRightPaddle == RIGHT)
-        return (paddleRightY);
-    else
-        alert("Error: Wrong Paddle specified");
-    return (0);
-}
 
-function setPaddlePositionY(leftOrRightPaddle: number, newPaddleY: number): void
-{
-    if (leftOrRightPaddle == LEFT)
-        paddleLeftY = newPaddleY;
-    else if (leftOrRightPaddle == RIGHT)
-        paddleRightY = newPaddleY;
-    else
-        alert("Error: Wrong Paddle specified");
-}
-
-function getPaddleLimit(upOrDown: number): number
-{
-    if (upOrDown == UP)
-        return (0 + paddleHeight / 2);
-    else if (upOrDown == DOWN)
-        return (100 - paddleHeight / 2);
-    else
-        alert("Error: Wrong Direction specified");
-    return (100);
-}
-
-function drawPaddles(): void
-{
-
-    const paddle_left: HTMLElement | null = document.getElementById("paddle_left");
-    const paddle_right: HTMLElement | null = document.getElementById("paddle_right");
-
-    if (paddle_left)
-    {
-        paddle_left.style.top = `${paddleLeftY}%`;
-    }
-    if (paddle_right)
-    {
-        paddle_right.style.top = `${paddleRightY}%`;
-    }
-}
-
-function movePaddle(leftOrRightPaddle: number, upOrDown: number)
-{
-    if (game_status == GAME_STARTED)
-    {
-        const limit = getPaddleLimit(upOrDown);
-        const sign = upOrDown == UP ? 1 : -1;
-
-        let paddleY = getPaddlePositionY(leftOrRightPaddle);
-
-        if (sign * paddleY > sign * limit)
-        {
-            paddleY = paddleY - (sign * paddleSpeed);
-            if (sign * paddleY < sign * limit)
-                paddleY = limit;
-                
-            setPaddlePositionY(leftOrRightPaddle, paddleY);
-            drawPaddles();
-        }
-    }
-}
 
 function movePaddles(): void
 {
@@ -308,28 +394,8 @@ function changeGameStatus(newStatus: number): void
     game_status = newStatus;
 }
 
-function initializeBall(): void
-{
-    ballX = 50;
-    ballY = 50;
-    ballSpeedX = (Math.random() * 2 - 1) * ballSpeed;
-
-    if (Math.abs(ballSpeedX) < 0.3)
-    {
-        if (ballSpeedX < 0)
-            ballSpeedX = -0.3;
-        else
-            ballSpeedX = 0.3;
-    }
-    
-    const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
-    ballSpeedY = Math.sqrt(ballSpeed ** 2 - ballSpeedX ** 2) * ballDirectionY;
-}
-
 function initializePaddles(): void
 {
-    paddleLeftY = 50;
-    paddleRightY = 50;
     upPressed = false;
     downPressed = false;
     wPressed = false;
@@ -471,59 +537,6 @@ function ballHitsWall(): boolean
     return true;
 }
 
-function getBoardGeometry(): void
-{
-    const board: HTMLElement | null = document.getElementById("board");
-
-    if (board)
-    {
-        boardLeft = board.getBoundingClientRect().left;
-        boardRight = board.getBoundingClientRect().right;
-        boardTop = board.getBoundingClientRect().top;
-        boardBottom = board.getBoundingClientRect().bottom;
-    }
-}
-
-function getBallGeometry()
-{
-    const ball: HTMLElement | null = document.getElementById("ball");
-    
-    if (ball)
-    {
-        ballLeft = ball.getBoundingClientRect().left;
-        ballRight = ball.getBoundingClientRect().right;
-        ballTop = ball.getBoundingClientRect().top;
-        ballBottom = ball.getBoundingClientRect().bottom;
-    }
-}
-
-function getLeftPaddleGeometry(): void
-{
-
-    const paddle_left: HTMLElement | null = document.getElementById("paddle_left");
-    
-    if (paddle_left)
-    {
-        paddleLeftLeft = paddle_left.getBoundingClientRect().left;
-        paddleLeftRight = paddle_left.getBoundingClientRect().right;
-        paddleLeftTop = paddle_left.getBoundingClientRect().top;
-        paddleLeftBottom = paddle_left.getBoundingClientRect().bottom;
-    }
-}
-
-function getRightPaddleGeometry(): void
-{
-    const paddle_right: HTMLElement | null = document.getElementById("paddle_right");
-    
-    if (paddle_right)
-    {
-        paddleRightLeft = paddle_right.getBoundingClientRect().left;
-        paddleRightRight = paddle_right.getBoundingClientRect().right;
-        paddleRightTop = paddle_right.getBoundingClientRect().top;
-        paddleRightBottom = paddle_right.getBoundingClientRect().bottom;
-    }
-}
-
 function ballHitsLeftPaddle(): boolean
 {
     getBallGeometry();
@@ -612,24 +625,6 @@ function ballIsOut(): boolean
     if (ballIsLeftOut() == true || ballIsRightOut() == true)
         return (true);
     return (false);
-}
-
-function moveBall(): void
-{
-    ballX += ballSpeedX;
-    ballY += ballSpeedY;
-    drawBall();
-}
-
-function drawBall(): void
-{
-    const ball: HTMLElement | null = document.getElementById("ball");
-    
-    if (ball)
-    {
-        ball.style.left = `${ballX}%`;
-        ball.style.top = `${ballY}%`;
-    }
 }
 
 function update(): void
