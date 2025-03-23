@@ -1,28 +1,12 @@
-function renderRevanchePage(player1: string | null, player2: string | null, won: string | null)
+function renderRevanchePage(player1: string | null, player2: string | null)
 {
     const app: HTMLElement | null = document.getElementById("app");
     
-    let playerWon;
-    if (won == "left")
-    {
-        playerWon = player1;
-    }
-    else
-    {
-        playerWon = player2;
-    }
-
     if (app)
     {
         app.innerHTML = `
         <div class="flex items-center justify-center min-h-screen bg-gray-100">
             <div class="w-full px-3 flex items-center justify-center">
-            
-                <div class="w-full px-3">
-                    <label class="login_label" for="inputLoginPwd">
-                        ${playerWon} wins! Do you want to play again?
-                    </label>
-                </div>            
             
                 <button class="login_button" id="btnRevanche">
                     Revanche

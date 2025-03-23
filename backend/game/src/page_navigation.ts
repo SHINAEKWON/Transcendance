@@ -3,7 +3,6 @@ interface GameState
     page: string;
     playerLeft: string | null;
     playerRight: string | null;
-    playerWins: string | null;
 }
 
 // Global object to track the state of the pages/game
@@ -11,15 +10,13 @@ let gameState: GameState = {
     page: "",
     playerLeft: null,
     playerRight: null,
-    playerWins: null
 };
 
-function setGameState(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null, playerWins: string | null = null): void
+function setGameState(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
 {
     gameState.page = page;
     gameState.playerLeft = playerLeft;
     gameState.playerRight = playerRight;
-    gameState.playerWins = playerWins;
     if (pushHistory == true)
     {
         pushStateToHistory();
@@ -40,9 +37,9 @@ function pushStateToHistory(): void
 /* ************************************************************************** */
 /* Navigate manually to a page and add to history                             */
 /* ************************************************************************** */
-function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null, playerWins: string | null = null): void
+function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
 {
-    setGameState(page, pushHistory, playerLeft, playerRight, playerWins);
+    setGameState(page, pushHistory, playerLeft, playerRight);
     if (page === "welcome")
     {
         renderWelcomePage();
@@ -53,7 +50,7 @@ function navigateTo(page: string, pushHistory: boolean = false, playerLeft: stri
     }
     else if (page === "revanche")
     {
-        renderRevanchePage(playerLeft, playerRight, playerWins);
+        renderRevanchePage(playerLeft, playerRight);
     }
     else if (page === "createAccount")
     {
@@ -109,7 +106,7 @@ function history_navigation(event: PopStateEvent)
     }
     else
     {
-        navigateTo(event.state.page, false, event.state.playerLeft, event.state.playerRight, event.state.playerWins);
+        navigateTo(event.state.page, false, event.state.playerLeft, event.state.playerRight);
     }
 }
 
@@ -156,9 +153,9 @@ function render_page_on_load_or_refresh(): void
     {
         navigateTo("game", false, history.state?.playerLeft, history.state?.playerRight);
     }
-    else if (location.hash === "#revanche" && history.state?.playerLeft && history.state?.playerRight && history.state?.playerWins)
+    else if (location.hash === "#revanche" && history.state?.playerLeft && history.state?.playerRight)
     {
-        navigateTo("revanche", false, history.state?.playerLeft, history.state?.playerRight, history.state?.playerWins);
+        navigateTo("revanche", false, history.state?.playerLeft, history.state?.playerRight);
     }
     else if (location.hash === "#createAccount")
     {

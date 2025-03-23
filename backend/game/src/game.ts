@@ -1,3 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/* Declare constants                                                          */
+/*                                                                            */
+/* ************************************************************************** */
+
+// Game status constants
+const GAME_NEW: number = 0;
+const GAME_STARTED: number = 1;
+const GAME_PAUSED: number = 2;
+const GAME_ENDED: number = 3;
+
+// direction constants
+const LEFT: number = 0;
+const RIGHT: number = 1;
+const UP: number = 0;
+const DOWN: number = 1;
+
+// score constants
+const score_winning: number = 1;
+
+// message constants
+const MAINMESSAGE: number = 0;
+const SIDEMESSAGE: number = 1;
+
+/* ************************************************************************** */
+/*                                                                            */
+/* Render                                                                     */
+/*                                                                            */
+/* ************************************************************************** */
 function renderGamePage(player1: string | null, player2: string | null)
 {
     const app: HTMLElement | null = document.getElementById("app");
@@ -34,19 +64,19 @@ function renderGamePage(player1: string | null, player2: string | null)
         </div>
         `;
     
-        document.addEventListener("keydown", keyDownHandler);
-        document.addEventListener("keyup", keyUpHandler);
-
-        changeGameStatus(GAME_NEW);
-        score_cnt_left = 0;
-        score_cnt_right = 0;
-        gameLoop();
+        if (player1 && player2)
+        {
+            let game: Game = new Game(player1, player2);
+            game.loop();
+        }
     }
 }
 
-
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/* Game Logic                                                                 */
+/*                                                                            */
+/* ************************************************************************** */
 
 class Ball
 {
@@ -95,7 +125,6 @@ class Ball
         this.speedY = Math.sqrt(Ball.speed ** 2 - this.speedX ** 2) * ballDirectionY;
     }
     
-    
     getCurrentGeometry()
     {
         this.left = this.element.getBoundingClientRect().left;
@@ -116,6 +145,75 @@ class Ball
         this.element.style.left = `${this.x}%`;
         this.element.style.top = `${this.y}%`;
     }
+
+    hitsWall(board: Board): boolean
+    {
+        this.getCurrentGeometry();
+        board.getCurrentGeometry();
+        
+        if (this.top > board.top && this.bottom < board.bottom)
+            return false;
+        return true;
+    }
+    
+    hitsPaddle(paddle: Paddle): boolean
+    {
+        this.getCurrentGeometry();
+        paddle.getCurrentGeometry();
+
+        let ballSide: number = 0;
+        let paddleSide: number = 0;
+
+        if (paddle.leftOrRight == LEFT)
+        {
+            ballSide = this.left;
+            paddleSide = paddle.right;
+        }
+        else if (paddle.leftOrRight == RIGHT)
+        {
+            ballSide = -1 * this.right;
+            paddleSide = -1 * paddle.left;
+        }
+
+        if (ballSide > paddleSide     
+        || this.bottom < paddle.top
+        || this.top > paddle.bottom)
+            return (false);
+        return (true);
+    }
+
+    increaseSpeed(dSpeed: number): void
+    {
+        this.speedX *= (1 + dSpeed);
+        this.speedY *= (1 + dSpeed);
+    }
+    
+    isLeftOut(board: Board): boolean
+    {
+        this.getCurrentGeometry();
+        board.getCurrentGeometry();
+        
+        if (this.left < board.left)
+            return (true);
+        return (false);
+    }
+    
+    isRightOut(board: Board): boolean
+    {
+        this.getCurrentGeometry();
+        board.getCurrentGeometry();
+        
+        if (this.right > board.right)
+            return (true);
+        return (false);
+    }
+    
+    isOut(board: Board): boolean
+    {
+        if (this.isLeftOut(board) == true || this.isRightOut(board) == true)
+            return (true);
+        return (false);
+    }
 }
 
 class Paddle
@@ -133,11 +231,15 @@ class Paddle
     top: number = 0;
     bottom: number = 0;
 
+    leftOrRight: number;
+
     constructor(leftOrRight: number)
     {
-        if (leftOrRight == LEFT)
+        this.leftOrRight = leftOrRight;
+
+        if (this.leftOrRight == LEFT)
             this.element = document.getElementById("paddle_left") as HTMLDivElement;
-        else if (leftOrRight == RIGHT)
+        else if (this.leftOrRight == RIGHT)
             this.element = document.getElementById("paddle_right") as HTMLDivElement;
         else
             throw new Error('Paddle not found');
@@ -163,8 +265,9 @@ class Paddle
         this.y = newY;
     }
     
-    getLimitY(upOrDown: number): number
+    getLimitY(upOrDown: number, board: Board): number
     {
+        this.height = this.element.offsetHeight / board.element.offsetHeight * 100;
         if (upOrDown == DOWN)
             return (100 - this.height / 2);
         else if (upOrDown == UP)
@@ -177,9 +280,9 @@ class Paddle
         this.element.style.top = `${this.y}%`;
     }
     
-    move(upOrDown: number)
+    move(upOrDown: number, board: Board)
     {
-        const limit = this.getLimitY(upOrDown);
+        const limit = this.getLimitY(upOrDown, board);
         const sign = upOrDown == UP ? 1 : -1;
     
         let newY = this.getY();
@@ -204,7 +307,7 @@ class Paddle
     }
 }
 
-class board
+class Board
 {
     element: HTMLDivElement;
 
@@ -231,459 +334,325 @@ class board
     }
 }
 
-/* ************************************************************************** */
-/*                                                                            */
-/* Declare variables and constants                                            */
-/*                                                                            */
-/* ************************************************************************** */
-
-// Game status constants
-const GAME_NEW: number = 0;
-const GAME_STARTED: number = 1;
-const GAME_PAUSED: number = 2;
-const GAME_BALLOUT: number = 3;
-const GAME_ENDED: number = 4;
-const GAME_LOADED: number = 5;
-
-// direction constants
-const LEFT: number = 0;
-const RIGHT: number = 1;
-const UP: number = 0;
-const DOWN: number = 1;
-
-// key pressed
-let upPressed: boolean = false;
-let downPressed: boolean = false;
-let wPressed: boolean = false;
-let sPressed: boolean = false;
-
-// game properties
-let game_status: number = GAME_NEW;
-
-// score properties
-const score_winning: number = 1;
-let score_cnt_left: number;
-let score_cnt_right: number;
-
-/* ************************************************************************** */
-/*                                                                            */
-/* Event listeners                                                            */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-function movePaddles(): void
+class Message
 {
-    if (upPressed)
-    {
-        movePaddle(RIGHT, UP);
-    }
-    if (downPressed)
-    {
-        movePaddle(RIGHT, DOWN);
-    }
-    if (wPressed)
-    {
-        movePaddle(LEFT, UP);
-    }
-    if (sPressed)
-    {
-        movePaddle(LEFT, DOWN);
-    }
-}
+    element: HTMLDivElement;
 
-function keyDownHandler(event: KeyboardEvent): void
-{
-    switch (event.key)
+    constructor(mainOrSideMessage: number)
     {
-        case "ArrowUp":
-            upPressed = true;
-            break ;
-        case "ArrowDown":
-            downPressed = true;
-            break ;
-        case "w":
-            wPressed = true;
-            break ;
-        case "s":
-            sPressed = true;
-            break ;
-        case " ":
-            pressSpace();
-            break ;
-        default:
-    }
-}
-
-function keyUpHandler(event: KeyboardEvent): void
-{
-    switch (event.key)
-    {
-        case "ArrowUp":
-            upPressed = false;
-            break ;
-        case "ArrowDown":
-            downPressed = false;
-            break ;
-        case "w":
-            wPressed = false;
-            break ;
-        case "s":
-            sPressed = false;
-            break ;
-        default:
-    }
-}
-
-/* ************************************************************************** */
-/* space key -> game start and pause                                          */
-/* ************************************************************************** */
-function hideMessages(): void
-{
-    const msg_pressSpace: HTMLElement | null = document.getElementById("msg_pressSpace");
-    const msg_start: HTMLElement | null = document.getElementById("msg_start");
-    
-    if (msg_pressSpace)
-    {
-        msg_pressSpace.style.visibility = 'hidden';
-    }
-    if (msg_start)
+        if (mainOrSideMessage == MAINMESSAGE)
+            this.element = document.getElementById("msg_start") as HTMLDivElement;
+        else if (mainOrSideMessage == SIDEMESSAGE)
+            this.element = document.getElementById("msg_pressSpace") as HTMLDivElement;
+        else
+            throw new Error('Message not found');
+        if (!this.element)
         {
-            msg_start.style.visibility = 'hidden';
-        }
-}
-
-function showMessages()
-{
-    const msg_pressSpace: HTMLElement | null = document.getElementById("msg_pressSpace");
-    const msg_start: HTMLElement | null = document.getElementById("msg_start");
-    
-    if (msg_pressSpace)
-    {
-        msg_pressSpace.style.visibility = 'visible';
-    }
-
-    if (msg_start)
-    {
-        msg_start.style.visibility = 'visible';
-    }
-}
-
-function changeStartMessageText(newText: string): void
-{
-    const msg_start: HTMLElement | null = document.getElementById("msg_start");
-
-    if (msg_start)
-    {
-        msg_start.textContent = newText;
-    }
-}
-
-function changeStartMessageColor(newColor: string): void
-{
-    const msg_start: HTMLElement | null = document.getElementById("msg_start");
-    
-    if (msg_start)
-    {
-        msg_start.style.color = newColor;
-    }
-}
-
-function changeGameStatus(newStatus: number): void
-{
-    game_status = newStatus;
-}
-
-function initializePaddles(): void
-{
-    upPressed = false;
-    downPressed = false;
-    wPressed = false;
-    sPressed = false;
-}
-
-function changeLeftScoreText(): void
-{
-    const score_left: HTMLElement | null = document.getElementById("score_left");
-    
-    if (score_left)
-    {
-        score_left.textContent = String(score_cnt_left);
-    }
-}
-
-function changeRightScoreText(): void
-{
-    const score_right: HTMLElement | null = document.getElementById("score_right");
-    
-    if (score_right)
-    {
-        score_right.textContent = String(score_cnt_right);
-    }
-}
-
-function changeScoreTexts(): void
-{
-    changeLeftScoreText();
-    changeRightScoreText();
-}
-
-function loadGame(): void
-{
-    showMessages();
-    initializeBall();
-    initializePaddles();
-    changeGameStatus(GAME_LOADED);
-}
-
-function startGame(): void
-{
-    changeGameStatus(GAME_STARTED);
-    hideMessages();
-    changeScoreTexts();
-}
-
-function restartGame(): void
-{
-    startGame();
-    drawPaddles();
-}
-
-function pauseGame(): void
-{
-    changeGameStatus(GAME_PAUSED);
-    changeStartMessageText("PAUSE");
-    changeStartMessageColor("red");
-    showMessages();
-}
-
-function balloutGame(): void
-{
-    changeGameStatus(GAME_BALLOUT);
-    showMessages();
-    initializeBall();
-    initializePaddles();
-    if (score_cnt_left == score_winning || score_cnt_right == score_winning)
-    {
-        restartGame()
-        endGame()
-    }
-}
-
-function unpauseGame(): void
-{
-    changeGameStatus(GAME_STARTED);
-    hideMessages();
-}
-
-function endGame(): void
-{
-    const name_left: HTMLElement | null = document.getElementById("name_left");
-    const name_right: HTMLElement | null = document.getElementById("name_right");
-    let won;
-        
-    changeGameStatus(GAME_ENDED);
-    if (score_cnt_left > score_cnt_right)
-    {
-        won = "left";
-    }
-    else
-    {
-        won = "right";
-    }
-    if (name_left && name_right)
-    {
-        navigateTo("revanche", true, name_left.textContent, name_right.textContent, won);
-    }
-}
-
-function pressSpace(): void
-{
-    if (game_status == GAME_BALLOUT)
-        restartGame();
-    else if (game_status == GAME_STARTED)
-        pauseGame();
-    else if (game_status == GAME_PAUSED)
-        unpauseGame();
-    else if (game_status == GAME_NEW || GAME_LOADED)
-        startGame();
-    else if (game_status == GAME_ENDED)
-    {}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function ballHitsWall(): boolean
-{
-    getBallGeometry();
-    getBoardGeometry();
-    
-    if (ballTop > boardTop && ballBottom < boardBottom)
-        return false;
-    return true;
-}
-
-function ballHitsLeftPaddle(): boolean
-{
-    getBallGeometry();
-    getLeftPaddleGeometry();
-
-    if (ballLeft > paddleLeftRight
-    || ballBottom < paddleLeftTop
-    || ballTop > paddleLeftBottom)
-        return (false);
-    return (true);
-}
-
-function ballHitsRightPaddle(): boolean
-{
-    getBallGeometry();
-    getRightPaddleGeometry();
-        
-    if (ballRight < paddleRightLeft
-    || ballBottom < paddleRightTop
-    || ballTop > paddleRightBottom)
-        return (false);
-    return (true);
-}
-
-function ballHitsPaddle(): boolean
-{
-    if (ballHitsLeftPaddle() == true || ballHitsRightPaddle() == true)
-    {
-        ballSpeedX *= 1.1;
-        ballSpeedY *= 1.1;
-        return (true);
-    }
-    return (false);
-}
-
-function ballIsLeftOut(): boolean
-{
-    getBallGeometry();
-    getBoardGeometry();
-    
-    if (ballLeft < boardLeft)
-        return (true);
-    return (false);
-}
-
-function ballIsRightOut(): boolean
-{
-    getBallGeometry();
-    getBoardGeometry();
-    
-    if (ballRight > boardRight)
-        return (true);
-    return (false);
-}
-
-function increaseScore(forPlayer: number): void
-{
-    if (forPlayer == LEFT)
-    {
-        const name_left: HTMLElement | null = document.getElementById("name_left");
-        
-        score_cnt_left += 1;
-        if (name_left)
-        {
-            changeStartMessageText("Point for " + name_left.textContent);
-            changeStartMessageColor("cyan");
+            throw new Error('Message not found');
         }
     }
-    else if (forPlayer == RIGHT)
-    {
-        const name_right: HTMLElement | null = document.getElementById("name_right");
-        
-        score_cnt_right += 1;
-        if (name_right)
-        {
-            changeStartMessageText("Point for " + name_right.textContent);
-            changeStartMessageColor("yellow");
-        }
-    }
-    else
-        alert("Error: Wrong Player specified");
-}
 
-function ballIsOut(): boolean
-{
-    if (ballIsLeftOut() == true || ballIsRightOut() == true)
-        return (true);
-    return (false);
-}
+    hide(): void
+    {        
+        this.element.style.visibility = 'hidden';
+    }
 
-function update(): void
-{
+    show(): void
+    {
+        this.element.style.visibility = 'visible';
+    }
 
-    const paddle_left: HTMLElement | null = document.getElementById("paddle_left");
-    const board: HTMLElement | null = document.getElementById("board");
+    changeText(newText: string): void
+    {
+        this.element.textContent = newText;
+    }
 
-    if (paddle_left && board)
+    changeColor(newColor: string): void
     {
-        paddleHeight = paddle_left.offsetHeight / board.offsetHeight * 100;
-    }
-    
-    if (game_status == GAME_STARTED)
-    {
-        moveBall();
-        movePaddles();
-        
-        if (ballHitsWall() == true)
-            ballSpeedY *= -1;
-        
-        else if (ballHitsPaddle() == true)
-            ballSpeedX *= -1;
-    
-        else if (ballIsLeftOut() == true)
-        {
-            increaseScore(RIGHT);
-            balloutGame();
-        }
-        else if (ballIsRightOut() == true)
-        {
-            increaseScore(LEFT);
-            balloutGame();
-        }
-    }
-    else if (game_status == GAME_NEW)
-    {
-        loadGame();
-    }
-    else if (game_status == GAME_PAUSED)
-    {
-    
-    }
-    else if (game_status == GAME_BALLOUT)
-    {
-
-    }
-    else if (game_status == GAME_LOADED)
-    {
-
-    }
-    else if (game_status == GAME_ENDED)
-    {
-        return ;
+        this.element.style.color = newColor;
     }
 }
 
-function gameLoop(): void
+class Player
 {
-    update();
-    requestAnimationFrame(gameLoop);
+    leftOrRight: number;
+
+    score: number;
+    name: string;
+
+    elementScore: HTMLDivElement;
+    elementName: HTMLDivElement;
+
+    paddle: Paddle;
+
+    constructor(leftOrRight: number, name: string)
+    {
+        this.score = 0;
+        this.leftOrRight = leftOrRight;
+        this.name = name;
+        this.paddle = new Paddle(leftOrRight);
+
+        // get score element
+        if (this.leftOrRight == LEFT)
+            this.elementScore = document.getElementById("score_left") as HTMLDivElement;
+        else if (this.leftOrRight == RIGHT)
+            this.elementScore = document.getElementById("score_right") as HTMLDivElement;
+        else
+            throw new Error('Score not found');
+        if (!this.elementScore)
+        {
+            throw new Error('Score not found');
+        }
+
+        // get name element
+        if (this.leftOrRight == LEFT)
+            this.elementName = document.getElementById("name_left") as HTMLDivElement;
+        else if (this.leftOrRight == RIGHT)
+            this.elementName = document.getElementById("name_right") as HTMLDivElement;
+        else
+            throw new Error('Name not found');
+        if (!this.elementName)
+        {
+            throw new Error('Name not found');
+        }
+    }
+
+    changeScoreText(): void
+    {
+        this.elementScore.textContent = String(this.score);
+    }
+    
+    increaseScore(): void
+    {
+        this.score += 1;
+    }
+}
+
+
+
+class Game
+{
+    board: Board = new Board();
+    ball: Ball = new Ball();
+
+    msgMain: Message = new Message(MAINMESSAGE);
+    msgSide: Message = new Message(SIDEMESSAGE);
+
+    state: number;
+
+    upPressed: boolean = false;
+    downPressed: boolean = false;
+    wPressed: boolean = false;
+    sPressed: boolean = false;
+
+    playerLeft: Player;
+    playerRight: Player;
+
+    animationFrameID: number | null = null;
+
+    constructor(nameLeft: string, nameRight: string)
+    {
+        this.playerLeft = new Player(LEFT, nameLeft);
+        this.playerRight = new Player(RIGHT, nameRight); 
+
+        this.state = GAME_NEW;
+
+        document.addEventListener("keydown", this.keyDownHandler.bind(this));
+        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+    }
+
+    changeState(newState: number): void
+    {
+        this.state = newState;
+    }
+
+    keyDownHandler(event: KeyboardEvent): void
+    {
+        switch (event.key)
+        {
+            case "ArrowUp":
+                this.upPressed = true;
+                break ;
+            case "ArrowDown":
+                this.downPressed = true;
+                break ;
+            case "w":
+                this.wPressed = true;
+                break ;
+            case "s":
+                this.sPressed = true;
+                break ;
+            case " ":
+                this.pressSpace();
+                break ;
+            default:
+        }
+    }
+    
+    keyUpHandler(event: KeyboardEvent): void
+    {
+        switch (event.key)
+        {
+            case "ArrowUp":
+                this.upPressed = false;
+                break ;
+            case "ArrowDown":
+                this.downPressed = false;
+                break ;
+            case "w":
+                this.wPressed = false;
+                break ;
+            case "s":
+                this.sPressed = false;
+                break ;
+            default:
+        }
+    }
+
+    movePaddles(): void
+    {
+        if (this.upPressed)
+        {
+            this.playerRight.paddle.move(UP, this.board);
+        }
+        if (this.downPressed)
+        {
+            this.playerRight.paddle.move(DOWN, this.board);
+        }
+        if (this.wPressed)
+        {
+            this.playerLeft.paddle.move(UP, this.board);
+        }
+        if (this.sPressed)
+        {
+            this.playerLeft.paddle.move(DOWN, this.board);
+        }
+    }
+
+    pressSpace(): void
+    {
+        if (this.state == GAME_NEW || this.state == GAME_PAUSED)
+            this.start();
+        else if (this.state == GAME_STARTED)
+            this.pause();
+        else if (this.state == GAME_ENDED)
+        {
+            this.state = GAME_NEW;
+            navigateTo("revanche", true, this.playerLeft.name, this.playerRight.name);
+        }
+    }
+
+    hideMessages(): void
+    {
+        this.msgMain.hide();
+        this.msgSide.hide();
+    }
+
+    showMessages(): void
+    {
+        this.msgMain.show();
+        this.msgSide.show();
+    }
+
+    start(): void
+    {
+        this.changeState(GAME_STARTED);
+        this.hideMessages();
+        this.playerLeft.paddle.draw();
+        this.playerRight.paddle.draw();
+    }
+
+    pause(): void
+    {
+        this.changeState(GAME_PAUSED);
+        this.msgMain.changeText("PAUSE");
+        this.msgMain.changeColor("red");
+        this.showMessages();
+    }
+
+    ballout(): void
+    {
+        this.changeState(GAME_PAUSED);
+        this.showMessages();
+        this.ball.initializePosition();
+        this.ball.initializeSpeed();
+        this.playerLeft.paddle.initializePosition();
+        this.playerRight.paddle.initializePosition();
+
+        if (this.playerLeft.score == score_winning)
+        {
+            this.end(LEFT);
+        }
+        else if (this.playerRight.score == score_winning)
+        {
+            this.end(RIGHT);
+        }
+    }
+
+    end(won: number): void
+    {
+        this.changeState(GAME_ENDED);
+        if (this.animationFrameID !== null)
+        {
+            cancelAnimationFrame(this.animationFrameID);
+            this.animationFrameID = null;
+        }
+        if (won == LEFT)
+        {
+            this.msgMain.changeText("Player " + this.playerLeft.name + " wins!");
+            this.msgMain.changeColor("cyan");
+        }
+        else if (won == RIGHT)
+        {
+            this.msgMain.changeText("Player " + this.playerRight.name + " wins!");
+            this.msgMain.changeColor("yellow");
+        }
+
+        this.showMessages();
+    }
+
+    update(): void
+    {
+        if (this.state == GAME_STARTED)
+        {
+            this.ball.move();
+            this.movePaddles();
+            
+            
+            if (this.ball.hitsWall(this.board) == true)
+                this.ball.speedY *= -1;
+        
+            else if (this.ball.hitsPaddle(this.playerLeft.paddle) == true
+            || this.ball.hitsPaddle(this.playerRight.paddle) == true)
+            {
+                this.ball.speedX *= -1;
+                this.ball.increaseSpeed(0.1);
+            }
+
+            else if (this.ball.isLeftOut(this.board) == true)
+            {
+                this.playerRight.increaseScore();
+                this.playerRight.changeScoreText();
+                this.msgMain.changeText("Point for " + this.playerRight.name);
+                this.msgMain.changeColor("yellow");
+
+                this.ballout();
+            }
+            else if (this.ball.isRightOut(this.board) == true)
+            {
+                this.playerLeft.increaseScore();
+                this.playerLeft.changeScoreText();
+                this.msgMain.changeText("Point for " + this.playerLeft.name);
+                this.msgMain.changeColor("cyan");
+
+                this.ballout();
+            }
+        }
+    }
+
+    loop(): void
+    {
+        this.update();
+        this.animationFrameID = requestAnimationFrame(()=>this.loop());
+    }
 }
