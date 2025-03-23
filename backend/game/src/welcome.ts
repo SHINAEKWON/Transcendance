@@ -5,7 +5,7 @@ function renderWelcomePage()
     if (app)
     {
         app.innerHTML = `
-        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="flex flex-col justify-center items-center space-y-2 h-screen">
                 
             <button class="login_button" id="btnCreateAccount">
                 Create Account
@@ -15,34 +15,31 @@ function renderWelcomePage()
                 Login
             </button>
 
-            <form class="" id="formNames">
+            <form class="flex flex-col justify-center items-center space-y-2" id="formNames">
 
-                    <div class="px-3">
-                        <label class="login_label" for="inputNameLeft">
-                            or enter names for quick game
-                        </label>
-                    </div>                
-                
-                
-                    <div class="px-3">
-                        <label class="login_label" for="inputNameLeft">
-                            Left Player
-                        </label>
-                        <input class="login_textfield" id="inputNameLeft" type="text" placeholder="CrazyName" required>
-                    </div>
+                <div class="px-3">
+                    <label class="login_label" for="inputNameLeft">
+                        or enter names for quick game
+                    </label>
+                </div>                
+                         
+                <div class="px-3">
+                    <label class="login_label" for="inputNameLeft">
+                        Left Player
+                    </label>
+                    <input class="login_textfield" id="inputNameLeft" type="text" placeholder="CrazyName" required>
+                </div>
                     
-                    <div class="px-3">
-                        <label class="login_label" for="inputNameRight">
-                            Right Player
-                        </label>
-                        <input class="login_textfield" id="inputNameRight" type="text" placeholder="StunningName" required>
-                    </div>
+                <div class="px-3">
+                    <label class="login_label" for="inputNameRight">
+                        Right Player
+                    </label>
+                    <input class="login_textfield" id="inputNameRight" type="text" placeholder="StunningName" required>
+                </div>
                 
-                    <div class="px-3">
-                        <button class="login_button" id="btnSubmitName" type="submit">
-                            Start Game
-                        </button>
-                    </div>
+                <button class="login_button" id="btnSubmitName" type="submit">
+                    Start Game
+                </button>
 
 
             </form>
