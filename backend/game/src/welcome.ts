@@ -7,48 +7,44 @@ function renderWelcomePage()
         app.innerHTML = `
         <div class="flex items-center justify-center min-h-screen bg-gray-100">
                 
-            <div class="w-full px-3 flex items-center justify-center">
-                <button class="login_button" id="btnCreateAccount" type="submit">
-                    Create Account
-                </button>
+            <button class="login_button" id="btnCreateAccount">
+                Create Account
+            </button>
                         
-                <button class="login_button" id="btnLogin" type="submit">
-                    Login
-                </button>
-            </div>
+            <button class="login_button" id="btnLogin">
+                Login
+            </button>
 
-            <form class="w-full max-w-lg" id="formNames">
-                <div class="flex flex-wrap">
+            <form class="" id="formNames">
 
-                    <div class="w-full px-3">
+                    <div class="px-3">
                         <label class="login_label" for="inputNameLeft">
                             or enter names for quick game
                         </label>
                     </div>                
                 
                 
-                    <div class="w-full px-3">
+                    <div class="px-3">
                         <label class="login_label" for="inputNameLeft">
                             Left Player
                         </label>
                         <input class="login_textfield" id="inputNameLeft" type="text" placeholder="CrazyName" required>
                     </div>
                     
-                    <div class="w-full px-3">
+                    <div class="px-3">
                         <label class="login_label" for="inputNameRight">
                             Right Player
                         </label>
                         <input class="login_textfield" id="inputNameRight" type="text" placeholder="StunningName" required>
                     </div>
                 
-                    <div class="w-full px-3">
+                    <div class="px-3">
                         <button class="login_button" id="btnSubmitName" type="submit">
                             Start Game
                         </button>
                     </div>
 
 
-                </div>
             </form>
         </div>
         `;
