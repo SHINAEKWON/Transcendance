@@ -218,4 +218,13 @@ button:hover {
 .custom-heigh {
   height: calc(100vh - 64px);
 }
+.text-neon-green {
+  color: #32cd32; /* vert un peu plus doux */
+  text-shadow:
+    0 0 2px #32cd32,
+    0 0 4px #32cd32,
+    0 0 6px #228B22,
+    0 0 10px #228B22;
+  font-weight: bold;
+}
 
