@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @import 'tailwindcss';
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap')
@@ -218,13 +204,30 @@ button:hover {
 .custom-heigh {
   height: calc(100vh - 64px);
 }
+
 .text-neon-green {
-  color: #32cd32; /* vert un peu plus doux */
+  color: var(--color-neon-green);
   text-shadow:
-    0 0 2px #32cd32,
-    0 0 4px #32cd32,
-    0 0 6px #228B22,
-    0 0 10px #228B22;
+    0 0 20px var(--color-neon-green),
+    0 0 1px var(--color-neon-green),
+    0 0 2px var(--color-neon-green);
   font-weight: bold;
+}
+
+
+.text-neon-purple {
+  color: var(--color-neon-purple);
+  text-shadow:
+    0 0 20px var(--color-neon-purple),
+    0 0 1px var(--color-neon-purple),
+    0 0 2px var(--color-neon-purple);
+  font-weight: bold;
+}
+
+
+
+.bg-neon-green {
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 255 20 / var(--tw-bg-opacity, 1));
 }
 
