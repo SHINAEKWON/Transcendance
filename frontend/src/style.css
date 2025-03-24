@@ -28,37 +28,9 @@ layer(utilities);
   }
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
 
-@layer utilities {
-  :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+
 
   .navbar-title,
   .welcome-message {
@@ -104,11 +76,14 @@ layer(utilities);
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
-}
+
 
 body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, div {
   font-family: 'Press Start 2P', sans-serif !important;
+  
 }
+
+
 
 .nav-link {
 @apply text-cyan-400 hover:text-purple-500 active:text-purple-700 transition-colors duration-200;
@@ -116,7 +91,7 @@ body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, div {
 
 @media (prefers-color-scheme: light) {
 :root {
-  color: #213547;
+  color: rgb(197, 187, 187);
   background-color: #ffffff;
 }
 button {
@@ -231,3 +206,13 @@ button:hover {
   background-color: rgb(57 255 20 / var(--tw-bg-opacity, 1));
 }
 
+.bg-neon-purple {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 0 255 / var(--tw-bg-opacity, 1));
+}
+
+
+.bg-neon-blue {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 243 255 / var(--tw-bg-opacity, 1));
+}

@@ -17,7 +17,7 @@ export class GameBoard {
 
   private CANVAS_WIDTH = 800;
   private CANVAS_HEIGHT = 450;
-  private readonly BALL_SIZE = 15;
+  private readonly BALL_SIZE = 12;
   private readonly PADDLE_WIDTH = 5;
   private readonly PADDLE_HEIGHT = 100;
   private readonly PADDLE_SPEED = 15;
