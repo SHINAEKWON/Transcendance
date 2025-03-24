@@ -1,77 +1,89 @@
-@layer theme, base, components, utilities;
-@layer utilities {
-  .mx-6 {
-    margin-inline: calc(var(--spacing) * 6);
+@import 'tailwindcss';
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap')
+layer(utilities);
+
+@theme {
+  --font-gaming: 'Press Start 2P', cursive;
+
+  --color-neon-blue: #00f3ff;
+  --color-neon-purple: #ff00ff;
+  --color-neon-green: #39ff14;
+
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 10px #00f3ff,
+        0 0 20px #00f3ff,
+        0 0 30px #00f3ff;
+    }
+    to {
+      text-shadow:
+        0 0 20px #00f3ff,
+        0 0 30px #00f3ff,
+        0 0 40px #00f3ff;
+    }
   }
-  .bg-blue-500\/50 {
-    background-color: color-mix(in oklab, var(--color-blue-500) 50%, transparent);
+}
+
+
+
+
+
+  .navbar-title,
+  .welcome-message {
+    font-family: 'Press Start 2P', sans-serif !important;
   }
-}
-@property --tw-gradient-from {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #0000;
-}
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Empêche le scroll inutile */
+    display: flex;
+    flex-direction: column;
+  }
 
-.navbar-title, .welcome-message {
-  font-family: 'Press Start 2P', sans-serif !important;
-}
+  main {
+    flex: 1;
+    width: 100%;
+  }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* Empêche le scroll inutile */
-  display: flex;
-  flex-direction: column;
-}
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition:
+      border-color 0.25s,
+      background-color 0.25s;
+  }
 
-main {
-  flex: 1;
-  width: 100%;
-}
+  button:hover {
+    border-color: #646cff;
+    background-color: #2a2a2a;
+  }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s, background-color 0.25s;
-}
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
 
-button:hover {
-  border-color: #646cff;
-  background-color: #2a2a2a;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, div {
   font-family: 'Press Start 2P', sans-serif !important;
+  
 }
+
+
 
 .nav-link {
 @apply text-cyan-400 hover:text-purple-500 active:text-purple-700 transition-colors duration-200;
@@ -79,7 +91,7 @@ body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, div {
 
 @media (prefers-color-scheme: light) {
 :root {
-  color: #213547;
+  color: rgb(197, 187, 187);
   background-color: #ffffff;
 }
 button {
@@ -168,3 +180,39 @@ button:hover {
   height: calc(100vh - 64px);
 }
 
+.text-neon-green {
+  color: var(--color-neon-green);
+  text-shadow:
+    0 0 20px var(--color-neon-green),
+    0 0 1px var(--color-neon-green),
+    0 0 2px var(--color-neon-green);
+  font-weight: bold;
+}
+
+
+.text-neon-purple {
+  color: var(--color-neon-purple);
+  text-shadow:
+    0 0 20px var(--color-neon-purple),
+    0 0 1px var(--color-neon-purple),
+    0 0 2px var(--color-neon-purple);
+  font-weight: bold;
+}
+
+
+
+.bg-neon-green {
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 255 20 / var(--tw-bg-opacity, 1));
+}
+
+.bg-neon-purple {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 0 255 / var(--tw-bg-opacity, 1));
+}
+
+
+.bg-neon-blue {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 243 255 / var(--tw-bg-opacity, 1));
+}
