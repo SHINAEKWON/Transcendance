@@ -4,23 +4,22 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsc --watch\" \"npx tailwindcss -i ./src/style.css -o ./dist/output.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
-    "build": "tsc && npx tailwindcss -i ./src/style.css -o ./dist/output.css --minify",
+    "dev": "concurrently \"tsc --watch\" \"npx @tailwindcss/cli -i ./src/style.css -o ./dist/output.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
+    "prod": "live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist",
+    "build": "tsc && npx tailwindcss -i ./src/style.css -o ./dist/output.css --minify --mount=/dist:dist",
     "start": "npm run dev"
   },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.15",
-    "@types/node": "^20.11.0",
-    "autoprefixer": "^10.4.17",
-    "concurrently": "^8.2.2",
-    "live-server": "^1.2.2",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.2"
-  },
-  "main": "postcss.config.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  
+  "dependencies": {
+    "@types/node": "^22.13.11",
+    "concurrently": "^8.2.2",
+    "live-server": "^1.2.2",
+    "typescript": "^5.8.2",
+    "@tailwindcss/cli": "^4.0.15",
+    "@tailwindcss/postcss": "^4.0.15"
+  }
 }

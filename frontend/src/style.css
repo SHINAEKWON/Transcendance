@@ -1,62 +1,124 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+
+
+
+
+
+
+
+
+
+
+
+
+@import 'tailwindcss';
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap')
+layer(utilities);
+
+@theme {
+  --font-gaming: 'Press Start 2P', cursive;
+
+  --color-neon-blue: #00f3ff;
+  --color-neon-purple: #ff00ff;
+  --color-neon-green: #39ff14;
+
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 10px #00f3ff,
+        0 0 20px #00f3ff,
+        0 0 30px #00f3ff;
+    }
+    to {
+      text-shadow:
+        0 0 20px #00f3ff,
+        0 0 30px #00f3ff,
+        0 0 40px #00f3ff;
+    }
+  }
 }
 
-.navbar-title, .welcome-message {
-  font-family: 'Press Start 2P', sans-serif !important;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* Empêche le scroll inutile */
-  display: flex;
-  flex-direction: column;
-}
+@layer utilities {
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-main {
-  flex: 1;
-  width: 100%;
-}
+  .navbar-title,
+  .welcome-message {
+    font-family: 'Press Start 2P', sans-serif !important;
+  }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s, background-color 0.25s;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Empêche le scroll inutile */
+    display: flex;
+    flex-direction: column;
+  }
 
-button:hover {
-  border-color: #646cff;
-  background-color: #2a2a2a;
-}
+  main {
+    flex: 1;
+    width: 100%;
+  }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition:
+      border-color 0.25s,
+      background-color 0.25s;
+  }
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  button:hover {
+    border-color: #646cff;
+    background-color: #2a2a2a;
+  }
+
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
 
 body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, div {
   font-family: 'Press Start 2P', sans-serif !important;

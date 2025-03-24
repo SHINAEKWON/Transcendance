@@ -14,11 +14,11 @@ export class ProfilePage {
                     <div class="mt-6">
                         <h4 class="text-neon-green mb-2">Stats</h4>
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-gray-700 p-4 rounded">
+                            <div class="bg-gray-700 p-4 rounded-sm">
                                 <p class="text-sm">Wins</p>
                                 <p class="text-2xl text-neon-blue">156</p>
                             </div>
-                            <div class="bg-gray-700 p-4 rounded">
+                            <div class="bg-gray-700 p-4 rounded-sm">
                                 <p class="text-sm">Tournaments</p>
                                 <p class="text-2xl text-neon-purple">23</p>
                             </div>

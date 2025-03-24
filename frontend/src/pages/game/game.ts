@@ -7,21 +7,21 @@ export class GamePage {
                     
                     <!-- Jouer contre une IA -->
                     <div class="game-mode-btn bg-gray-900 p-6 rounded-lg hover:ring-2 hover:ring-neon-purple cursor-pointer flex flex-col items-center" data-page="aiPlay">
-                        <img src="/public/images/p_Robo.jpg" class="w-full h-48 object-cover rounded mb-4">
+                        <img src="/public/images/p_Robo.jpg" class="w-full h-48 object-cover rounded-sm mb-4">
                         <h3 class="text-xl text-neon-green mb-2 text-center">🤖 Play against a Robo</h3>
                         <p class="text-gray-400 text-sm text-center">Face the ultimate AI challenge. Can you defeat the machine?</p>
                     </div>
 
                     <!-- Jouer en local -->
                     <div class="game-mode-btn bg-gray-900 p-6 rounded-lg hover:ring-2 hover:ring-neon-purple cursor-pointer flex flex-col items-center" data-page="localPlay">
-                        <img src="/public/images/p_Locally.jpg" class="w-full h-48 object-cover rounded mb-4">
+                        <img src="/public/images/p_Locally.jpg" class="w-full h-48 object-cover rounded-sm mb-4">
                         <h3 class="text-xl text-neon-green mb-2 text-center">🎮 Play against a Friend Locally</h3>
                         <p class="text-gray-400 text-sm text-center">Two controllers, one screen. Who will take the crown?</p>
                     </div>
 
                     <!-- Jouer en ligne -->
                     <div class="game-mode-btn bg-gray-900 p-6 rounded-lg hover:ring-2 hover:ring-neon-purple cursor-pointer flex flex-col items-center" data-page="onlinePlay">
-                        <img src="/public/images/p_Online.jpg" class="w-full h-48 object-cover rounded mb-4">
+                        <img src="/public/images/p_Online.jpg" class="w-full h-48 object-cover rounded-sm mb-4">
                         <h3 class="text-xl text-neon-green mb-2 text-center">🌐 Play against a Friend Online</h3>
                         <p class="text-gray-400 text-sm text-center">Distance is nothing—battle your friend anywhere, anytime!</p>
                     </div>
