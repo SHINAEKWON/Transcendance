@@ -66,8 +66,11 @@ function renderGamePage(player1: string | null, player2: string | null)
     
         if (player1 && player2)
         {
-            let game: Game = new Game(player1, player2);
-            game.loop();
+            if (!game)
+            {
+                game = new Game(player1, player2);
+                game.loop();
+            }
         }
     }
 }
@@ -449,6 +452,8 @@ class Game
     playerRight: Player;
 
     animationFrameID: number | null = null;
+    
+    eventListeners: { [key: string]: EventListener } = {};
 
     constructor(nameLeft: string, nameRight: string)
     {
@@ -457,8 +462,16 @@ class Game
 
         this.state = GAME_NEW;
 
-        document.addEventListener("keydown", this.keyDownHandler.bind(this));
-        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+        this.initializeEventListeners();
+    }
+    
+    initializeEventListeners(): void
+    {
+        this.eventListeners["keydown"] = this.keyDownHandler.bind(this) as EventListener;
+        this.eventListeners["keyup"] = this.keyUpHandler.bind(this) as EventListener;
+        
+        document.addEventListener("keydown", this.eventListeners["keydown"]);
+        document.addEventListener("keyup", this.eventListeners["keyup"]);
     }
 
     changeState(newState: number): void
@@ -592,11 +605,6 @@ class Game
     end(won: number): void
     {
         this.changeState(GAME_ENDED);
-        if (this.animationFrameID !== null)
-        {
-            cancelAnimationFrame(this.animationFrameID);
-            this.animationFrameID = null;
-        }
         if (won == LEFT)
         {
             this.msgMain.changeText("Player " + this.playerLeft.name + " wins!");
@@ -654,5 +662,33 @@ class Game
     {
         this.update();
         this.animationFrameID = requestAnimationFrame(()=>this.loop());
+    }
+    
+    stopLoop(): void
+    {
+        if (this.animationFrameID !== null)
+        {
+            cancelAnimationFrame(this.animationFrameID);
+            this.animationFrameID = null;
+        }
+    }
+    
+    removeEventListeners(): void
+    {
+        for (const event in this.eventListeners)
+        {
+            if (this.eventListeners.hasOwnProperty(event))
+            {
+                document.removeEventListener(event, this.eventListeners[event]);
+                console.log(`Event listener for ${event} removed.`);
+            }
+        }
+        this.eventListeners = {};
+    }
+    
+    destroy(): void
+    {
+        this.stopLoop();
+        
     }
 }

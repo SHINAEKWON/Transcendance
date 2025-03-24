@@ -1,3 +1,5 @@
+let game: Game | null = null;
+
 interface GameState
 {
     page: string;
@@ -40,6 +42,11 @@ function pushStateToHistory(): void
 function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
 {
     setGameState(page, pushHistory, playerLeft, playerRight);
+    if (page !== "game" && game)
+    {
+        game.destroy();
+        game = null;
+    }
     if (page === "welcome")
     {
         renderWelcomePage();
