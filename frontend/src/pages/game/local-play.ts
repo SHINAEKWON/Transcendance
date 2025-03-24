@@ -52,7 +52,7 @@ export class LocalPlayPage {
                     console.log(`🚀 Redirection vers #game avec: ${player1} vs ${player2}`);
 
                     // ✅ Mettre à jour l'URL pour router.ts
-                    window.location.hash = `#game?player1=${encodeURIComponent(player1)}&player2=${encodeURIComponent(player2)}`;
+                    window.location.hash = `#gameboard?player1=${encodeURIComponent(player1)}&player2=${encodeURIComponent(player2)}`;
                 });
             } else {
                 console.error("❌ Erreur: Bouton Play non trouvé !");

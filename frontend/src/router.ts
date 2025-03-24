@@ -47,13 +47,23 @@ export class Router {
         if (this.appElement && this.routes[pageName]) {
             console.log(`✅ Chargement de la page: ${pageName}`);
     
-            if (pageName === "game") {
+            if (pageName === "localPlay") {
+                const page: any = this.routes[pageName];
+                this.appElement.innerHTML = this.routes[pageName].render();
+                if (typeof page.attachEvents === "function") {
+                    page.attachEvents();
+                }
+            }else if (pageName === "gameboard") {
                 const player1 = params.get("player1") || "Player 1";
                 const player2 = params.get("player2") || "Player 2";
     
                 console.log(`🎮 Lancement du jeu avec: ${player1} vs ${player2}`);
     
                 this.appElement.innerHTML = this.routes[pageName].render(player1, player2);
+                const page: any = this.routes[pageName];
+                if (typeof page.init === "function") {
+                    page.init();
+                }
             } else {
                 this.appElement.innerHTML = this.routes[pageName].render();
             }

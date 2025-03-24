@@ -1,5 +1,5 @@
 export class GamePage {
-    render(player1: string = "Player 1", player2: string = "Player 2"): string {
+    render(): string {
         return `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Games</h2>
