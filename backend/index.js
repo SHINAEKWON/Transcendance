@@ -32,14 +32,6 @@ fastify.get('/ping', async (request, reply) => {
   return { message: 'pong' };
 });
 
-// Shin Ae : test de creation d'une DB dans le volume de docker
-const db = new sqlite3.Database('./data/user_db.sqlite', (err) => {
-  if (err) {
-    console.error('Failed to connect DB', err.message);
-  } else {
-    console.log('SQLite DB connected successfully!');
-  }
-});
 
 // Lancer le serveur
 const start = async () => {
