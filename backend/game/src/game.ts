@@ -81,51 +81,49 @@ function renderGamePage(player1: string | null, player2: string | null)
 /*                                                                            */
 /* ************************************************************************** */
 
-class Ball
+abstract class GameElement
 {
-    static readonly speed: number = 0.5;
-
     element: HTMLDivElement;
-
+    elementId: string;
+    
     x: number = 0;
     y: number = 0;
-    speedX: number = 0;
-    speedY: number = 0;
 
     left: number = 0;
     right: number = 0;
     top: number = 0;
     bottom: number = 0;
-
-    constructor()
+    
+    height: number = 0;
+    
+    constructor(elementId: string)
     {
-        this.element = document.getElementById("ball") as HTMLDivElement;
+        this.elementId = elementId;
+        this.element = document.getElementById(elementId) as HTMLDivElement;
         if (!this.element)
         {
-            throw new Error('Ball not found');
+            throw new Error(`${elementId} not found`);
         }
+        this.getCurrentGeometry();
         this.initializePosition();
-        this.initializeSpeed();
     }
-
-    initializePosition(): void
+    
+    setPosition(x: number | null, y: number | null): void
     {
-        this.x = 50;
-        this.y = 50;
+        if (x !== null)
+            this.x = x;
+        if (y !== null)
+            this.y = y;
     }
-
-    initializeSpeed(): void
+    
+    setX(newX: number): void
     {
-        // initialize x-speed
-        this.speedX = (Math.random() * 2 - 1) * Ball.speed;
-        if (Math.abs(this.speedX) < 0.3)
-        {
-            this.speedX = this.speedX < 0 ? -0.3 : 0.3;
-        }
-        
-        // initialize y-speed
-        const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
-        this.speedY = Math.sqrt(Ball.speed ** 2 - this.speedX ** 2) * ballDirectionY;
+        this.setPosition(newX, null);
+    }
+    
+    setY(newY: number): void
+    {
+        this.setPosition(null, newY);
     }
     
     getCurrentGeometry()
@@ -136,6 +134,39 @@ class Ball
         this.bottom = this.element.getBoundingClientRect().bottom;
     }
 
+    draw(): void
+    {        
+        this.element.style.left = `${this.x}%`;
+        this.element.style.top = `${this.y}%`;
+    }
+    
+    getY(): number
+    {
+        return this.y;
+    }
+    
+    abstract initializePosition(): void;
+}
+
+abstract class MovingGameElement extends GameElement
+{
+    speed: number;
+    speedX: number = 0;
+    speedY: number = 0;
+    
+    constructor(elementId: string, speed: number)
+    {
+        super(elementId);
+        this.speed = speed;
+        this.initializeSpeed();
+    }
+    
+    setSpeedComponents(speedX: number, speedY: number): void
+    {
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
+    
     move(): void
     {
         this.x += this.speedX;
@@ -143,10 +174,99 @@ class Ball
         this.draw();
     }
     
-    draw(): void
-    {        
-        this.element.style.left = `${this.x}%`;
-        this.element.style.top = `${this.y}%`;
+    increaseSpeed(dSpeed: number): void
+    {
+        this.speedX *= (1 + dSpeed);
+        this.speedY *= (1 + dSpeed);
+    }
+    
+    abstract initializeSpeed(): void;
+}
+
+
+class Paddle extends MovingGameElement
+{
+    leftOrRight: number;
+
+    constructor(leftOrRight: number)
+    {
+        if (leftOrRight == LEFT)
+            super("paddle_left", 1);
+        else if (leftOrRight == RIGHT)
+            super("paddle_right", 1);
+        else
+            throw new Error('Paddle not found');
+            
+        this.leftOrRight = leftOrRight;
+    }
+
+    initializePosition()
+    {
+        this.setY(50);
+    }
+    
+    initializeSpeed()
+    {
+        this.setSpeedComponents(0, this.speed);
+    }
+    
+    getLimitY(upOrDown: number, board: Board): number
+    {
+        this.height = this.element.offsetHeight / board.element.offsetHeight * 100;
+        if (upOrDown == DOWN)
+            return (100 - this.height / 2);
+        else if (upOrDown == UP)
+            return (0 + this.height / 2);
+        return 0;
+    }
+    
+    /*
+    move(upOrDown: number, board: Board)
+    {
+        const limit = this.getLimitY(upOrDown, board);
+        const sign = upOrDown == UP ? 1 : -1;
+    
+        let newY = this.getY();
+    
+        if (sign * newY > sign * limit)
+        {
+            newY = newY - (sign * Paddle.speed);
+            if (sign * newY < sign * limit)
+                newY = limit;
+                   
+            this.setY(newY);
+            this.draw();
+        }
+    }
+    */
+}
+
+class Ball extends MovingGameElement
+{
+    constructor()
+    {
+        super("ball", 0.5);
+    }
+
+    initializePosition()
+    {
+        this.setPosition(50, 50);
+    }
+
+    initializeSpeed()
+    {
+        // initialize x-speed
+        let speedX = (Math.random() * 2 - 1) * this.speed;
+        if (Math.abs(speedX) < 0.3)
+        {
+            speedX = speedX < 0 ? -0.3 : 0.3;
+        }
+        
+        // initialize y-speed
+        const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
+        let speedY = Math.sqrt(this.speed ** 2 - speedX ** 2) * ballDirectionY;
+        
+        this.setSpeedComponents(speedX, speedY);
     }
 
     hitsWall(board: Board): boolean
@@ -185,12 +305,6 @@ class Ball
         return (true);
     }
 
-    increaseSpeed(dSpeed: number): void
-    {
-        this.speedX *= (1 + dSpeed);
-        this.speedY *= (1 + dSpeed);
-    }
-    
     isLeftOut(board: Board): boolean
     {
         this.getCurrentGeometry();
@@ -216,97 +330,6 @@ class Ball
         if (this.isLeftOut(board) == true || this.isRightOut(board) == true)
             return (true);
         return (false);
-    }
-}
-
-class Paddle
-{
-    static readonly speed: number = 1;
-
-    element: HTMLDivElement;
-
-    y: number = 0;
-
-    height: number = 0;
-
-    left: number = 0;
-    right: number = 0;
-    top: number = 0;
-    bottom: number = 0;
-
-    leftOrRight: number;
-
-    constructor(leftOrRight: number)
-    {
-        this.leftOrRight = leftOrRight;
-
-        if (this.leftOrRight == LEFT)
-            this.element = document.getElementById("paddle_left") as HTMLDivElement;
-        else if (this.leftOrRight == RIGHT)
-            this.element = document.getElementById("paddle_right") as HTMLDivElement;
-        else
-            throw new Error('Paddle not found');
-        if (!this.element)
-        {
-            throw new Error('Paddle not found');
-        }
-        this.initializePosition();
-    }
-
-    initializePosition(): void
-    {
-        this.y = 50;
-    }
-
-    getY(): number
-    {
-        return this.y;
-    }
-    
-    setY(newY: number): void
-    {
-        this.y = newY;
-    }
-    
-    getLimitY(upOrDown: number, board: Board): number
-    {
-        this.height = this.element.offsetHeight / board.element.offsetHeight * 100;
-        if (upOrDown == DOWN)
-            return (100 - this.height / 2);
-        else if (upOrDown == UP)
-            return (0 + this.height / 2);
-        return 0;
-    }
-
-    draw(): void
-    {
-        this.element.style.top = `${this.y}%`;
-    }
-    
-    move(upOrDown: number, board: Board)
-    {
-        const limit = this.getLimitY(upOrDown, board);
-        const sign = upOrDown == UP ? 1 : -1;
-    
-        let newY = this.getY();
-    
-        if (sign * newY > sign * limit)
-        {
-            newY = newY - (sign * Paddle.speed);
-            if (sign * newY < sign * limit)
-                newY = limit;
-                   
-            this.setY(newY);
-            this.draw();
-        }
-    }
-
-    getCurrentGeometry(): void
-    {
-        this.left = this.element.getBoundingClientRect().left;
-        this.right = this.element.getBoundingClientRect().right;
-        this.top = this.element.getBoundingClientRect().top;
-        this.bottom = this.element.getBoundingClientRect().bottom;
     }
 }
 
@@ -524,22 +547,28 @@ class Game
 
     movePaddles(): void
     {
+        let leftDirection: number;
+        let rightDirection: number;
+        
         if (this.upPressed)
-        {
-            this.playerRight.paddle.move(UP, this.board);
-        }
-        if (this.downPressed)
-        {
-            this.playerRight.paddle.move(DOWN, this.board);
-        }
-        if (this.wPressed)
-        {
-            this.playerLeft.paddle.move(UP, this.board);
-        }
-        if (this.sPressed)
-        {
-            this.playerLeft.paddle.move(DOWN, this.board);
-        }
+            rightDirection = -1;
+        else if (this.downPressed)
+            rightDirection = 1;
+        else
+            rightDirection = 0;
+            
+        if (this.upPressed)
+            leftDirection = -1;
+        else if (this.downPressed)
+            leftDirection = 1;
+        else
+            leftDirection = 0;
+
+        this.playerLeft.paddle.setSpeedComponents(0, leftDirection);
+        this.playerRight.paddle.setSpeedComponents(0, rightDirection);
+        
+        this.playerLeft.paddle.move();
+        this.playerRight.paddle.move();
     }
 
     pressSpace(): void
@@ -634,6 +663,7 @@ class Game
             || this.ball.hitsPaddle(this.playerRight.paddle) == true)
             {
                 this.ball.speedX *= -1;
+                alert("hello");
                 this.ball.increaseSpeed(0.1);
             }
 
