@@ -10,6 +10,9 @@ import { LocalPlayPage } from './pages/game/local-play.js';
 import { AIPlayPage } from './pages/game/ai-play.js';
 import { OnlinePlayPage } from './pages/game/online-play.js';
 import { GameBoard } from './pages/game/gameboard.js';
+import { SignupPage } from './pages/login/signup.js';
+import { SigninPage } from './pages/login/signin.js';
+import { GuestPage } from './pages/login/guest.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -23,6 +26,10 @@ const router = new Router({
     aiPlay: new AIPlayPage(),        // 🤖 Mode IA
     onlinePlay: new OnlinePlayPage(), // 🌐 Mode Online
     gameboard: new GameBoard(), // à Ajouer 
+    signup: new SignupPage(),
+    signin: new SigninPage(),
+    guest: new GuestPage(),
+
 });
 
 // ✅ Rendre `router` accessible dans `window` pour d'autres scripts

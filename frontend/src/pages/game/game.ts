@@ -28,21 +28,7 @@ export class GamePage {
 
                 </div>
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    console.log("✅ DOM chargé - Ajout des écouteurs d'événements");
-                    
-                    document.querySelectorAll(".game-mode-btn").forEach(button => {
-                        console.log("🔍 Bouton détecté :", button);
-
-                        button.addEventListener("click", function () {
-                            const page = this.getAttribute("data-page");
-                            console.log("📌 Clic détecté sur :", page);
-                            window.location.hash = page;
-                        });
-                    });
-                });
-            </script>
+            
         `;
     }
 }

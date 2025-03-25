@@ -80,7 +80,7 @@ export class Router {
 
     // ✅ Fonction pour attacher les événements aux boutons après un changement de page
     private attachGameModeEvents(): void {
-        if (this.currentPage === "game") {
+        
             console.log("✅ Attachement des événements de navigation pour les modes de jeu");
 
             document.querySelectorAll(".game-mode-btn").forEach(button => {
@@ -94,6 +94,6 @@ export class Router {
                     }
                 });
             });
-        }
+        
     }
 }
