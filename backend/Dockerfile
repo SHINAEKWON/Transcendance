@@ -50,7 +50,7 @@ COPY . .
 
 VOLUME ["/app/data"]
 
-# Creation d'une base de donnee
+# Creation d'une base de donnee (test en cours)
 RUN mkdir -p /app/data && sqlite3 /app/data/user_db.sqlite ".databases"
 
 # Définir la variable d’environnement
