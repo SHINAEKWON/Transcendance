@@ -13,11 +13,11 @@ const GAME_ENDED: number = 3;
 // direction constants
 const LEFT: number = 0;
 const RIGHT: number = 1;
-const UP: number = 0;
-const DOWN: number = 1;
+const UP: number = 2;
+const DOWN: number = 3;
 
 // score constants
-const score_winning: number = 1;
+const score_winning: number = 5;
 
 // message constants
 const MAINMESSAGE: number = 0;
@@ -86,17 +86,15 @@ abstract class GameElement
     element: HTMLDivElement;
     elementId: string;
     
-    x: number = 0;
-    y: number = 0;
+    newLeft: number;
+    newTop: number;
 
-    left: number = 0;
-    right: number = 0;
-    top: number = 0;
-    bottom: number = 0;
+    currentLeft: number = 0;
+    currentRight: number = 0;
+    currentTop: number = 0;
+    currentBottom: number = 0;
     
-    height: number = 0;
-    
-    constructor(elementId: string)
+    constructor(elementId: string, newLeft: number, newTop: number)
     {
         this.elementId = elementId;
         this.element = document.getElementById(elementId) as HTMLDivElement;
@@ -104,45 +102,131 @@ abstract class GameElement
         {
             throw new Error(`${elementId} not found`);
         }
+        this.newLeft = newLeft;
+        this.newTop = newTop;
+        
         this.getCurrentGeometry();
-        this.initializePosition();
     }
     
-    setPosition(x: number | null, y: number | null): void
+    setPosition(newLeft: number | null, newTop: number | null): void
     {
-        if (x !== null)
-            this.x = x;
-        if (y !== null)
-            this.y = y;
+        if (newLeft !== null)
+            this.newLeft = newLeft;
+        if (newTop !== null)
+            this.newTop = newTop;
     }
     
-    setX(newX: number): void
+    setLeft(newLeft: number): void
     {
-        this.setPosition(newX, null);
+        this.setPosition(newLeft, null);
     }
     
-    setY(newY: number): void
+    setTop(newTop: number): void
     {
-        this.setPosition(null, newY);
+        this.setPosition(null, newTop);
     }
     
     getCurrentGeometry()
     {
-        this.left = this.element.getBoundingClientRect().left;
-        this.right = this.element.getBoundingClientRect().right;
-        this.top = this.element.getBoundingClientRect().top;
-        this.bottom = this.element.getBoundingClientRect().bottom;
+        this.currentLeft = this.element.getBoundingClientRect().left;
+        this.currentRight = this.element.getBoundingClientRect().right;
+        this.currentTop = this.element.getBoundingClientRect().top;
+        this.currentBottom = this.element.getBoundingClientRect().bottom;
     }
 
     draw(): void
-    {        
-        this.element.style.left = `${this.x}%`;
-        this.element.style.top = `${this.y}%`;
+    {
+        this.element.style.left = `${this.newLeft}%`;
+        this.element.style.top = `${this.newTop}%`;
     }
     
-    getY(): number
+    isInsideTop(ofElement: GameElement): boolean
     {
-        return this.y;
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentTop > ofElement.currentTop)
+            return true;
+        return false; 
+    }
+    
+    isInsideBottom(ofElement: GameElement): boolean
+    {
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentBottom < ofElement.currentBottom)
+            return true;
+        return false; 
+    }
+    
+    isInsideLeft(ofElement: GameElement): boolean
+    {
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentLeft > ofElement.currentLeft)
+            return true;
+        return false;
+    }
+    
+    isInsideRight(ofElement: GameElement): boolean
+    {
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentRight < ofElement.currentRight)
+            return true;
+        return false;
+    }
+    
+    rightTouchesLeft(ofElement: GameElement): boolean
+    {
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentRight < ofElement.currentLeft
+        || this.currentBottom < ofElement.currentTop
+        || this.currentTop > ofElement.currentBottom)
+            return false;
+        return true;
+    }
+    
+    leftTouchesRight(ofElement: GameElement): boolean
+    {
+        this.getCurrentGeometry();
+        ofElement.getCurrentGeometry();
+        
+        if (this.currentLeft > ofElement.currentRight
+        || this.currentBottom < ofElement.currentTop
+        || this.currentTop > ofElement.currentBottom)
+            return false;
+        return true;
+    }
+    
+    hide(): void
+    {        
+        this.element.style.visibility = 'hidden';
+    }
+
+    show(): void
+    {
+        this.element.style.visibility = 'visible';
+    }
+
+    changeText(newText: string): void
+    {
+        this.element.textContent = newText;
+    }
+
+    changeColor(newColor: string): void
+    {
+        this.element.style.color = newColor;
+    }
+    
+    changeBackgroundColor(newColor: string): void
+    {
+        this.element.style.backgroundColor = newColor;
     }
     
     abstract initializePosition(): void;
@@ -154,9 +238,9 @@ abstract class MovingGameElement extends GameElement
     speedX: number = 0;
     speedY: number = 0;
     
-    constructor(elementId: string, speed: number)
+    constructor(elementId: string, newLeft: number, newTop: number, speed: number)
     {
-        super(elementId);
+        super(elementId, newLeft, newTop);
         this.speed = speed;
         this.initializeSpeed();
     }
@@ -167,10 +251,19 @@ abstract class MovingGameElement extends GameElement
         this.speedY = speedY;
     }
     
-    move(): void
+    move(insideElement: GameElement | null = null): void
     {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.newLeft += this.speedX;
+        this.newTop += this.speedY;
+        
+        if (insideElement !== null
+        && (this.speedY < 0 && !this.isInsideTop(insideElement)
+        ||  this.speedY > 0 && !this.isInsideBottom(insideElement)))
+        { 
+            this.newLeft -= this.speedX;
+            this.newTop -= this.speedY;
+            return ;
+        }
         this.draw();
     }
     
@@ -191,9 +284,9 @@ class Paddle extends MovingGameElement
     constructor(leftOrRight: number)
     {
         if (leftOrRight == LEFT)
-            super("paddle_left", 1);
+            super("paddle_left", 0, 50, 1);
         else if (leftOrRight == RIGHT)
-            super("paddle_right", 1);
+            super("paddle_right", 100, 50, 1);
         else
             throw new Error('Paddle not found');
             
@@ -202,50 +295,24 @@ class Paddle extends MovingGameElement
 
     initializePosition()
     {
-        this.setY(50);
+        if (this.leftOrRight == LEFT)
+            this.newLeft = 0;
+        else
+            this.newLeft = 100;
+        this.newTop = 50;
     }
     
     initializeSpeed()
     {
         this.setSpeedComponents(0, this.speed);
     }
-    
-    getLimitY(upOrDown: number, board: Board): number
-    {
-        this.height = this.element.offsetHeight / board.element.offsetHeight * 100;
-        if (upOrDown == DOWN)
-            return (100 - this.height / 2);
-        else if (upOrDown == UP)
-            return (0 + this.height / 2);
-        return 0;
-    }
-    
-    /*
-    move(upOrDown: number, board: Board)
-    {
-        const limit = this.getLimitY(upOrDown, board);
-        const sign = upOrDown == UP ? 1 : -1;
-    
-        let newY = this.getY();
-    
-        if (sign * newY > sign * limit)
-        {
-            newY = newY - (sign * Paddle.speed);
-            if (sign * newY < sign * limit)
-                newY = limit;
-                   
-            this.setY(newY);
-            this.draw();
-        }
-    }
-    */
 }
 
 class Ball extends MovingGameElement
 {
     constructor()
     {
-        super("ball", 0.5);
+        super("ball", 50, 50, 0.5);
     }
 
     initializePosition()
@@ -271,58 +338,48 @@ class Ball extends MovingGameElement
 
     hitsWall(board: Board): boolean
     {
-        this.getCurrentGeometry();
-        board.getCurrentGeometry();
-        
-        if (this.top > board.top && this.bottom < board.bottom)
+        if (this.isInsideTop(board) && this.isInsideBottom(board))
             return false;
-        return true;
+        return (true);
+    }
+
+    hitsLeftPaddle(paddle: Paddle): boolean
+    {
+        if (paddle.leftOrRight == LEFT && this.leftTouchesRight(paddle))
+        {
+            this.changeBackgroundColor("cyan");
+            return true;
+        }
+        return false;
+    }
+    
+    hitsRightPaddle(paddle: Paddle): boolean
+    {
+        if (paddle.leftOrRight == RIGHT && this.rightTouchesLeft(paddle))
+        {
+            this.changeBackgroundColor("yellow");
+            return true;
+        }
+        return false;
     }
     
     hitsPaddle(paddle: Paddle): boolean
     {
-        this.getCurrentGeometry();
-        paddle.getCurrentGeometry();
-
-        let ballSide: number = 0;
-        let paddleSide: number = 0;
-
-        if (paddle.leftOrRight == LEFT)
-        {
-            ballSide = this.left;
-            paddleSide = paddle.right;
-        }
-        else if (paddle.leftOrRight == RIGHT)
-        {
-            ballSide = -1 * this.right;
-            paddleSide = -1 * paddle.left;
-        }
-
-        if (ballSide > paddleSide     
-        || this.bottom < paddle.top
-        || this.top > paddle.bottom)
-            return (false);
-        return (true);
+        return (this.hitsLeftPaddle(paddle) || this.hitsRightPaddle(paddle));
     }
 
     isLeftOut(board: Board): boolean
     {
-        this.getCurrentGeometry();
-        board.getCurrentGeometry();
-        
-        if (this.left < board.left)
-            return (true);
-        return (false);
+        if (this.isInsideLeft(board))
+            return (false);
+        return (true);
     }
     
     isRightOut(board: Board): boolean
     {
-        this.getCurrentGeometry();
-        board.getCurrentGeometry();
-        
-        if (this.right > board.right)
-            return (true);
-        return (false);
+        if (this.isInsideRight(board))
+            return (false);
+        return (true);
     }
     
     isOut(board: Board): boolean
@@ -333,69 +390,32 @@ class Ball extends MovingGameElement
     }
 }
 
-class Board
+class Board extends GameElement
 {
-    element: HTMLDivElement;
-
-    left: number = 0;
-    right: number = 0;
-    top: number = 0;
-    bottom: number = 0;
-
     constructor()
     {
-        this.element = document.getElementById("board") as HTMLDivElement;
-        if (!this.element)
-        {
-            throw new Error('Board not found');
-        }
+        super("board", 0, 0);
     }
-
-    getCurrentGeometry(): void
+    
+    initializePosition(): void
     {
-        this.left = this.element.getBoundingClientRect().left;
-        this.right = this.element.getBoundingClientRect().right;
-        this.top = this.element.getBoundingClientRect().top;
-        this.bottom = this.element.getBoundingClientRect().bottom;
+    
     }
 }
 
-class Message
+class Message extends GameElement
 {
-    element: HTMLDivElement;
-
     constructor(mainOrSideMessage: number)
     {
         if (mainOrSideMessage == MAINMESSAGE)
-            this.element = document.getElementById("msg_start") as HTMLDivElement;
+            super("msg_start", 0, 0);
         else if (mainOrSideMessage == SIDEMESSAGE)
-            this.element = document.getElementById("msg_pressSpace") as HTMLDivElement;
-        else
-            throw new Error('Message not found');
-        if (!this.element)
-        {
-            throw new Error('Message not found');
-        }
+            super("msg_pressSpace", 0, 0);
     }
-
-    hide(): void
-    {        
-        this.element.style.visibility = 'hidden';
-    }
-
-    show(): void
+    
+    initializePosition(): void
     {
-        this.element.style.visibility = 'visible';
-    }
-
-    changeText(newText: string): void
-    {
-        this.element.textContent = newText;
-    }
-
-    changeColor(newColor: string): void
-    {
-        this.element.style.color = newColor;
+    
     }
 }
 
@@ -557,9 +577,9 @@ class Game
         else
             rightDirection = 0;
             
-        if (this.upPressed)
+        if (this.wPressed)
             leftDirection = -1;
-        else if (this.downPressed)
+        else if (this.sPressed)
             leftDirection = 1;
         else
             leftDirection = 0;
@@ -567,8 +587,8 @@ class Game
         this.playerLeft.paddle.setSpeedComponents(0, leftDirection);
         this.playerRight.paddle.setSpeedComponents(0, rightDirection);
         
-        this.playerLeft.paddle.move();
-        this.playerRight.paddle.move();
+        this.playerLeft.paddle.move(this.board);
+        this.playerRight.paddle.move(this.board);
     }
 
     pressSpace(): void
@@ -655,7 +675,6 @@ class Game
             this.ball.move();
             this.movePaddles();
             
-            
             if (this.ball.hitsWall(this.board) == true)
                 this.ball.speedY *= -1;
         
@@ -663,7 +682,6 @@ class Game
             || this.ball.hitsPaddle(this.playerRight.paddle) == true)
             {
                 this.ball.speedX *= -1;
-                alert("hello");
                 this.ball.increaseSpeed(0.1);
             }
 
@@ -676,6 +694,7 @@ class Game
 
                 this.ballout();
             }
+            
             else if (this.ball.isRightOut(this.board) == true)
             {
                 this.playerLeft.increaseScore();
