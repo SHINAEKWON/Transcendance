@@ -15,11 +15,11 @@ const score_winning: number = 5;
 
 class Game
 {
-    board: Board = new Board(["relative", "w-9/12", "h-4/5", "border-t", "border-b", "border-white"]);
-    ball: Ball = new Ball(this.board, ["absolute", "top-1/2", "left-1/2", "w-[3%]", "aspect-square", "bg-white", "rounded-full", "transform", "-translate-x-1/2", "-translate-y-1/2"]);
+    board: Board = new Board(["border-t", "border-b", "border-white"]);
+    balls: Ball[] = [];
 
-    msgMain: Message = new Message("NEW GAME", MAINMESSAGE, this.board, ["absolute", "left-1/2", "top-1/4", "w-3/4", "h-1/5", "text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500", "flex", "items-center", "justify-center", "transform", "-translate-x-1/2"]);
-    msgSide: Message = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["absolute", "left-1/2", "top-3/4", "w-3/4", "h-1/10", "text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500", "flex", "items-center", "justify-center", "transform", "-translate-x-1/2"]);
+    msgMain: Message = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
+    msgSide: Message = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);
 
     state: number;
 
@@ -36,6 +36,10 @@ class Game
         this.playerRight = new Player(RIGHT, nameRight, this.board); 
 
         this.state = GAME_NEW;
+
+        this.balls.push(new Ball("ball1", this.board, ["aspect-square", "rounded-full"]));
+        this.balls.push(new Ball("ball2", this.board, ["aspect-square", "rounded-full"]));
+        this.balls.push(new Ball("ball3", this.board, ["aspect-square", "rounded-full"]));
 
         this.initializeEventListeners();
     }
@@ -92,8 +96,6 @@ class Game
     {
         this.changeState(GAME_STARTED);
         this.hideMessages();
-        this.playerLeft.paddle.draw();
-        this.playerRight.paddle.draw();
     }
 
     pause(): void
@@ -104,14 +106,30 @@ class Game
         this.showMessages();
     }
 
+    reinitializeBalls(): void
+    {
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            this.balls[i].reinitializePosition();
+            this.balls[i].initializeSpeed();
+        }
+    }
+
+    moveBalls(): void
+    {
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            this.balls[i].move();
+        }
+    }
+
     ballout(): void
     {
         this.changeState(GAME_PAUSED);
         this.showMessages();
-        this.ball.initializePosition();
-        this.ball.initializeSpeed();
-        this.playerLeft.paddle.initializePosition();
-        this.playerRight.paddle.initializePosition();
+        this.reinitializeBalls()
+        this.playerLeft.paddle.reinitializePosition();
+        this.playerRight.paddle.reinitializePosition();
 
         if (this.playerLeft.score == score_winning)
         {
@@ -140,25 +158,21 @@ class Game
         this.showMessages();
     }
 
-    update(): void
+    checkBalls(): void
     {
-        if (this.state == GAME_STARTED)
+        for (let i=0; i < this.balls.length; ++i)
         {
-            this.ball.move();
-            this.playerLeft.paddle.move(this.board);
-            this.playerRight.paddle.move(this.board);
-            
-            if (this.ball.hitsWall(this.board) == true)
-                this.ball.speedY *= -1;
+            if (this.balls[i].hitsWall(this.board) == true)
+                this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
         
-            else if (this.ball.hitsPaddle(this.playerLeft.paddle) == true
-            || this.ball.hitsPaddle(this.playerRight.paddle) == true)
+            else if (this.balls[i].hitsPaddle(this.playerLeft.paddle) == true
+            || this.balls[i].hitsPaddle(this.playerRight.paddle) == true)
             {
-                this.ball.speedX *= -1;
-                this.ball.increaseSpeed(0.1);
+                this.balls[i].setSpeedComponents(this.balls[i].getSpeedX() * -1, this.balls[i].getSpeedY());
+                this.balls[i].increaseSpeed(0.1);
             }
 
-            else if (this.ball.isLeftOut(this.board) == true)
+            else if (this.balls[i].isLeftOut(this.board) == true)
             {
                 this.playerRight.increaseScore();
                 this.playerRight.changeScoreText();
@@ -168,7 +182,7 @@ class Game
                 this.ballout();
             }
             
-            else if (this.ball.isRightOut(this.board) == true)
+            else if (this.balls[i].isRightOut(this.board) == true)
             {
                 this.playerLeft.increaseScore();
                 this.playerLeft.changeScoreText();
@@ -177,6 +191,18 @@ class Game
 
                 this.ballout();
             }
+        }
+    }
+
+    update(): void
+    {
+        if (this.state == GAME_STARTED)
+        {
+            this.moveBalls();
+            this.playerLeft.paddle.move(this.board);
+            this.playerRight.paddle.move(this.board);
+            
+            this.checkBalls();
         }
     }
 

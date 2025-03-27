@@ -1,14 +1,14 @@
 class Ball extends MovingGameElement
 {
-    constructor(parentElement: GameElement, classList: string[] = [])
+    constructor(ballId: string, parentElement: GameElement, classList: string[] = [])
     {
-        super("ball", 50, 50, 0.5, parentElement, classList);
+        super(ballId, 48.5, 48.5, 3, null, "white", 0.5, parentElement, classList);
     }
 
     initializeSpeed()
     {
         // initialize x-speed
-        let speedX = (Math.random() * 2 - 1) * this.speed;
+        let speedX = (Math.random() * 2 - 1) * this.getInitialSpeed();
         if (Math.abs(speedX) < 0.3)
         {
             speedX = speedX < 0 ? -0.3 : 0.3;
@@ -16,7 +16,7 @@ class Ball extends MovingGameElement
         
         // initialize y-speed
         const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
-        let speedY = Math.sqrt(this.speed ** 2 - speedX ** 2) * ballDirectionY;
+        let speedY = Math.sqrt(this.getInitialSpeed() ** 2 - speedX ** 2) * ballDirectionY;
         
         this.setSpeedComponents(speedX, speedY);
     }

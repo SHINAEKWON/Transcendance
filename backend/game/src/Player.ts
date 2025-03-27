@@ -19,12 +19,12 @@ class Player
         // get score element
         if (this.leftOrRight == LEFT)
         {
-            this.paddle = new Paddle(0, leftOrRight, "w", "s", parentElement, ["absolute" ,"top-1/2" ,"left-0" ,"w-[0.3%]" ,"h-[15%]" ,"bg-cyan-400" ,"transform", "-translate-y-1/2"]);
+            this.paddle = new Paddle(0, leftOrRight, "w", "s", parentElement);
             this.elementScore = document.getElementById("score_left") as HTMLDivElement;
         }
         else if (this.leftOrRight == RIGHT)
         {
-            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown", parentElement, ["absolute" ,"top-1/2" ,"right-0" ,"w-[0.3%]" ,"h-[15%]" ,"bg-yellow-400" ,"transform", "-translate-y-1/2"]);
+            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown", parentElement);
             this.elementScore = document.getElementById("score_right") as HTMLDivElement;
         }
         else

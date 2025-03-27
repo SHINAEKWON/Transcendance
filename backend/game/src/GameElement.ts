@@ -1,33 +1,49 @@
+/*
+    I assign position: absolute; to all elements.
+    It means that position is indicated relative to parent element (or body if no parent).
+
+    See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
+*/
+
 abstract class GameElement
 {
+    /* ********************************************************************** */
+    /* Attributes                                                             */
+    /* ********************************************************************** */
     element: HTMLDivElement;
     
-    leftInitialRelative: number;
-    topInitialRelative: number;
-    
-    leftNewRelative: number;
-    topNewRelative: number;
+    // This stores the initial position relative to the parent
+    private readonly leftInitialRelative: number;
+    private readonly topInitialRelative: number;
 
-    leftCurrentAbsolute: number = 0;
-    rightCurrentAbsolute: number = 0;
-    topCurrentAbsolute: number = 0;
-    bottomCurrentAbsolute: number = 0;
+    // This stores the current position in absolute pixels on the screen
+    private leftCurrentAbsolute: number = 0;
+    private rightCurrentAbsolute: number = 0;
+    private topCurrentAbsolute: number = 0;
+    private bottomCurrentAbsolute: number = 0;
     
+    // Event listeners can be added (to the document) by a GameElement
     eventListeners: { [key: string]: EventListener } = {};
     
+
+
+
+    /* ********************************************************************** */
+    /* Constructor                                                            */
+    /* ********************************************************************** */
     constructor(
         elementId: string, 
         leftInitialRelative: number, 
         topInitialRelative: number,
-        parentElement: GameElement | null = null,
-        classList: string[] = []
+        widthFraction: number,
+        heightFraction: number | null,
+        backgroundColor: string | null,
+        parentElement: GameElement | null,
+        classList: string[]
     )
     {
         this.element = document.createElement('div');
         this.element.id = elementId;
-
-        if (classList)
-            this.element.classList.add(...classList);
 
         if (parentElement)
         {
@@ -36,66 +52,57 @@ abstract class GameElement
         else
         {
             const app: HTMLElement | null = document.getElementById("app");
-            if (app)
-            {
-                app.appendChild(this.element);
-            }
-            else
-            {
-                throw new Error('No app div');
-            }
+            if (app) { app.appendChild(this.element); }
+            else { throw new Error('No app div'); }
         }
 
         this.leftInitialRelative = leftInitialRelative;
         this.topInitialRelative = topInitialRelative;
+
+        this.element.classList.add("absolute");
+        if (backgroundColor !== null)
+            this.changeBackgroundColor(backgroundColor);
+
+        if (classList)
+            this.element.classList.add(...classList);
+        // if (this.element.id === "board")
+        //     alert(this.element.classList);
         
-        this.leftNewRelative = this.leftInitialRelative;
-        this.topNewRelative = this.topInitialRelative;
-        
-        this.getCurrentGeometry();
+        this.element.style.left = `${this.leftInitialRelative}%`;
+        this.element.style.top = `${this.topInitialRelative}%`;
+        this.element.style.width = `${widthFraction}%`;
+        if (heightFraction !== null)
+            this.element.style.height = `${heightFraction}%`;
+
+        this.getAndSetCurrentGeometry();
     }
-    
-    setPosition(leftNewRelative: number | null, topNewRelative: number | null): void
-    {
-        if (leftNewRelative !== null)
-            this.leftNewRelative = leftNewRelative;
-        if (topNewRelative !== null)
-            this.topNewRelative = topNewRelative;
-    }
-    
-    setLeft(leftNewRelative: number): void
-    {
-        this.setPosition(leftNewRelative, null);
-    }
-    
-    setTop(topNewRelative: number): void
-    {
-        this.setPosition(null, topNewRelative);
-    }
-    
-    getCurrentGeometry()
+
+
+
+
+    /* ********************************************************************** */
+    /* Methods                                                                */
+    /* ********************************************************************** */
+    getLeftInitialRelative(): number { return (this.leftInitialRelative); }
+    getTopInitialRelative(): number { return (this.topInitialRelative); }
+
+    getLeftCurrentAbsolute(): number { return (this.leftCurrentAbsolute); }
+    getRightCurrentAbsolute(): number { return (this.rightCurrentAbsolute); }
+    getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
+    getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
+
+    getAndSetCurrentGeometry()
     {
         this.leftCurrentAbsolute = this.element.getBoundingClientRect().left;
         this.rightCurrentAbsolute = this.element.getBoundingClientRect().right;
         this.topCurrentAbsolute = this.element.getBoundingClientRect().top;
         this.bottomCurrentAbsolute = this.element.getBoundingClientRect().bottom;
     }
-    
-    initializePosition(): void
-    {
-        this.setPosition(this.leftInitialRelative, this.topInitialRelative);
-    }
 
-    draw(): void
-    {
-        this.element.style.left = `${this.leftNewRelative}%`;
-        this.element.style.top = `${this.topNewRelative}%`;
-    }
-    
     isInsideTop(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.topCurrentAbsolute > ofElement.topCurrentAbsolute)
             return true;
@@ -104,8 +111,8 @@ abstract class GameElement
     
     isInsideBottom(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.bottomCurrentAbsolute < ofElement.bottomCurrentAbsolute)
             return true;
@@ -114,8 +121,8 @@ abstract class GameElement
     
     isInsideLeft(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.leftCurrentAbsolute > ofElement.leftCurrentAbsolute)
             return true;
@@ -124,8 +131,8 @@ abstract class GameElement
     
     isInsideRight(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.rightCurrentAbsolute < ofElement.rightCurrentAbsolute)
             return true;
@@ -134,8 +141,8 @@ abstract class GameElement
     
     rightTouchesLeft(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
         || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
@@ -147,8 +154,8 @@ abstract class GameElement
     
     leftTouchesRight(ofElement: GameElement): boolean
     {
-        this.getCurrentGeometry();
-        ofElement.getCurrentGeometry();
+        this.getAndSetCurrentGeometry();
+        ofElement.getAndSetCurrentGeometry();
         
         if (this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
         || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute

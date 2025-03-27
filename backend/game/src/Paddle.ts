@@ -6,12 +6,12 @@ class Paddle extends MovingGameElement
     upKey: string;
     downKey: string;
 
-    constructor(initialLeft: number, leftOrRight: number, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
+    constructor(leftInitialRelative: number, leftOrRight: number, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
     {
         if (leftOrRight == LEFT)
-            super("paddle_left", initialLeft, 50, 1, parentElement, classList);
+            super("paddle_left", leftInitialRelative, 42.5, 0.3, 15, "cyan", 1, parentElement, classList);
         else if (leftOrRight == RIGHT)
-            super("paddle_right", initialLeft, 50, 1, parentElement, classList);
+            super("paddle_right", leftInitialRelative, 42.5, 0.3, 15, "yellow", 1, parentElement, classList);
         else
             throw new Error('Paddle not found');
             
@@ -32,10 +32,10 @@ class Paddle extends MovingGameElement
         switch (event.key)
         {
             case this.upKey:
-                this.setSpeedComponents(0, -this.speed);
+                this.setSpeedComponents(0, -this.getInitialSpeed());
                 break ;
             case this.downKey:
-                this.setSpeedComponents(0, this.speed);
+                this.setSpeedComponents(0, this.getInitialSpeed());
                 break ;
             default:
         }
