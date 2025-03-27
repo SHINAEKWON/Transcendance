@@ -6,6 +6,7 @@ RUN apt-get update \
     && apt-get install -y curl \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
+    && apt-get install -y sqlite3 \
     && apt-get clean
 
 # Définir le répertoire de travail
@@ -46,6 +47,11 @@ RUN npm install fastify@4 @fastify/static@6
 # Copier le reste du projet
 # - with WORKDIR instruction, it will copy the files to /app in the container.
 COPY . .
+
+VOLUME ["/app/data"]
+
+# Creation d'une base de donnee (test en cours)
+RUN mkdir -p /app/data && sqlite3 /app/data/user_db.sqlite ".databases"
 
 # Définir la variable d’environnement
 ENV PORT=3000

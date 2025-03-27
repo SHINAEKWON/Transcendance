@@ -1,8 +1,10 @@
 import Fastify from 'fastify';
+import sqlite3 from 'sqlite3';
 import dotenv from 'dotenv';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
+
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -29,6 +31,7 @@ fastify.get('/', async (request, reply) => {
 fastify.get('/ping', async (request, reply) => {
   return { message: 'pong' };
 });
+
 
 // Lancer le serveur
 const start = async () => {
