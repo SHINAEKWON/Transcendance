@@ -2,23 +2,23 @@ abstract class GameElement
 {
     element: HTMLDivElement;
     
-    initialLeft: number;
-    initialTop: number;
+    leftInitialRelative: number;
+    topInitialRelative: number;
     
-    newLeft: number;
-    newTop: number;
+    leftNewRelative: number;
+    topNewRelative: number;
 
-    currentLeft: number = 0;
-    currentRight: number = 0;
-    currentTop: number = 0;
-    currentBottom: number = 0;
+    leftCurrentAbsolute: number = 0;
+    rightCurrentAbsolute: number = 0;
+    topCurrentAbsolute: number = 0;
+    bottomCurrentAbsolute: number = 0;
     
     eventListeners: { [key: string]: EventListener } = {};
     
     constructor(
         elementId: string, 
-        initialLeft: number, 
-        initialTop: number,
+        leftInitialRelative: number, 
+        topInitialRelative: number,
         parentElement: GameElement | null = null,
         classList: string[] = []
     )
@@ -46,50 +46,50 @@ abstract class GameElement
             }
         }
 
-        this.initialLeft = initialLeft;
-        this.initialTop = initialTop;
+        this.leftInitialRelative = leftInitialRelative;
+        this.topInitialRelative = topInitialRelative;
         
-        this.newLeft = this.initialLeft;
-        this.newTop = this.initialTop;
+        this.leftNewRelative = this.leftInitialRelative;
+        this.topNewRelative = this.topInitialRelative;
         
         this.getCurrentGeometry();
     }
     
-    setPosition(newLeft: number | null, newTop: number | null): void
+    setPosition(leftNewRelative: number | null, topNewRelative: number | null): void
     {
-        if (newLeft !== null)
-            this.newLeft = newLeft;
-        if (newTop !== null)
-            this.newTop = newTop;
+        if (leftNewRelative !== null)
+            this.leftNewRelative = leftNewRelative;
+        if (topNewRelative !== null)
+            this.topNewRelative = topNewRelative;
     }
     
-    setLeft(newLeft: number): void
+    setLeft(leftNewRelative: number): void
     {
-        this.setPosition(newLeft, null);
+        this.setPosition(leftNewRelative, null);
     }
     
-    setTop(newTop: number): void
+    setTop(topNewRelative: number): void
     {
-        this.setPosition(null, newTop);
+        this.setPosition(null, topNewRelative);
     }
     
     getCurrentGeometry()
     {
-        this.currentLeft = this.element.getBoundingClientRect().left;
-        this.currentRight = this.element.getBoundingClientRect().right;
-        this.currentTop = this.element.getBoundingClientRect().top;
-        this.currentBottom = this.element.getBoundingClientRect().bottom;
+        this.leftCurrentAbsolute = this.element.getBoundingClientRect().left;
+        this.rightCurrentAbsolute = this.element.getBoundingClientRect().right;
+        this.topCurrentAbsolute = this.element.getBoundingClientRect().top;
+        this.bottomCurrentAbsolute = this.element.getBoundingClientRect().bottom;
     }
     
     initializePosition(): void
     {
-        this.setPosition(this.initialLeft, this.initialTop);
+        this.setPosition(this.leftInitialRelative, this.topInitialRelative);
     }
 
     draw(): void
     {
-        this.element.style.left = `${this.newLeft}%`;
-        this.element.style.top = `${this.newTop}%`;
+        this.element.style.left = `${this.leftNewRelative}%`;
+        this.element.style.top = `${this.topNewRelative}%`;
     }
     
     isInsideTop(ofElement: GameElement): boolean
@@ -97,7 +97,7 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentTop > ofElement.currentTop)
+        if (this.topCurrentAbsolute > ofElement.topCurrentAbsolute)
             return true;
         return false; 
     }
@@ -107,7 +107,7 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentBottom < ofElement.currentBottom)
+        if (this.bottomCurrentAbsolute < ofElement.bottomCurrentAbsolute)
             return true;
         return false; 
     }
@@ -117,7 +117,7 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentLeft > ofElement.currentLeft)
+        if (this.leftCurrentAbsolute > ofElement.leftCurrentAbsolute)
             return true;
         return false;
     }
@@ -127,7 +127,7 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentRight < ofElement.currentRight)
+        if (this.rightCurrentAbsolute < ofElement.rightCurrentAbsolute)
             return true;
         return false;
     }
@@ -137,10 +137,10 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentRight < ofElement.currentLeft
-        || this.currentLeft > ofElement.currentRight
-        || this.currentBottom < ofElement.currentTop
-        || this.currentTop > ofElement.currentBottom)
+        if (this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+        || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
+        || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+        || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
             return false;
         return true;
     }
@@ -150,10 +150,10 @@ abstract class GameElement
         this.getCurrentGeometry();
         ofElement.getCurrentGeometry();
         
-        if (this.currentLeft > ofElement.currentRight
-        || this.currentRight < ofElement.currentLeft
-        || this.currentBottom < ofElement.currentTop
-        || this.currentTop > ofElement.currentBottom)
+        if (this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
+        || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+        || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+        || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
             return false;
         return true;
     }

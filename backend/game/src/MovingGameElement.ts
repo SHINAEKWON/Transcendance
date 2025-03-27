@@ -4,9 +4,9 @@ abstract class MovingGameElement extends GameElement
     speedX: number = 0;
     speedY: number = 0;
     
-    constructor(elementId: string, newLeft: number, newTop: number, speed: number, parentElement: GameElement, classList: string[] = [])
+    constructor(elementId: string, leftNewRelative: number, topNewRelative: number, speed: number, parentElement: GameElement, classList: string[] = [])
     {
-        super(elementId, newLeft, newTop, parentElement, classList);
+        super(elementId, leftNewRelative, topNewRelative, parentElement, classList);
         this.speed = speed;
         this.initializeSpeed();
     }
@@ -19,15 +19,15 @@ abstract class MovingGameElement extends GameElement
     
     move(insideElement: GameElement | null = null): void
     {
-        this.newLeft += this.speedX;
-        this.newTop += this.speedY;
+        this.leftNewRelative += this.speedX;
+        this.topNewRelative += this.speedY;
         
         if (insideElement !== null
         && (this.speedY < 0 && !this.isInsideTop(insideElement)
         ||  this.speedY > 0 && !this.isInsideBottom(insideElement)))
         { 
-            this.newLeft -= this.speedX;
-            this.newTop -= this.speedY;
+            this.leftNewRelative -= this.speedX;
+            this.topNewRelative -= this.speedY;
             return ;
         }
         this.draw();
