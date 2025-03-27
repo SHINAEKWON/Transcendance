@@ -86,6 +86,9 @@ abstract class GameElement
     element: HTMLDivElement;
     elementId: string;
     
+    initialLeft: number;
+    initialTop: number;
+    
     newLeft: number;
     newTop: number;
 
@@ -94,7 +97,9 @@ abstract class GameElement
     currentTop: number = 0;
     currentBottom: number = 0;
     
-    constructor(elementId: string, newLeft: number, newTop: number)
+    eventListeners: { [key: string]: EventListener } = {};
+    
+    constructor(elementId: string, initialLeft: number, initialTop: number)
     {
         this.elementId = elementId;
         this.element = document.getElementById(elementId) as HTMLDivElement;
@@ -102,8 +107,11 @@ abstract class GameElement
         {
             throw new Error(`${elementId} not found`);
         }
-        this.newLeft = newLeft;
-        this.newTop = newTop;
+        this.initialLeft = initialLeft;
+        this.initialTop = initialTop;
+        
+        this.newLeft = this.initialLeft;
+        this.newTop = this.initialTop;
         
         this.getCurrentGeometry();
     }
@@ -132,6 +140,11 @@ abstract class GameElement
         this.currentRight = this.element.getBoundingClientRect().right;
         this.currentTop = this.element.getBoundingClientRect().top;
         this.currentBottom = this.element.getBoundingClientRect().bottom;
+    }
+    
+    initializePosition(): void
+    {
+        this.setPosition(this.initialLeft, this.initialTop);
     }
 
     draw(): void
@@ -219,7 +232,7 @@ abstract class GameElement
         this.element.textContent = newText;
     }
 
-    changeColor(newColor: string): void
+    changeTextColor(newColor: string): void
     {
         this.element.style.color = newColor;
     }
@@ -229,7 +242,18 @@ abstract class GameElement
         this.element.style.backgroundColor = newColor;
     }
     
-    abstract initializePosition(): void;
+    removeEventListeners(): void
+    {
+        for (const event in this.eventListeners)
+        {
+            if (this.eventListeners.hasOwnProperty(event))
+            {
+                document.removeEventListener(event, this.eventListeners[event]);
+                console.log(`Event listener for ${event} removed.`);
+            }
+        }
+        this.eventListeners = {};
+    }
 }
 
 abstract class MovingGameElement extends GameElement
@@ -276,48 +300,11 @@ abstract class MovingGameElement extends GameElement
     abstract initializeSpeed(): void;
 }
 
-
-class Paddle extends MovingGameElement
-{
-    leftOrRight: number;
-
-    constructor(leftOrRight: number)
-    {
-        if (leftOrRight == LEFT)
-            super("paddle_left", 0, 50, 1);
-        else if (leftOrRight == RIGHT)
-            super("paddle_right", 100, 50, 1);
-        else
-            throw new Error('Paddle not found');
-            
-        this.leftOrRight = leftOrRight;
-    }
-
-    initializePosition()
-    {
-        if (this.leftOrRight == LEFT)
-            this.newLeft = 0;
-        else
-            this.newLeft = 100;
-        this.newTop = 50;
-    }
-    
-    initializeSpeed()
-    {
-        this.setSpeedComponents(0, this.speed);
-    }
-}
-
 class Ball extends MovingGameElement
 {
     constructor()
     {
         super("ball", 50, 50, 0.5);
-    }
-
-    initializePosition()
-    {
-        this.setPosition(50, 50);
     }
 
     initializeSpeed()
@@ -396,11 +383,6 @@ class Board extends GameElement
     {
         super("board", 0, 0);
     }
-    
-    initializePosition(): void
-    {
-    
-    }
 }
 
 class Message extends GameElement
@@ -411,11 +393,6 @@ class Message extends GameElement
             super("msg_start", 0, 0);
         else if (mainOrSideMessage == SIDEMESSAGE)
             super("msg_pressSpace", 0, 0);
-    }
-    
-    initializePosition(): void
-    {
-    
     }
 }
 
@@ -436,13 +413,18 @@ class Player
         this.score = 0;
         this.leftOrRight = leftOrRight;
         this.name = name;
-        this.paddle = new Paddle(leftOrRight);
 
         // get score element
         if (this.leftOrRight == LEFT)
+        {
+            this.paddle = new Paddle(0, leftOrRight, "w", "s");
             this.elementScore = document.getElementById("score_left") as HTMLDivElement;
+        }
         else if (this.leftOrRight == RIGHT)
+        {
+            this.paddle = new Paddle(100, leftOrRight, "upArrow", "downArrow");
             this.elementScore = document.getElementById("score_right") as HTMLDivElement;
+        }
         else
             throw new Error('Score not found');
         if (!this.elementScore)
@@ -474,7 +456,71 @@ class Player
     }
 }
 
+class Paddle extends MovingGameElement
+{
+    leftOrRight: number;
+    
+    upKey: string;
+    downKey: string;
 
+    constructor(initialLeft: number, leftOrRight: number, upKey: string, downKey: string)
+    {
+        if (leftOrRight == LEFT)
+            super("paddle_left", initialLeft, 50, 1);
+        else if (leftOrRight == RIGHT)
+            super("paddle_right", initialLeft, 50, 1);
+        else
+            throw new Error('Paddle not found');
+            
+        this.leftOrRight = leftOrRight;
+        this.upKey = upKey;
+        this.downKey = downKey;
+        
+        this.initializeEventListeners();
+    }
+
+    initializeSpeed()
+    {
+        this.setSpeedComponents(0, this.speed);
+    }
+    
+    keyDownHandler(event: KeyboardEvent): void
+    {
+        switch (event.key)
+        {
+            case this.upKey:
+                this.setSpeedComponents(0, -this.speed);
+                break ;
+            case this.downKey:
+                this.setSpeedComponents(0, this.speed);
+                break ;
+            default:
+        }
+    }
+    
+    keyUpHandler(event: KeyboardEvent): void
+    {
+        switch (event.key)
+        {
+            case this.upKey:
+                this.setSpeedComponents(0, 0);
+                break ;
+            case this.downKey:
+                this.setSpeedComponents(0, 0);
+                break ;
+            default:
+        }
+    }
+    
+    initializeEventListeners(): void
+    {
+        this.eventListeners["keydown"] = this.keyDownHandler.bind(this) as EventListener;
+        this.eventListeners["keyup"] = this.keyUpHandler.bind(this) as EventListener;
+        
+        document.addEventListener("keydown", this.eventListeners["keydown"]);
+        document.addEventListener("keyup", this.eventListeners["keyup"]);
+    }
+}
 
 class Game
 {
@@ -485,11 +531,6 @@ class Game
     msgSide: Message = new Message(SIDEMESSAGE);
 
     state: number;
-
-    upPressed: boolean = false;
-    downPressed: boolean = false;
-    wPressed: boolean = false;
-    sPressed: boolean = false;
 
     playerLeft: Player;
     playerRight: Player;
@@ -507,88 +548,10 @@ class Game
 
         this.initializeEventListeners();
     }
-    
-    initializeEventListeners(): void
-    {
-        this.eventListeners["keydown"] = this.keyDownHandler.bind(this) as EventListener;
-        this.eventListeners["keyup"] = this.keyUpHandler.bind(this) as EventListener;
-        
-        document.addEventListener("keydown", this.eventListeners["keydown"]);
-        document.addEventListener("keyup", this.eventListeners["keyup"]);
-    }
 
     changeState(newState: number): void
     {
         this.state = newState;
-    }
-
-    keyDownHandler(event: KeyboardEvent): void
-    {
-        switch (event.key)
-        {
-            case "ArrowUp":
-                this.upPressed = true;
-                break ;
-            case "ArrowDown":
-                this.downPressed = true;
-                break ;
-            case "w":
-                this.wPressed = true;
-                break ;
-            case "s":
-                this.sPressed = true;
-                break ;
-            case " ":
-                this.pressSpace();
-                break ;
-            default:
-        }
-    }
-    
-    keyUpHandler(event: KeyboardEvent): void
-    {
-        switch (event.key)
-        {
-            case "ArrowUp":
-                this.upPressed = false;
-                break ;
-            case "ArrowDown":
-                this.downPressed = false;
-                break ;
-            case "w":
-                this.wPressed = false;
-                break ;
-            case "s":
-                this.sPressed = false;
-                break ;
-            default:
-        }
-    }
-
-    movePaddles(): void
-    {
-        let leftDirection: number;
-        let rightDirection: number;
-        
-        if (this.upPressed)
-            rightDirection = -1;
-        else if (this.downPressed)
-            rightDirection = 1;
-        else
-            rightDirection = 0;
-            
-        if (this.wPressed)
-            leftDirection = -1;
-        else if (this.sPressed)
-            leftDirection = 1;
-        else
-            leftDirection = 0;
-
-        this.playerLeft.paddle.setSpeedComponents(0, leftDirection);
-        this.playerRight.paddle.setSpeedComponents(0, rightDirection);
-        
-        this.playerLeft.paddle.move(this.board);
-        this.playerRight.paddle.move(this.board);
     }
 
     pressSpace(): void
@@ -601,6 +564,17 @@ class Game
         {
             this.state = GAME_NEW;
             navigateTo("revanche", true, this.playerLeft.name, this.playerRight.name);
+        }
+    }
+    
+    keyDownHandler(event: KeyboardEvent): void
+    {
+        switch (event.key)
+        {
+            case " ":
+                this.spacePressed();
+                break ;
+            default:
         }
     }
 
@@ -628,7 +602,7 @@ class Game
     {
         this.changeState(GAME_PAUSED);
         this.msgMain.changeText("PAUSE");
-        this.msgMain.changeColor("red");
+        this.msgMain.changeTextColor("red");
         this.showMessages();
     }
 
@@ -657,12 +631,12 @@ class Game
         if (won == LEFT)
         {
             this.msgMain.changeText("Player " + this.playerLeft.name + " wins!");
-            this.msgMain.changeColor("cyan");
+            this.msgMain.changeTextColor("cyan");
         }
         else if (won == RIGHT)
         {
             this.msgMain.changeText("Player " + this.playerRight.name + " wins!");
-            this.msgMain.changeColor("yellow");
+            this.msgMain.changeTextColor("yellow");
         }
 
         this.showMessages();
@@ -673,7 +647,8 @@ class Game
         if (this.state == GAME_STARTED)
         {
             this.ball.move();
-            this.movePaddles();
+            this.playerLeft.paddle.move();
+            this.playerRight.paddle.move();
             
             if (this.ball.hitsWall(this.board) == true)
                 this.ball.speedY *= -1;
@@ -690,7 +665,7 @@ class Game
                 this.playerRight.increaseScore();
                 this.playerRight.changeScoreText();
                 this.msgMain.changeText("Point for " + this.playerRight.name);
-                this.msgMain.changeColor("yellow");
+                this.msgMain.changeTextColor("yellow");
 
                 this.ballout();
             }
@@ -700,7 +675,7 @@ class Game
                 this.playerLeft.increaseScore();
                 this.playerLeft.changeScoreText();
                 this.msgMain.changeText("Point for " + this.playerLeft.name);
-                this.msgMain.changeColor("cyan");
+                this.msgMain.changeTextColor("cyan");
 
                 this.ballout();
             }
@@ -722,22 +697,9 @@ class Game
         }
     }
     
-    removeEventListeners(): void
-    {
-        for (const event in this.eventListeners)
-        {
-            if (this.eventListeners.hasOwnProperty(event))
-            {
-                document.removeEventListener(event, this.eventListeners[event]);
-                console.log(`Event listener for ${event} removed.`);
-            }
-        }
-        this.eventListeners = {};
-    }
-    
     destroy(): void
     {
         this.stopLoop();
-        
+        this.removeEventListeners();
     }
 }
