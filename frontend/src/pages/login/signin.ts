@@ -6,8 +6,8 @@ export class SigninPage {
                 
                 <form id="signin-form" class="space-y-6">
                     <div>
-                        <label class="block text-neon-purple mb-1" for="email">Email</label>
-                        <input type="email" id="email" name="email" required
+                        <label class="block text-neon-purple mb-1" for="login">Login</label>
+                        <input type="text" id="login" name="login" required
                             class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                     </div>
                     <div>
