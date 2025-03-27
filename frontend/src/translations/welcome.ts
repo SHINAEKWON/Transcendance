@@ -1,0 +1,78 @@
+export const welcomeTranslations = {
+    en: {
+      title: "My Transcendence",
+      profile: "Profile",
+      duel: "Duel",
+      tournaments: "Tournaments",
+      chat: "Chat",
+      language: "Language",
+      welcome: "Welcome to Transcendence!",
+      enjoy: "Enjoy the game and have fun!",
+      start: "Get Started",
+      pitch: "Play Ping-pong, challenge friends, and become a champion!",
+      signup: "Sign Up",
+      signin: "Sign In",
+      guest: "Play as Guest"
+    },
+    fr: {
+      title: "Mon Transcendence",
+      profile: "Profil",
+      duel: "Duel",
+      tournaments: "Tournois",
+      chat: "Chat",
+      language: "Langue",
+      welcome: "Bienvenue sur Transcendence !",
+      enjoy: "Amuse-toi bien et profite du jeu !",
+      start: "Commencer",
+      pitch: "Joue au Ping-pong, défie tes amis et deviens champion !",
+      signup: "S'inscrire",
+      signin: "Se connecter",
+      guest: "Jouer en invité"
+    },
+    de: {
+      title: "Mein Transcendence",
+      profile: "Profil",
+      duel: "Duell",
+      tournaments: "Turniere",
+      chat: "Chat",
+      language: "Sprache",
+      welcome: "Willkommen bei Transcendence!",
+      enjoy: "Viel Spaß beim Spiel!",
+      start: "Loslegen",
+      pitch: "Spiele Tischtennis, fordere Freunde heraus und werde Champion!",
+      signup: "Registrieren",
+      signin: "Anmelden",
+      guest: "Als Gast spielen"
+    },
+    ar: {
+      title: " ترونسوندونسي",
+      profile: "الملف الشخصي",
+      duel: "مبارزة",
+      tournaments: "دوريات",
+      chat: "دردشة",
+      language: "اللغة",
+      welcome: "مرحبًا بك في ترونسوندونس!",
+      enjoy: "استمتع باللعبة وامرح!",
+      start: "ابدأ الآن",
+      pitch: "العب بينغ بونغ، تحد أصدقاءك وكن بطلاً!",
+      signup: "إنشاء حساب",
+      signin: "تسجيل الدخول",
+      guest: "العب كزائر"
+    },
+    ko: {
+      title: "마이트랜센던스",
+      profile: "프로필",
+      duel: "듀얼",
+      tournaments: "토너먼트",
+      chat: "채팅",
+      language: "언어",
+      welcome: "트랜센던스에 오신 것을 환영합니다!",
+      enjoy: "게임을 즐기고 재미있게 노세요!",
+      start: "시작하기",
+      pitch: "탁구를 하고 친구에게 도전하며 챔피언이 되세요!",
+      signup: "가입하기",
+      signin: "로그인",
+      guest: "게스트로 플레이"
+    }
+  } as const;
+  

@@ -7,10 +7,11 @@ export class LanguagePage {
                 <div class="mt-6">
                     <h4 class="text-neon-green mb-2">Choose Language</h4>
                     <select id="language-select" class="bg-gray-700 text-white p-2 rounded-sm">
-                        <option value="en">English</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                        <option value="de">Deutsch</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="ar">🇹🇳 العربية</option>
+                        <option value="ko">🇰🇷 한국어</option>
                     </select>
                 </div>
             </div>

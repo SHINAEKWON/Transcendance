@@ -13,15 +13,15 @@ export class WelcomePage {
 
                     <div class="flex justify-center gap-6 pt-6 flex-wrap">
                         <!-- Sign Up -->
-                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-green-300 via-pink-400 to-purple-500 
-                            shadow-lg hover:scale-110 hover:ring-4 hover:ring-neon-green transition cursor-pointer 
+                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-purple-800 via-pink-400 to-yellow-400 
+                            shadow-lg hover:scale-110 hover:ring-4 hover:ring-neon-purple transition cursor-pointer 
                             flex items-center justify-center text-center font-bold text-white text-sm" 
                             data-page="signup">
                             Sign Up
                         </div>
 
                         <!-- Sign In -->
-                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-300 
+                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-blue-800 via-blue-400 to-yellow-400 
                             shadow-lg hover:scale-110 hover:ring-4 hover:ring-neon-blue transition cursor-pointer 
                             flex items-center justify-center text-center font-bold text-white text-sm" 
                             data-page="signin">
@@ -29,8 +29,8 @@ export class WelcomePage {
                         </div>
 
                         <!-- Play as Guest -->
-                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 
-                            shadow-lg hover:scale-110 hover:ring-4 hover:ring-white transition cursor-pointer 
+                        <div class="game-mode-btn w-24 h-24 rounded-full bg-gradient-to-br from-green-500 via-green-300 to-yellow-400
+                            shadow-lg hover:scale-110 hover:ring-4 hover:ring-neon-green transition cursor-pointer 
                             flex items-center justify-center text-center font-bold text-white text-sm leading-tight" 
                             data-page="guest">
                             Play<br>as Guest
