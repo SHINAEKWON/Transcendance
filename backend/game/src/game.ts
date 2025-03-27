@@ -35,20 +35,7 @@ function renderGamePage(player1: string | null, player2: string | null)
     if (app)
     {
         app.innerHTML = `
-        <div class="relative w-full h-screen flex flex-col items-center justify-center bg-black">
-            <div id="board" class="relative w-9/12 h-4/5 border-t border-b border-white">
-                <div class="absolute left-1/2 w-px h-full bg-white"></div>
-                <div class="absolute top-1/2 w-full h-px bg-white"></div>
-                <div id="ball" class="absolute top-1/2 left-1/2 w-[3%] aspect-square bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-                <div id="paddle_left" class="absolute top-1/2 left-0 w-[0.3%] h-[15%] bg-cyan-400 transform -translate-y-1/2"></div>
-                <div id="paddle_right" class="absolute top-1/2 right-0 w-[0.3%] h-[15%] bg-yellow-400 transform -translate-y-1/2"></div>
-                <div id="msg_start" class="absolute left-1/2 top-1/4 w-3/4 h-1/5 text-center text-red-500 text-4xl border-dotted border-2 border-red-500 flex items-center justify-center transform -translate-x-1/2">
-                    NEW GAME
-                </div>
-                <div id="msg_pressSpace" class="absolute left-1/2 top-3/4 w-3/4 h-1/10 text-center text-red-500 text-2xl border-dotted border-2 border-red-500 flex items-center justify-center transform -translate-x-1/2">
-                    Press SPACE to start...
-                </div>
-            </div>
+
     
             <div class="absolute top-[90%] left-1/2 w-9/12 h-[7%] text-4xl transform -translate-x-1/2 flex items-center justify-between">
                 <div class="w-[47%] flex items-center">
@@ -61,7 +48,6 @@ function renderGamePage(player1: string | null, player2: string | null)
                     <div id="score_right" class="text-yellow-400 w-1/5 text-right">0</div>
                 </div>
             </div>
-        </div>
         `;
     
         if (player1 && player2)
@@ -84,7 +70,6 @@ function renderGamePage(player1: string | null, player2: string | null)
 abstract class GameElement
 {
     element: HTMLDivElement;
-    elementId: string;
     
     initialLeft: number;
     initialTop: number;
@@ -99,14 +84,46 @@ abstract class GameElement
     
     eventListeners: { [key: string]: EventListener } = {};
     
-    constructor(elementId: string, initialLeft: number, initialTop: number)
+    constructor(
+        elementId: string, 
+        initialLeft: number, 
+        initialTop: number,
+        parentElement: GameElement | null = null,
+        classList: string[] = []
+    )
     {
-        this.elementId = elementId;
-        this.element = document.getElementById(elementId) as HTMLDivElement;
-        if (!this.element)
+        alert("creating " + elementId);
+        this.element = document.createElement('div');
+        alert("a " + elementId);
+
+        this.element.id = elementId;
+        alert("b " + elementId);
+
+        if (classList)
+            this.element.classList.add(...classList);
+        alert("c " + elementId);
+
+
+        if (parentElement)
         {
-            throw new Error(`${elementId} not found`);
+            parentElement.element.appendChild(this.element);
+            alert("appended " + this.element.id + " to " + parentElement.element.id);
         }
+        else
+        {
+            alert("no parent");
+            const app: HTMLElement | null = document.getElementById("app");
+            if (app)
+            {
+                app.appendChild(this.element);
+                alert("appended " + this.element.id + " to " + app.id);
+            }
+            else
+            {
+                throw new Error('No app div');
+            }
+        }
+
         this.initialLeft = initialLeft;
         this.initialTop = initialTop;
         
@@ -269,9 +286,9 @@ abstract class MovingGameElement extends GameElement
     speedX: number = 0;
     speedY: number = 0;
     
-    constructor(elementId: string, newLeft: number, newTop: number, speed: number)
+    constructor(elementId: string, newLeft: number, newTop: number, speed: number, parentElement: GameElement, classList: string[] = [])
     {
-        super(elementId, newLeft, newTop);
+        super(elementId, newLeft, newTop, parentElement, classList);
         this.speed = speed;
         this.initializeSpeed();
     }
@@ -309,9 +326,10 @@ abstract class MovingGameElement extends GameElement
 
 class Ball extends MovingGameElement
 {
-    constructor()
+    constructor(parentElement: GameElement, classList: string[] = [])
     {
-        super("ball", 50, 50, 0.5);
+        alert("initializing ball to " + parentElement.element.id);
+        super("ball", 50, 50, 0.5, parentElement, classList);
     }
 
     initializeSpeed()
@@ -366,20 +384,26 @@ class Ball extends MovingGameElement
 
 class Board extends GameElement
 {
-    constructor()
+    constructor(classList: string[] = [])
     {
-        super("board", 0, 0);
+        super("board", 0, 0, null, classList);
     }
 }
 
 class Message extends GameElement
 {
-    constructor(mainOrSideMessage: number)
+    constructor(text: string, mainOrSideMessage: number, parentElement: GameElement, classList: string[] = [])
     {
         if (mainOrSideMessage == MAINMESSAGE)
-            super("msg_start", 0, 0);
+        {
+            super("msg_start", 0, 0, parentElement, classList);
+            this.changeText(text);
+        }
         else if (mainOrSideMessage == SIDEMESSAGE)
-            super("msg_pressSpace", 0, 0);
+        {
+            super("msg_pressSpace", 0, 0, parentElement, classList);
+            this.changeText(text);
+        }
     }
 }
 
@@ -395,7 +419,7 @@ class Player
 
     paddle: Paddle;
 
-    constructor(leftOrRight: number, name: string)
+    constructor(leftOrRight: number, name: string, parentElement: GameElement)
     {
         this.score = 0;
         this.leftOrRight = leftOrRight;
@@ -404,12 +428,12 @@ class Player
         // get score element
         if (this.leftOrRight == LEFT)
         {
-            this.paddle = new Paddle(0, leftOrRight, "w", "s");
+            this.paddle = new Paddle(0, leftOrRight, "w", "s", parentElement, ["absolute" ,"top-1/2" ,"left-0" ,"w-[0.3%]" ,"h-[15%]" ,"bg-cyan-400" ,"transform", "-translate-y-1/2"]);
             this.elementScore = document.getElementById("score_left") as HTMLDivElement;
         }
         else if (this.leftOrRight == RIGHT)
         {
-            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown");
+            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown", parentElement, ["absolute" ,"top-1/2" ,"right-0" ,"w-[0.3%]" ,"h-[15%]" ,"bg-yellow-400" ,"transform", "-translate-y-1/2"]);
             this.elementScore = document.getElementById("score_right") as HTMLDivElement;
         }
         else
@@ -450,12 +474,12 @@ class Paddle extends MovingGameElement
     upKey: string;
     downKey: string;
 
-    constructor(initialLeft: number, leftOrRight: number, upKey: string, downKey: string)
+    constructor(initialLeft: number, leftOrRight: number, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
     {
         if (leftOrRight == LEFT)
-            super("paddle_left", initialLeft, 50, 1);
+            super("paddle_left", initialLeft, 50, 1, parentElement, classList);
         else if (leftOrRight == RIGHT)
-            super("paddle_right", initialLeft, 50, 1);
+            super("paddle_right", initialLeft, 50, 1, parentElement, classList);
         else
             throw new Error('Paddle not found');
             
@@ -511,11 +535,11 @@ class Paddle extends MovingGameElement
 
 class Game
 {
-    board: Board = new Board();
-    ball: Ball = new Ball();
+    board: Board = new Board(["relative", "w-9/12", "h-4/5", "border-t", "border-b", "border-white"]);
+    ball: Ball = new Ball(this.board, ["absolute", "top-1/2", "left-1/2", "w-[3%]", "aspect-square", "bg-white", "rounded-full", "transform", "-translate-x-1/2", "-translate-y-1/2"]);
 
-    msgMain: Message = new Message(MAINMESSAGE);
-    msgSide: Message = new Message(SIDEMESSAGE);
+    msgMain: Message = new Message("NEW GAME", MAINMESSAGE, this.board, ["absolute", "left-1/2", "top-1/4", "w-3/4", "h-1/5", "text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500", "flex", "items-center", "justify-center", "transform", "-translate-x-1/2"]);
+    msgSide: Message = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["absolute", "left-1/2", "top-3/4", "w-3/4", "h-1/10", "text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500", "flex", "items-center", "justify-center", "transform", "-translate-x-1/2"]);
 
     state: number;
 
@@ -528,8 +552,8 @@ class Game
 
     constructor(nameLeft: string, nameRight: string)
     {
-        this.playerLeft = new Player(LEFT, nameLeft);
-        this.playerRight = new Player(RIGHT, nameRight); 
+        this.playerLeft = new Player(LEFT, nameLeft, this.board);
+        this.playerRight = new Player(RIGHT, nameRight, this.board); 
 
         this.state = GAME_NEW;
 
