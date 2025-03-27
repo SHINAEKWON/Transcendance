@@ -199,6 +199,7 @@ abstract class GameElement
         ofElement.getCurrentGeometry();
         
         if (this.currentRight < ofElement.currentLeft
+        || this.currentLeft > ofElement.currentRight
         || this.currentBottom < ofElement.currentTop
         || this.currentTop > ofElement.currentBottom)
             return false;
@@ -211,10 +212,16 @@ abstract class GameElement
         ofElement.getCurrentGeometry();
         
         if (this.currentLeft > ofElement.currentRight
+        || this.currentRight < ofElement.currentLeft
         || this.currentBottom < ofElement.currentTop
         || this.currentTop > ofElement.currentBottom)
             return false;
         return true;
+    }
+
+    touchesLeftOrRight(ofElement: GameElement): boolean
+    {
+        return (this.rightTouchesLeft(ofElement) || this.leftTouchesRight(ofElement));
     }
     
     hide(): void
@@ -330,29 +337,9 @@ class Ball extends MovingGameElement
         return (true);
     }
 
-    hitsLeftPaddle(paddle: Paddle): boolean
-    {
-        if (paddle.leftOrRight == LEFT && this.leftTouchesRight(paddle))
-        {
-            this.changeBackgroundColor("cyan");
-            return true;
-        }
-        return false;
-    }
-    
-    hitsRightPaddle(paddle: Paddle): boolean
-    {
-        if (paddle.leftOrRight == RIGHT && this.rightTouchesLeft(paddle))
-        {
-            this.changeBackgroundColor("yellow");
-            return true;
-        }
-        return false;
-    }
-    
     hitsPaddle(paddle: Paddle): boolean
     {
-        return (this.hitsLeftPaddle(paddle) || this.hitsRightPaddle(paddle));
+        return this.touchesLeftOrRight(paddle);
     }
 
     isLeftOut(board: Board): boolean
@@ -422,7 +409,7 @@ class Player
         }
         else if (this.leftOrRight == RIGHT)
         {
-            this.paddle = new Paddle(100, leftOrRight, "upArrow", "downArrow");
+            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown");
             this.elementScore = document.getElementById("score_right") as HTMLDivElement;
         }
         else
@@ -481,7 +468,7 @@ class Paddle extends MovingGameElement
 
     initializeSpeed()
     {
-        this.setSpeedComponents(0, this.speed);
+        this.setSpeedComponents(0, 0);
     }
     
     keyDownHandler(event: KeyboardEvent): void
@@ -549,6 +536,13 @@ class Game
         this.initializeEventListeners();
     }
 
+    initializeEventListeners(): void
+    {
+        this.eventListeners["keydown"] = this.keyDownHandler.bind(this) as EventListener;
+        
+        document.addEventListener("keydown", this.eventListeners["keydown"]);
+    }
+
     changeState(newState: number): void
     {
         this.state = newState;
@@ -572,7 +566,7 @@ class Game
         switch (event.key)
         {
             case " ":
-                this.spacePressed();
+                this.pressSpace();
                 break ;
             default:
         }
@@ -647,8 +641,8 @@ class Game
         if (this.state == GAME_STARTED)
         {
             this.ball.move();
-            this.playerLeft.paddle.move();
-            this.playerRight.paddle.move();
+            this.playerLeft.paddle.move(this.board);
+            this.playerRight.paddle.move(this.board);
             
             if (this.ball.hitsWall(this.board) == true)
                 this.ball.speedY *= -1;
@@ -695,6 +689,19 @@ class Game
             cancelAnimationFrame(this.animationFrameID);
             this.animationFrameID = null;
         }
+    }
+
+    removeEventListeners(): void
+    {
+        for (const event in this.eventListeners)
+        {
+            if (this.eventListeners.hasOwnProperty(event))
+            {
+                document.removeEventListener(event, this.eventListeners[event]);
+                console.log(`Event listener for ${event} removed.`);
+            }
+        }
+        this.eventListeners = {};
     }
     
     destroy(): void
