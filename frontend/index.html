@@ -10,22 +10,8 @@
 <body>
     <div id="background-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('/public/images/background.jpeg');"></div>
     <div id="background-overlay" class="absolute inset-0 bg-black opacity-0 transition-opacity duration-500 backdrop-blur-xs scale-100"></div>
-
-    <nav class="bg-gray-800 p-4 relative opacity-80">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" onclick="router.updatePage('welcome', true)" class="navbar-title text-2xl text-neon-blue animate-glow">MyTranscendence</a>
-            <div class="flex space-x-4">
-                <a href="#profile" data-page="profile" class="nav-link">Profile</a>
-                <a href="#game" data-page="game" class="nav-link">Duel</a>
-                <a href="#tournaments" data-page="tournaments" class="nav-link">Tournaments</a>
-                <a href="#chat" data-page="chat" class="nav-link">Chat</a>
-                <a href="#language" data-page="language" class="nav-link flex items-center space-x-2">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="UK Flag" class="w-6 h-4">
-                    <span>Language</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    <nav class="bg-gray-800 p-4 relative opacity-80" id="navbar"></nav>
+    
     <div class="flex z-10"> 
         <aside id="sidebar" class="w-1/4 bg-gray-800 p-4 custom-heigh opacity-80"></aside>  
         <main id="app" class="w-3/4 p-4 relative z-10"></main>

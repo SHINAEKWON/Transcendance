@@ -1,5 +1,5 @@
-import { getLang } from './language'
-import { welcomeTranslations } from '../translations/welcome'
+import { getLang } from './language.js'
+import { welcomeTranslations } from '../translations/welcome.js'
 
 const translationsMap = {
   welcome: welcomeTranslations,

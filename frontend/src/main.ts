@@ -13,6 +13,7 @@ import { GameBoard } from './pages/game/gameboard.js';
 import { SignupPage } from './pages/login/signup.js';
 import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
+import { Navbar } from './pages/navbar.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -40,6 +41,16 @@ window.addEventListener('hashchange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    const appElement: HTMLElement | null = document.getElementById('navbar');
+    if(appElement){
+        appElement.innerHTML = new Navbar().render();
+    }
+   
+
+    
+
+   
     function updateSidebar() {
         const appElement: HTMLElement | null = document.getElementById('sidebar');
         const currentPage = window.location.hash.slice(1) || 'welcome';
@@ -79,4 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('hashchange', updateSidebar);
 
     router.init(); // ✅ Initialiser `router`
+
+   
 });

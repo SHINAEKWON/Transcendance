@@ -1,5 +1,7 @@
+import { getTranslation } from "../i18n/i18n.js";
 export class WelcomePage {
     render(): string {
+        const t = getTranslation("welcome");
         return `
             <div class="flex items-center justify-center min-h-screen bg-dark-blue">
                 <div class="bg-gray-800 bg-opacity-90 p-8 rounded-2xl shadow-lg text-center w-[90%] max-w-xl space-y-6 custom-position">
@@ -7,7 +9,7 @@ export class WelcomePage {
                     <p class="text-xl text-neon-pink font-semibold">Enjoy the game and have fun!</p>
 
                     <div>
-                        <h4 class="text-neon-green text-lg font-bold mb-2">Get Started</h4>
+                        <h4 class="text-neon-green text-lg font-bold mb-2">${t.start}</h4>
                         <p class="text-gray-300 text-sm">Play Ping-pong, challenge friends, and become a champion!</p>
                     </div>
 

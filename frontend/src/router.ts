@@ -1,3 +1,4 @@
+import { setLang, getLang } from './i18n/language.js'; // 💬 Langue
 interface Page {
     render(...args: any[]): string; // ✅ Permettre `render()` d'accepter des arguments
 }
@@ -70,7 +71,8 @@ export class Router {
     
             setTimeout(() => {
                 this.attachGameModeEvents();
-            }, 100);
+                this.attachLangEvent();
+            }, 10);
         } else {
             console.error(`❌ Erreur: Impossible de charger la page "${pageName}".`);
         }
@@ -95,5 +97,24 @@ export class Router {
                 });
             });
         
+    }
+
+    private attachLangEvent(){
+         // ✅ Charger la langue déjà choisie et la mettre dans le <select>
+    const lang = getLang();
+    const select = document.getElementById("language-select") as HTMLSelectElement;
+    if (select) {
+        select.value = lang;
+         // ✅ Lorsqu'on change la langue dans le sélecteur
+         select.addEventListener("change", (e) => {
+        const target = e.target as HTMLElement;
+        if (target.id === "language-select") {
+            const value = (target as HTMLSelectElement).value;
+            setLang(value);
+            location.reload(); // Recharge pour appliquer la nouvelle langue
+        }
+    });
+
+    }
     }
 }
