@@ -1,12 +1,31 @@
 import { getLang } from './language.js'
 import { welcomeTranslations } from '../translations/welcome.js'
+import { navbarTranslations } from '../translations/navbar.js'
+import { languageTranslations } from '../translations/language.js'
+import { gameTranslations, localPlayTranslations } from '../translations/game.js';
+import { tournamentsTranslations } from '../translations/tournaments.js';
+import { profileTranslations } from '../translations/profile.js';
+
 
 const translationsMap = {
   welcome: welcomeTranslations,
-  // tu pourras ajouter guest, profile, etc.
+  navbar: navbarTranslations,
+  language: languageTranslations,
+  game: gameTranslations,
+  localPlay: localPlayTranslations,
+  tournaments: tournamentsTranslations,
+  profile: profileTranslations,
 }
 
-export function getTranslation(page: keyof typeof translationsMap) {
+export function getTranslation<
+  Page extends keyof typeof translationsMap,
+  Key extends keyof typeof translationsMap[Page]
+>(
+  page: Page,
+  key: Key
+): string {
   const lang = getLang()
-  return translationsMap[page][lang as keyof typeof translationsMap[typeof page]]
+  const pageTranslations = translationsMap[page]
+  const entry = pageTranslations[key] as Record<string, string>
+  return entry[lang]
 }
