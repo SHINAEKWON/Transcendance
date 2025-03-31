@@ -22,6 +22,8 @@ abstract class GameElement
     private topCurrentAbsolute: number = 0;
     private bottomCurrentAbsolute: number = 0;
     
+    private isactive: boolean = true;
+    
     // Event listeners can be added (to the document) by a GameElement
     eventListeners: { [key: string]: EventListener } = {};
     
@@ -65,8 +67,6 @@ abstract class GameElement
 
         if (classList)
             this.element.classList.add(...classList);
-        // if (this.element.id === "board")
-        //     alert(this.element.classList);
         
         this.element.style.left = `${this.leftInitialRelative}%`;
         this.element.style.top = `${this.topInitialRelative}%`;
@@ -85,11 +85,22 @@ abstract class GameElement
     /* ********************************************************************** */
     getLeftInitialRelative(): number { return (this.leftInitialRelative); }
     getTopInitialRelative(): number { return (this.topInitialRelative); }
-
+    isActive(): boolean { return this.isactive; }
+    
     getLeftCurrentAbsolute(): number { return (this.leftCurrentAbsolute); }
     getRightCurrentAbsolute(): number { return (this.rightCurrentAbsolute); }
     getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
     getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
+    
+    activate(): void
+    {
+        this.isactive = true;
+    }
+    
+    desactivate(): void
+    {
+        this.isactive = false;
+    }
 
     getAndSetCurrentGeometry()
     {
@@ -101,68 +112,88 @@ abstract class GameElement
 
     isInsideTop(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.topCurrentAbsolute > ofElement.topCurrentAbsolute)
-            return true;
+            if (this.topCurrentAbsolute > ofElement.topCurrentAbsolute)
+                return true;
+        }
         return false; 
     }
     
     isInsideBottom(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.bottomCurrentAbsolute < ofElement.bottomCurrentAbsolute)
-            return true;
+            if (this.bottomCurrentAbsolute < ofElement.bottomCurrentAbsolute)
+                return true;
+        }
         return false; 
     }
     
     isInsideLeft(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.leftCurrentAbsolute > ofElement.leftCurrentAbsolute)
-            return true;
+            if (this.leftCurrentAbsolute > ofElement.leftCurrentAbsolute)
+                return true;
+        }
         return false;
     }
     
     isInsideRight(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.rightCurrentAbsolute < ofElement.rightCurrentAbsolute)
-            return true;
+            if (this.rightCurrentAbsolute < ofElement.rightCurrentAbsolute)
+                return true;
+        }
         return false;
     }
     
     rightTouchesLeft(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-        || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
-        || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-        || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
-            return false;
-        return true;
+            if (this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
+            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
+                return false;
+            return true;
+        }
+        return false;
     }
     
     leftTouchesRight(ofElement: GameElement): boolean
     {
-        this.getAndSetCurrentGeometry();
-        ofElement.getAndSetCurrentGeometry();
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
         
-        if (this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
-        || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-        || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-        || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
-            return false;
-        return true;
+            if (this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
+            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
+                return false;
+            return true;
+        }
+        return false;
     }
 
     touchesLeftOrRight(ofElement: GameElement): boolean

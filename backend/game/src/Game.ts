@@ -12,6 +12,8 @@ const DOWN: number = 3;
 
 // score constants
 const score_winning: number = 5;
+const count_balls: number = 100;
+let active_balls: number = count_balls;
 
 class Game
 {
@@ -37,9 +39,11 @@ class Game
 
         this.state = GAME_NEW;
 
-        this.balls.push(new Ball("ball1", this.board, ["aspect-square", "rounded-full"]));
-        this.balls.push(new Ball("ball2", this.board, ["aspect-square", "rounded-full"]));
-        this.balls.push(new Ball("ball3", this.board, ["aspect-square", "rounded-full"]));
+        for (let i=0; i < count_balls; ++i)
+        {
+            this.balls.push(new Ball("ball" + i, this.board, ["aspect-square", "rounded-full"]));
+            this.balls[i].changeText(String(i));
+        }
 
         this.initializeEventListeners();
     }
@@ -110,6 +114,7 @@ class Game
     {
         for (let i=0; i < this.balls.length; ++i)
         {
+            this.balls[i].activate();
             this.balls[i].reinitializePosition();
             this.balls[i].initializeSpeed();
         }
@@ -122,22 +127,36 @@ class Game
             this.balls[i].move();
         }
     }
+    
+    countActiveBalls(): number
+    {
+        let countActiveBalls: number = 0;
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            if (this.balls[i].isActive() == true)
+                ++countActiveBalls;
+        } 
+        return countActiveBalls;
+    }
 
     ballout(): void
     {
-        this.changeState(GAME_PAUSED);
-        this.showMessages();
-        this.reinitializeBalls()
-        this.playerLeft.paddle.reinitializePosition();
-        this.playerRight.paddle.reinitializePosition();
+        if (this.countActiveBalls() == 0)
+        {
+            this.changeState(GAME_PAUSED);
+            this.showMessages();
+            this.reinitializeBalls()
+            this.playerLeft.paddle.reinitializePosition();
+            this.playerRight.paddle.reinitializePosition();
 
-        if (this.playerLeft.score == score_winning)
-        {
-            this.end(LEFT);
-        }
-        else if (this.playerRight.score == score_winning)
-        {
-            this.end(RIGHT);
+            if (this.playerLeft.score == score_winning * count_balls)
+            {
+                this.end(LEFT);
+            }
+            else if (this.playerRight.score == score_winning * count_balls)
+            {
+                this.end(RIGHT);
+            }
         }
     }
 
@@ -162,33 +181,35 @@ class Game
     {
         for (let i=0; i < this.balls.length; ++i)
         {
-            if (this.balls[i].hitsWall(this.board) == true)
+            if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this.board) == true)
                 this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
         
-            else if (this.balls[i].hitsPaddle(this.playerLeft.paddle) == true
+            else if (this.balls[i].isActive() == true && this.balls[i].hitsPaddle(this.playerLeft.paddle) == true
             || this.balls[i].hitsPaddle(this.playerRight.paddle) == true)
             {
                 this.balls[i].setSpeedComponents(this.balls[i].getSpeedX() * -1, this.balls[i].getSpeedY());
                 this.balls[i].increaseSpeed(0.1);
             }
 
-            else if (this.balls[i].isLeftOut(this.board) == true)
+            else if (this.balls[i].isActive() == true && this.balls[i].isLeftOut(this.board) == true)
             {
+                this.balls[i].desactivate();
                 this.playerRight.increaseScore();
                 this.playerRight.changeScoreText();
-                this.msgMain.changeText("Point for " + this.playerRight.name);
-                this.msgMain.changeTextColor("yellow");
+                //this.msgMain.changeText("Point for " + this.playerRight.name);
+                //this.msgMain.changeTextColor("yellow");
 
                 this.ballout();
             }
             
-            else if (this.balls[i].isRightOut(this.board) == true)
+            else if (this.balls[i].isActive() == true && this.balls[i].isRightOut(this.board) == true)
             {
+                this.balls[i].desactivate();
                 this.playerLeft.increaseScore();
                 this.playerLeft.changeScoreText();
-                this.msgMain.changeText("Point for " + this.playerLeft.name);
-                this.msgMain.changeTextColor("cyan");
-
+                //this.msgMain.changeText("Point for " + this.playerLeft.name);
+                //this.msgMain.changeTextColor("cyan");
+                
                 this.ballout();
             }
         }

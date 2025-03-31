@@ -39,7 +39,9 @@ abstract class MovingGameElement extends GameElement
     getInitialSpeed(): number { return this.initialSpeed; }
     getSpeedX(): number { return this.speedX; }
     getSpeedY(): number { return this.speedY; }
-
+    getLeftNewRelative(): number { return this.leftNewRelative; }
+    getTopNewRelative(): number { return this.topNewRelative; }
+    
     private setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
     {
         if (leftNewRelative !== null)
@@ -51,6 +53,7 @@ abstract class MovingGameElement extends GameElement
     reinitializePosition(): void
     {
         this.setNewPosition(this.getLeftInitialRelative(), this.getTopInitialRelative());
+        this.draw();
     }
     
     setSpeedComponents(speedX: number, speedY: number): void
@@ -66,16 +69,19 @@ abstract class MovingGameElement extends GameElement
     
     move(insideElement: GameElement | null = null): void
     {
-        this.setNewPosition(this.leftNewRelative + this.speedX, this.topNewRelative + this.speedY);
+        if (this.isActive() == true)
+        {
+            this.setNewPosition(this.leftNewRelative + this.speedX, this.topNewRelative + this.speedY);
         
-        if (insideElement !== null
-        && (this.speedY < 0 && !this.isInsideTop(insideElement)
-        ||  this.speedY > 0 && !this.isInsideBottom(insideElement)))
-        { 
-            this.setNewPosition(this.leftNewRelative - this.speedX, this.topNewRelative - this.speedY);
-            return ;
+            if (insideElement !== null
+            && (this.speedY < 0 && !this.isInsideTop(insideElement)
+            ||  this.speedY > 0 && !this.isInsideBottom(insideElement)))
+            { 
+                this.setNewPosition(this.leftNewRelative - this.speedX, this.topNewRelative - this.speedY);
+                return ;
+            }
+            this.draw();
         }
-        this.draw();
     }
 
     private draw(): void
