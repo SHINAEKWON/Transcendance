@@ -1,66 +1,61 @@
 class Player
 {
-    leftOrRight: number;
-
     score: number;
     name: string;
 
-    elementScore: HTMLDivElement;
-    elementName: HTMLDivElement;
-
-    paddle: Paddle;
+    paddles: Paddle[] = [];
     
     color: string;
 
-    constructor(leftOrRight: number, name: string, color: string, parentElement: GameElement)
+    constructor(name: string, color: string, paddleKeys: [string, string][], paddleLeftInitialRelative: number, parentElement: GameElement)
     {
         this.score = 0;
-        this.leftOrRight = leftOrRight;
         this.name = name;
         
         this.color = color;
 
-        // get score element
-        if (this.leftOrRight == LEFT)
+        for (let i = 0; i < paddleKeys.length; ++i)
         {
-            this.paddle = new Paddle(0, leftOrRight, this, "w", "s", parentElement);
-            this.elementScore = document.getElementById("score_left") as HTMLDivElement;
-        }
-        else if (this.leftOrRight == RIGHT)
-        {
-            this.paddle = new Paddle(100, leftOrRight, this, "ArrowUp", "ArrowDown", parentElement);
-            this.elementScore = document.getElementById("score_right") as HTMLDivElement;
-        }
-        else
-            throw new Error('Score not found');
-        if (!this.elementScore)
-        {
-            throw new Error('Score not found');
-        }
-
-        // get name element
-        if (this.leftOrRight == LEFT)
-            this.elementName = document.getElementById("name_left") as HTMLDivElement;
-        else if (this.leftOrRight == RIGHT)
-            this.elementName = document.getElementById("name_right") as HTMLDivElement;
-        else
-            throw new Error('Name not found');
-        if (!this.elementName)
-        {
-            throw new Error('Name not found');
+            this.paddles.push(new Paddle(paddleLeftInitialRelative + 10 * i, this, paddleKeys[i][0], paddleKeys[i][1], parentElement));
         }
     }
     
     getColor(): string { return this.color; }
     getName(): string { return this.name; }
 
-    changeScoreText(): void
+    countPaddles(): number
     {
-        this.elementScore.textContent = String(this.score);
+        return this.paddles.length;
     }
-    
+
     increaseScore(): void
     {
         this.score += 1;
+    }
+
+    reinitializePaddles(): void
+    {
+        for (let i = 0; i < this.paddles.length; ++i)
+        {
+            this.paddles[i].reinitializePosition();
+        }
+    }
+
+    movePaddles(board: Board): void
+    {
+        for (let i = 0; i < this.paddles.length; ++i)
+        {
+            this.paddles[i].move(board);
+        }
+    }
+
+    ballHitsPaddles(ball: Ball): boolean
+    {
+        for (let i = 0; i < this.paddles.length; ++i)
+        {
+            if (ball.hitsPaddle(this.paddles[i]))
+                return true;
+        }
+        return false;
     }
 }

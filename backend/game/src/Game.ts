@@ -11,8 +11,8 @@ const UP: number = 2;
 const DOWN: number = 3;
 
 // score constants
-const score_winning: number = 5;
-const count_balls: number = 100;
+const score_winning: number = 1;
+const count_balls: number = 2;
 let active_balls: number = count_balls;
 
 class Game
@@ -25,8 +25,7 @@ class Game
 
     state: number;
 
-    playerLeft: Player;
-    playerRight: Player;
+    players: Player[] = [];
 
     animationFrameID: number | null = null;
     
@@ -34,10 +33,13 @@ class Game
 
     constructor(nameLeft: string, nameRight: string)
     {
-        this.playerLeft = new Player(LEFT, nameLeft, this.board);
-        this.playerRight = new Player(RIGHT, nameRight, this.board); 
-
         this.state = GAME_NEW;
+
+        this.players.push(new Player(nameLeft, "cyan", [["w", "s"], ["e", "d"], ["r", "f"]], 0, this.board));
+        this.players.push(new Player(nameRight, "yellow", [["ArrowUp", "ArrowDown"]], 100, this.board));
+
+        this.players.push(new Player("hello", "red", [["c", "v"]], 70, this.board));
+
 
         for (let i=0; i < count_balls; ++i)
         {
@@ -69,7 +71,7 @@ class Game
         else if (this.state == GAME_ENDED)
         {
             this.state = GAME_NEW;
-            navigateTo("revanche", true, this.playerLeft.name, this.playerRight.name);
+            navigateTo("revanche", true, this.players[0].name, this.players[1].name);
         }
     }
     
@@ -139,6 +141,36 @@ class Game
         return countActiveBalls;
     }
 
+    reinitializePlayers(): void
+    {
+        for (let i = 0; i < this.players.length; ++i)
+        {
+            this.players[i].reinitializePaddles();
+        }
+    }
+
+    checkGameEnded(): boolean
+    {
+        for (let i = 0; i < this.players.length; ++i)
+        {
+            if (this.players[i].score >= score_winning * count_balls)
+                return true;
+        } 
+        return false;
+    }
+
+    //TODO: check if two players have same score
+    getLeadingPlayer(): Player
+    {
+        let leadingPlayer: Player = this.players[0];
+        for (let i = 0; i < this.players.length; ++i)
+        {
+            if (this.players[i].score > leadingPlayer.score)
+                leadingPlayer = this.players[i];
+        } 
+        return leadingPlayer;
+    }
+
     ballout(): void
     {
         if (this.countActiveBalls() == 0)
@@ -146,35 +178,43 @@ class Game
             this.changeState(GAME_PAUSED);
             this.showMessages();
             this.reinitializeBalls()
-            this.playerLeft.paddle.reinitializePosition();
-            this.playerRight.paddle.reinitializePosition();
+            this.reinitializePlayers();
 
-            if (this.playerLeft.score == score_winning * count_balls)
+            if (this.checkGameEnded() == true)
             {
-                this.end(LEFT);
-            }
-            else if (this.playerRight.score == score_winning * count_balls)
-            {
-                this.end(RIGHT);
+                this.end();
             }
         }
     }
 
-    end(won: number): void
+    end(): void
     {
         this.changeState(GAME_ENDED);
-        if (won == LEFT)
-        {
-            this.msgMain.changeText("Player " + this.playerLeft.name + " wins!");
-            this.msgMain.changeTextColor("cyan");
-        }
-        else if (won == RIGHT)
-        {
-            this.msgMain.changeText("Player " + this.playerRight.name + " wins!");
-            this.msgMain.changeTextColor("yellow");
-        }
+
+        const winningPlayer = this.getLeadingPlayer();
+
+        this.msgMain.changeText("Player " + winningPlayer.name + " wins!");
+        this.msgMain.changeTextColor(winningPlayer.color);
 
         this.showMessages();
+    }
+
+    ballHitsPaddles(ball: Ball): boolean
+    {
+        for (let i = 0; i < this.players.length; ++i)
+        {
+            if (this.players[i].ballHitsPaddles(ball) == true)
+                return true;
+        } 
+        return false;
+    }
+
+    movePaddles(board: Board): void
+    {
+        for (let i = 0; i < this.players.length; ++i)
+        {
+            this.players[i].movePaddles(board);
+        } 
     }
 
     checkBalls(): void
@@ -184,8 +224,7 @@ class Game
             if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this.board) == true)
                 this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
         
-            else if (this.balls[i].isActive() == true && this.balls[i].hitsPaddle(this.playerLeft.paddle) == true
-            || this.balls[i].hitsPaddle(this.playerRight.paddle) == true)
+            else if (this.balls[i].isActive() == true && this.ballHitsPaddles(this.balls[i]) == true)
             {
                 this.balls[i].setSpeedComponents(this.balls[i].getSpeedX() * -1, this.balls[i].getSpeedY());
                 this.balls[i].increaseSpeed(0.1);
@@ -194,8 +233,7 @@ class Game
             else if (this.balls[i].isActive() == true && this.balls[i].isLeftOut(this.board) == true)
             {
                 this.balls[i].desactivate();
-                this.playerRight.increaseScore();
-                this.playerRight.changeScoreText();
+                this.players[1].increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerRight.name);
                 //this.msgMain.changeTextColor("yellow");
 
@@ -205,8 +243,7 @@ class Game
             else if (this.balls[i].isActive() == true && this.balls[i].isRightOut(this.board) == true)
             {
                 this.balls[i].desactivate();
-                this.playerLeft.increaseScore();
-                this.playerLeft.changeScoreText();
+                this.players[0].increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerLeft.name);
                 //this.msgMain.changeTextColor("cyan");
                 
@@ -220,8 +257,7 @@ class Game
         if (this.state == GAME_STARTED)
         {
             this.moveBalls();
-            this.playerLeft.paddle.move(this.board);
-            this.playerRight.paddle.move(this.board);
+            this.movePaddles(this.board);
             
             this.checkBalls();
         }
