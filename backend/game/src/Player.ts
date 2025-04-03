@@ -9,22 +9,26 @@ class Player
     elementName: HTMLDivElement;
 
     paddle: Paddle;
+    
+    color: string;
 
-    constructor(leftOrRight: number, name: string, parentElement: GameElement)
+    constructor(leftOrRight: number, name: string, color: string, parentElement: GameElement)
     {
         this.score = 0;
         this.leftOrRight = leftOrRight;
         this.name = name;
+        
+        this.color = color;
 
         // get score element
         if (this.leftOrRight == LEFT)
         {
-            this.paddle = new Paddle(0, leftOrRight, "w", "s", parentElement);
+            this.paddle = new Paddle(0, leftOrRight, this, "w", "s", parentElement);
             this.elementScore = document.getElementById("score_left") as HTMLDivElement;
         }
         else if (this.leftOrRight == RIGHT)
         {
-            this.paddle = new Paddle(100, leftOrRight, "ArrowUp", "ArrowDown", parentElement);
+            this.paddle = new Paddle(100, leftOrRight, this, "ArrowUp", "ArrowDown", parentElement);
             this.elementScore = document.getElementById("score_right") as HTMLDivElement;
         }
         else
@@ -46,6 +50,9 @@ class Player
             throw new Error('Name not found');
         }
     }
+    
+    getColor(): string { return this.color; }
+    getName(): string { return this.name; }
 
     changeScoreText(): void
     {
