@@ -7,9 +7,9 @@ export class WelcomePage {
 
         return `
             <div class="flex items-center justify-center min-h-screen bg-dark-blue">
-                <div class="bg-gray-800 bg-opacity-90 p-8 rounded-2xl shadow-lg text-center w-[90%] max-w-xl space-y-6 custom-position">
+                <div class="bg-gray-800 bg-opacity-90 p-10 rounded-2xl shadow-lg text-center w-[90%] max-w-xl space-y-6 custom-position">
                     <h2 class="text-4xl font-gaming text-neon-blue animate-glow">${t("welcome")}</h2>
-                    <p class="text-xl text-neon-pink font-semibold">${t("enjoy")}</p>
+                    <p class="text-xl text-neon-orange font-semibold">${t("enjoy")}</p>
 
                     <div>
                         <h4 class="text-neon-green text-lg font-bold mb-2">${t("start")}</h4>

@@ -9,6 +9,7 @@ layer(utilities);
   --color-neon-blue: #00f3ff;
   --color-neon-purple: #ff00ff;
   --color-neon-green: #39ff14;
+  --color-neon-orange: #FF6700;
 
   --animate-glow: glow 2s ease-in-out infinite alternate;
 
@@ -199,6 +200,14 @@ button:hover {
   font-weight: bold;
 }
 
+.text-neon-orange {
+  color: var(--color-neon-orange);
+  text-shadow:
+    0 0 20px var(--color-neon-orange),
+    0 0 1px var(--color-neon-orange),
+    0 0 2px var(--color-neon-orange);
+  font-weight: bold;
+}
 
 
 .bg-neon-green {
@@ -209,6 +218,11 @@ button:hover {
 .bg-neon-purple {
   --tw-bg-opacity: 1;
   background-color: rgb(255 0 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-neon-orange {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 115 0 / var(--tw-bg-opacity, 1));
 }
 
 

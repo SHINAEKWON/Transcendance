@@ -29,7 +29,7 @@ export class ProfilePage {
         const friends = [
             { name: "PlayerOne", avatar: "./public/images/player1_avatar.png", status: "online" },
             { name: "PingQueen", avatar: "./public/images/player2_avatar.png", status: "in-game" },
-            { name: "ShadowAce", avatar: "./public/images/profile.jpg", status: "offline" }
+            { name: "ShadowAce", avatar: "./public/images/avatar1.png", status: "offline" }
         ];
 
         const friendCards = friends.map(friend => `
@@ -42,7 +42,7 @@ export class ProfilePage {
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <button class="bg-neon-blue text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('challenge')}</button>
+                    <button class="bg-neon-orange text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('challenge')}</button>
                     <button class="bg-neon-purple text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('invite')}</button>
                     <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('block')}</button>
                 </div>

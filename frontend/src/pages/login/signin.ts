@@ -1,7 +1,7 @@
 export class SigninPage {
     render(): string {
         return `
-            <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+            <div class="max-w-md mx-auto bg-gray-800  p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Sign In</h2>
                 
                 <form id="signin-form" class="space-y-6">
