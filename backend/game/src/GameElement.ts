@@ -27,6 +27,12 @@ abstract class GameElement
     // Event listeners can be added (to the document) by a GameElement
     eventListeners: { [key: string]: EventListener } = {};
     
+    hasLeftWall: boolean = true;
+    hasTopWall: boolean = true;
+    hasRightWall: boolean = true;
+    hasBottomWall: boolean = true;
+
+    
 
 
 

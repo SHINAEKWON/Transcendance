@@ -28,7 +28,11 @@ class Game
 
     constructor(nameLeft: string, nameRight: string)
     {
-        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-t", "border-b", "border-white"], 2, nameLeft, "yellow", [["w", "s"]], "alex", "red", [["r", "t"]], nameRight, "cyan", [["ArrowUp", "ArrowDown"]], null, null, null);
+        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-white"], 2, 
+        nameLeft, "yellow", [["w", "s"]], 
+        "alex", "red", [["r", "t"]], 
+        nameRight, "cyan", [["ArrowUp", "ArrowDown"]], 
+        "hi", "blue", [["b", "n"]]);
 
         this.msgMain = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
         this.msgSide = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);

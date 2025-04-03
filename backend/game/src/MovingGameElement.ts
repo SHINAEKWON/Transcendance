@@ -75,7 +75,9 @@ abstract class MovingGameElement extends GameElement
         
             if (insideElement !== null
             && (this.speedY < 0 && !this.isInsideTop(insideElement)
-            ||  this.speedY > 0 && !this.isInsideBottom(insideElement)))
+            ||  this.speedY > 0 && !this.isInsideBottom(insideElement)
+            ||  this.speedX < 0 && !this.isInsideLeft(insideElement)
+            ||  this.speedX > 0 && !this.isInsideRight(insideElement)))
             { 
                 this.setNewPosition(this.leftNewRelative - this.speedX, this.topNewRelative - this.speedY);
                 return ;

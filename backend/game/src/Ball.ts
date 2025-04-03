@@ -23,9 +23,15 @@ class Ball extends MovingGameElement
 
     hitsWall(board: Board): boolean
     {
-        if (this.isInsideTop(board) && this.isInsideBottom(board))
-            return false;
-        return (true);
+        if (board.hasLeftWall == true && this.isInsideLeft(board) == false)
+            return true
+        if (board.hasTopWall == true && this.isInsideTop(board) == false)
+            return true;
+        if (board.hasRightWall == true && this.isInsideRight(board) == false)
+            return true;
+        if (board.hasBottomWall == true && this.isInsideBottom(board) == false)
+            return true;
+        return (false);
     }
 
     hitsPaddle(paddle: Paddle): boolean
@@ -35,21 +41,36 @@ class Ball extends MovingGameElement
 
     isLeftOut(board: Board): boolean
     {
-        if (this.isInsideLeft(board))
+        if (board.hasLeftWall == true || this.isInsideLeft(board))
             return (false);
         return (true);
     }
     
     isRightOut(board: Board): boolean
     {
-        if (this.isInsideRight(board))
+        if (board.hasRightWall == true || this.isInsideRight(board))
+            return (false);
+        return (true);
+    }
+    
+    isTopOut(board: Board): boolean
+    {
+        if (board.hasTopWall == true || this.isInsideTop(board))
+            return (false);
+        return (true);
+    }
+    
+    isBottomOut(board: Board): boolean
+    {
+        if (board.hasBottomWall == true || this.isInsideBottom(board))
             return (false);
         return (true);
     }
     
     isOut(board: Board): boolean
     {
-        if (this.isLeftOut(board) == true || this.isRightOut(board) == true)
+        if (this.isLeftOut(board) == true || this.isRightOut(board) == true
+        || this.isTopOut(board) == true || this.isBottomOut(board) == true)
             return (true);
         return (false);
     }
