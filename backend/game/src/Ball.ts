@@ -30,7 +30,7 @@ class Ball extends MovingGameElement
 
     hitsPaddle(paddle: Paddle): boolean
     {
-        return this.touchesLeftOrRight(paddle);
+        return this.touches(paddle);
     }
 
     isLeftOut(board: Board): boolean

@@ -12,20 +12,15 @@ const DOWN: number = 3;
 
 // score constants
 const score_winning: number = 1;
-const count_balls: number = 2;
-let active_balls: number = count_balls;
 
 class Game
 {
-    board: Board = new Board(["border-t", "border-b", "border-white"]);
-    balls: Ball[] = [];
-
-    msgMain: Message = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
-    msgSide: Message = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);
+    board: Board;
+    
+    msgMain: Message; 
+    msgSide: Message;
 
     state: number;
-
-    players: Player[] = [];
 
     animationFrameID: number | null = null;
     
@@ -33,20 +28,12 @@ class Game
 
     constructor(nameLeft: string, nameRight: string)
     {
+        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-t", "border-b", "border-white"], 2, nameLeft, "yellow", [["w", "s"]], "alex", "red", [["r", "t"]], nameRight, "cyan", [["ArrowUp", "ArrowDown"]], null, null, null);
+
+        this.msgMain = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
+        this.msgSide = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);
+
         this.state = GAME_NEW;
-
-        this.players.push(new Player(nameLeft, "cyan", [["w", "s"], ["e", "d"], ["r", "f"]], 0, this.board));
-        this.players.push(new Player(nameRight, "yellow", [["ArrowUp", "ArrowDown"]], 100, this.board));
-
-        this.players.push(new Player("hello", "red", [["c", "v"]], 70, this.board));
-
-
-        for (let i=0; i < count_balls; ++i)
-        {
-            this.balls.push(new Ball("ball" + i, this.board, ["aspect-square", "rounded-full"]));
-            this.balls[i].changeText(String(i));
-        }
-
         this.initializeEventListeners();
     }
 
@@ -71,7 +58,7 @@ class Game
         else if (this.state == GAME_ENDED)
         {
             this.state = GAME_NEW;
-            navigateTo("revanche", true, this.players[0].name, this.players[1].name);
+            navigateTo("revanche", true, "hello", "ciao");
         }
     }
     
@@ -112,73 +99,25 @@ class Game
         this.showMessages();
     }
 
-    reinitializeBalls(): void
-    {
-        for (let i=0; i < this.balls.length; ++i)
-        {
-            this.balls[i].activate();
-            this.balls[i].reinitializePosition();
-            this.balls[i].initializeSpeed();
-        }
-    }
-
-    moveBalls(): void
-    {
-        for (let i=0; i < this.balls.length; ++i)
-        {
-            this.balls[i].move();
-        }
-    }
-    
-    countActiveBalls(): number
-    {
-        let countActiveBalls: number = 0;
-        for (let i=0; i < this.balls.length; ++i)
-        {
-            if (this.balls[i].isActive() == true)
-                ++countActiveBalls;
-        } 
-        return countActiveBalls;
-    }
-
-    reinitializePlayers(): void
-    {
-        for (let i = 0; i < this.players.length; ++i)
-        {
-            this.players[i].reinitializePaddles();
-        }
-    }
-
     checkGameEnded(): boolean
     {
-        for (let i = 0; i < this.players.length; ++i)
+        const leadingPlayer: Player | null = this.board.getLeadingPlayer();
+        if (leadingPlayer !== null)
         {
-            if (this.players[i].score >= score_winning * count_balls)
+            if (leadingPlayer.score >= score_winning)
                 return true;
-        } 
+        }
         return false;
-    }
-
-    //TODO: check if two players have same score
-    getLeadingPlayer(): Player
-    {
-        let leadingPlayer: Player = this.players[0];
-        for (let i = 0; i < this.players.length; ++i)
-        {
-            if (this.players[i].score > leadingPlayer.score)
-                leadingPlayer = this.players[i];
-        } 
-        return leadingPlayer;
     }
 
     ballout(): void
     {
-        if (this.countActiveBalls() == 0)
+        if (this.board.countActiveBalls() == 0)
         {
             this.changeState(GAME_PAUSED);
             this.showMessages();
-            this.reinitializeBalls()
-            this.reinitializePlayers();
+            this.board.reinitializeBalls()
+            this.board.reinitializePlayers();
 
             if (this.checkGameEnded() == true)
             {
@@ -191,75 +130,25 @@ class Game
     {
         this.changeState(GAME_ENDED);
 
-        const winningPlayer = this.getLeadingPlayer();
+        const winningPlayer: Player | null = this.board.getLeadingPlayer();
 
-        this.msgMain.changeText("Player " + winningPlayer.name + " wins!");
-        this.msgMain.changeTextColor(winningPlayer.color);
-
-        this.showMessages();
-    }
-
-    ballHitsPaddles(ball: Ball): boolean
-    {
-        for (let i = 0; i < this.players.length; ++i)
+        if (winningPlayer !== null)
         {
-            if (this.players[i].ballHitsPaddles(ball) == true)
-                return true;
-        } 
-        return false;
-    }
-
-    movePaddles(board: Board): void
-    {
-        for (let i = 0; i < this.players.length; ++i)
-        {
-            this.players[i].movePaddles(board);
-        } 
-    }
-
-    checkBalls(): void
-    {
-        for (let i=0; i < this.balls.length; ++i)
-        {
-            if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this.board) == true)
-                this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
-        
-            else if (this.balls[i].isActive() == true && this.ballHitsPaddles(this.balls[i]) == true)
-            {
-                this.balls[i].setSpeedComponents(this.balls[i].getSpeedX() * -1, this.balls[i].getSpeedY());
-                this.balls[i].increaseSpeed(0.1);
-            }
-
-            else if (this.balls[i].isActive() == true && this.balls[i].isLeftOut(this.board) == true)
-            {
-                this.balls[i].desactivate();
-                this.players[1].increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerRight.name);
-                //this.msgMain.changeTextColor("yellow");
-
-                this.ballout();
-            }
-            
-            else if (this.balls[i].isActive() == true && this.balls[i].isRightOut(this.board) == true)
-            {
-                this.balls[i].desactivate();
-                this.players[0].increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerLeft.name);
-                //this.msgMain.changeTextColor("cyan");
-                
-                this.ballout();
-            }
+            this.msgMain.changeText("Player " + winningPlayer.name + " wins!");
+            this.msgMain.changeTextColor(winningPlayer.color);
         }
+        this.showMessages();
     }
 
     update(): void
     {
         if (this.state == GAME_STARTED)
         {
-            this.moveBalls();
-            this.movePaddles(this.board);
+            this.board.moveBalls();
+            this.board.movePaddles(this.board);
             
-            this.checkBalls();
+            if (this.board.checkBalls() == true)
+                this.ballout();
         }
     }
 

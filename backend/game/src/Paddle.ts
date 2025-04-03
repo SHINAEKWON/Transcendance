@@ -5,14 +5,50 @@ class Paddle extends MovingGameElement
     downKey: string;
     
     player: Player;
+    position: string;
 
-    constructor(leftInitialRelative: number, player: Player, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
+    constructor(position: string, player: Player, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
     {
-        super(player.getName() + "_paddle_" + player.countPaddles(), leftInitialRelative, 42.5, 0.3, 15, player.getColor(), 1, parentElement, classList);
+        let leftInitialRelative: number;
+        let topInitialRelative: number;
+        let widthFraction: number;
+        let heightFraction: number;
+
+        if (position === "left")
+        {
+            leftInitialRelative = 0;
+            topInitialRelative = 42.5;
+            widthFraction = 0.3;
+            heightFraction = 15;
+        }
+        else if (position === "top")
+        {
+            leftInitialRelative = 50;
+            topInitialRelative = 0;
+            widthFraction = 15;
+            heightFraction = 0.3;
+        }
+        else if (position === "right")
+        {
+            leftInitialRelative = 100;
+            topInitialRelative = 42.5;
+            widthFraction = 0.3;
+            heightFraction = 15;
+        }
+        else
+        {
+            leftInitialRelative = 50;
+            topInitialRelative = 100;
+            widthFraction = 15;
+            heightFraction = 0.3;
+        }
+
+        super(player.getName() + "_paddle_" + player.countPaddles(), leftInitialRelative, topInitialRelative, widthFraction, heightFraction, player.getColor(), 1, parentElement, classList);
         
         this.player = player;
         this.upKey = upKey;
         this.downKey = downKey;
+        this.position = position;
         
         this.initializeEventListeners();
     }
@@ -24,15 +60,31 @@ class Paddle extends MovingGameElement
     
     keyDownHandler(event: KeyboardEvent): void
     {
-        switch (event.key)
+        if (this.position == "left" || this.position == "right")
         {
-            case this.upKey:
-                this.setSpeedComponents(0, -this.getInitialSpeed());
-                break ;
-            case this.downKey:
-                this.setSpeedComponents(0, this.getInitialSpeed());
-                break ;
-            default:
+            switch (event.key)
+            {
+                case this.upKey:
+                    this.setSpeedComponents(0, -this.getInitialSpeed());
+                    break ;
+                case this.downKey:
+                    this.setSpeedComponents(0, this.getInitialSpeed());
+                    break ;
+                default:
+            }
+        }
+        else
+        {
+            switch (event.key)
+            {
+                case this.upKey:
+                    this.setSpeedComponents(-this.getInitialSpeed(), 0);
+                    break ;
+                case this.downKey:
+                    this.setSpeedComponents(this.getInitialSpeed(), 0);
+                    break ;
+                default:
+            } 
         }
     }
     

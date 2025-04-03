@@ -1,22 +1,33 @@
+type Players =
+{
+    left: Player | null;
+    top: Player | null;
+    right: Player | null;
+    bottom: Player | null;
+};
+
 class Player
 {
     score: number;
     name: string;
 
+    position: string;
+
     paddles: Paddle[] = [];
     
     color: string;
 
-    constructor(name: string, color: string, paddleKeys: [string, string][], paddleLeftInitialRelative: number, parentElement: GameElement)
+    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: GameElement, position: string)
     {
         this.score = 0;
         this.name = name;
+        this.position = position;
         
         this.color = color;
 
         for (let i = 0; i < paddleKeys.length; ++i)
         {
-            this.paddles.push(new Paddle(paddleLeftInitialRelative + 10 * i, this, paddleKeys[i][0], paddleKeys[i][1], parentElement));
+            this.paddles.push(new Paddle(position, this, paddleKeys[i][0], paddleKeys[i][1], parentElement));
         }
     }
     

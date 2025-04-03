@@ -196,9 +196,43 @@ abstract class GameElement
         return false;
     }
 
-    touchesLeftOrRight(ofElement: GameElement): boolean
+    topTouchesBottom(ofElement: GameElement): boolean
     {
-        return (this.rightTouchesLeft(ofElement) || this.leftTouchesRight(ofElement));
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
+        
+            if (this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute
+            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute)
+                return false;
+            return true;
+        }
+        return false;
+    }
+
+    bottomTouchesTop(ofElement: GameElement): boolean
+    {
+        if (this.isactive == true && ofElement.isactive == true)
+        {
+            this.getAndSetCurrentGeometry();
+            ofElement.getAndSetCurrentGeometry();
+        
+            if (this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
+            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute
+            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
+            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute)
+                return false;
+            return true;
+        }
+        return false;
+    }
+
+    touches(element: GameElement): boolean
+    {
+        return (this.rightTouchesLeft(element) || this.leftTouchesRight(element) || this.topTouchesBottom(element) || this.bottomTouchesTop(element));
     }
     
     hide(): void
