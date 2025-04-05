@@ -60,13 +60,13 @@ class Player
         }
     }
 
-    ballHitsPaddles(ball: Ball): boolean
+    ballHitsPaddles(ball: Ball): Paddle | null
     {
         for (let i = 0; i < this.paddles.length; ++i)
         {
             if (ball.hitsPaddle(this.paddles[i]))
-                return true;
+                return this.paddles[i];
         }
-        return false;
+        return null;
     }
 }

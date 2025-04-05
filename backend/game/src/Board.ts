@@ -127,14 +127,15 @@ class Board extends GameElement
         }
     }
 
-    ballHitsPaddles(ball: Ball): Paddle | null
+    ballHitsPaddle(ball: Ball): Paddle | null
     {
         for (const direction in this.players) {
             const player = this.players[direction as keyof Players];
             if (player !== null)
             {
-                if (player.ballHitsPaddles(ball) == true)
-                    return player.paddles[0];
+                let paddle: Paddle | null = player.ballHitsPaddles(ball);
+                if (paddle !== null)
+                    return paddle;
             }
         } 
         return null;
@@ -180,9 +181,9 @@ class Board extends GameElement
             if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this) == true)
                 this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
         
-            else if (this.balls[i].isActive() == true && this.ballHitsPaddles(this.balls[i]) != null)
+            else if (this.balls[i].isActive() == true && this.ballHitsPaddle(this.balls[i]) !== null)
             {
-                let paddle: Paddle | null = this.ballHitsPaddles(this.balls[i]);
+                let paddle: Paddle | null = this.ballHitsPaddle(this.balls[i]);
                 if (paddle != null)
                 {
                     if (paddle.position === "left" || paddle.position === "right")
@@ -196,8 +197,9 @@ class Board extends GameElement
             else if (this.balls[i].isActive() == true && this.balls[i].isLeftOut(this) == true)
             {
                 this.balls[i].desactivate();
-                if (this.players.right !== null)
-                    this.players.right.increaseScore();
+                
+                if (this.players.left !== null)
+                    this.players.left.increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerRight.name);
                 //this.msgMain.changeTextColor("yellow");
 
@@ -208,8 +210,8 @@ class Board extends GameElement
             {
                 this.balls[i].desactivate();
 
-                if (this.players.left !== null)
-                    this.players.left.increaseScore();
+                if (this.players.right !== null)
+                    this.players.right.increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerLeft.name);
                 //this.msgMain.changeTextColor("cyan");
                 
@@ -220,8 +222,8 @@ class Board extends GameElement
             {
                 this.balls[i].desactivate();
 
-                if (this.players.bottom !== null)
-                    this.players.bottom.increaseScore();
+                if (this.players.top !== null)
+                    this.players.top.increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerLeft.name);
                 //this.msgMain.changeTextColor("cyan");
                 
@@ -232,8 +234,8 @@ class Board extends GameElement
             {
                 this.balls[i].desactivate();
 
-                if (this.players.top !== null)
-                    this.players.top.increaseScore();
+                if (this.players.bottom !== null)
+                    this.players.bottom.increaseScore();
                 //this.msgMain.changeText("Point for " + this.playerLeft.name);
                 //this.msgMain.changeTextColor("cyan");
                 
