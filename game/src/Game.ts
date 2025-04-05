@@ -1,3 +1,9 @@
+import { Board } from "./Board";
+import { Ball } from "./Ball";
+import { Player } from "./Player";
+import { navigateTo } from "./page_navigation";
+
+
 // Game status constants
 const GAME_NEW: number = 0;
 const GAME_STARTED: number = 1;
@@ -14,7 +20,7 @@ enum Direction
 }
 
 // position constants
-enum Position
+export enum Position
 {
     Left,
     Top,
@@ -23,21 +29,14 @@ enum Position
     None
 }
 
-// score constants
-const score_winning: number = 1;
-
-class Game
+export class Game
 {
+    private readonly score_winning: number = 1;
+
     board: Board;
-    
-    msgMain: Message; 
-    msgSide: Message;
-
     state: number;
-
     animationFrameID: number | null = null;
-    
-    eventListeners: { [key: string]: EventListener } = {};
+        eventListeners: { [key: string]: EventListener } = {};
 
     constructor(nameLeft: string, nameRight: string)
     {
@@ -49,9 +48,6 @@ class Game
         //null, null, null,
         //null, null, null,
         //null, null, null);
-
-        this.msgMain = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
-        this.msgSide = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
@@ -93,30 +89,14 @@ class Game
         }
     }
 
-    hideMessages(): void
-    {
-        this.msgMain.hide();
-        this.msgSide.hide();
-    }
-
-    showMessages(): void
-    {
-        this.msgMain.show();
-        this.msgSide.show();
-    }
-
     start(): void
     {
         this.changeState(GAME_STARTED);
-        this.hideMessages();
     }
 
     pause(): void
     {
         this.changeState(GAME_PAUSED);
-        this.msgMain.changeText("PAUSE");
-        this.msgMain.changeTextColor("red");
-        this.showMessages();
     }
 
     checkGameEnded(): boolean
@@ -124,7 +104,7 @@ class Game
         const leadingPlayer: Player | null = this.board.getLoosingPlayer();
         if (leadingPlayer !== null)
         {
-            if (leadingPlayer.getScore() >= score_winning)
+            if (leadingPlayer.getScore() >= this.score_winning)
                 return true;
         }
         return false;
@@ -135,7 +115,6 @@ class Game
         if (this.board.countActiveBalls() == 0)
         {
             this.changeState(GAME_PAUSED);
-            this.showMessages();
             this.board.reinitializeBalls()
             this.board.reinitializePlayers();
 
@@ -151,13 +130,6 @@ class Game
         this.changeState(GAME_ENDED);
 
         const loosingPlayer: Player | null = this.board.getLoosingPlayer();
-
-        if (loosingPlayer !== null)
-        {
-            this.msgMain.changeText("Player " + loosingPlayer.getName() + " looses!");
-            this.msgMain.changeTextColor(loosingPlayer.getColor());
-        }
-        this.showMessages();
     }
 
     update(): void

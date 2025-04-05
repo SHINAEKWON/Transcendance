@@ -1,4 +1,10 @@
-type Players =
+import { Paddle } from "./Paddle";
+import { GameElement } from "./GameElement";
+import { Ball } from "./Ball";
+import { Board } from "./Board";
+import { Position } from "./Game";
+
+export type Players =
 {
     left: Player | null;
     top: Player | null;
@@ -6,7 +12,7 @@ type Players =
     bottom: Player | null;
 };
 
-class Player
+export class Player
 {
     private name: string;
     private color: string;

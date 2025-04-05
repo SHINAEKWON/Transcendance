@@ -5,7 +5,7 @@
     See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
 */
 
-abstract class GameElement
+export abstract class GameElement
 {
     /* ********************************************************************** */
     /* Attributes                                                             */

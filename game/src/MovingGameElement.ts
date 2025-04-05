@@ -1,4 +1,6 @@
-abstract class MovingGameElement extends GameElement
+import { GameElement } from "./GameElement";
+
+export abstract class MovingGameElement extends GameElement
 {
 
     /* ********************************************************************** */

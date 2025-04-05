@@ -1,5 +1,9 @@
+import { MovingGameElement } from "./MovingGameElement";
+import { GameElement } from "./GameElement";
+import { Player } from "./Player";
+import { Position } from "./Game";
 
-class Paddle extends MovingGameElement
+export class Paddle extends MovingGameElement
 {
     private upKey: string;
     private downKey: string;

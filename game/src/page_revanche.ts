@@ -1,4 +1,6 @@
-function renderRevanchePage(player1: string | null, player2: string | null)
+import { navigateTo } from "./page_navigation";
+
+export function renderRevanchePage(player1: string | null, player2: string | null)
 {
     const app: HTMLElement | null = document.getElementById("app");
     

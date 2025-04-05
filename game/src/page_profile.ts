@@ -1,4 +1,6 @@
-function renderProfilePage(profilename: string | null)
+import { navigateTo } from "./page_navigation";
+
+export function renderProfilePage(profilename: string | null)
 {
     const app: HTMLElement | null = document.getElementById("app");
     

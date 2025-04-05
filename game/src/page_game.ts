@@ -1,4 +1,8 @@
-function renderGamePage(player1: string | null, player2: string | null)
+import { Game } from "./Game";
+
+export let game: Game | null = null;
+
+export function renderGamePage(player1: string | null, player2: string | null)
 {
     const app: HTMLElement | null = document.getElementById("app");
     

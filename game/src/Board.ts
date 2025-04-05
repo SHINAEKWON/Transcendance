@@ -1,4 +1,10 @@
-class Board extends GameElement
+import { Ball } from "./Ball";
+import { GameElement } from "./GameElement";
+import { Players, Player } from "./Player";
+import { Paddle } from "./Paddle";
+import { Position } from "./Game";
+
+export class Board extends GameElement
 {
     balls: Ball[] = [];
     players: Players;

@@ -1,4 +1,6 @@
-function renderCreateAccountPage()
+import { navigateTo } from "./page_navigation";
+
+export function renderCreateAccountPage()
 {
     const app: HTMLElement | null = document.getElementById("app");
     

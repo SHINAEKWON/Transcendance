@@ -1,4 +1,6 @@
-function renderWelcomePage()
+import { navigateTo } from "./page_navigation";
+
+export function renderWelcomePage()
 {
     const app: HTMLElement | null = document.getElementById("app");
     

@@ -1,4 +1,9 @@
-let game: Game | null = null;
+import { game, renderGamePage } from "./page_game";
+import { renderCreateAccountPage } from "./page_create_account";
+import { renderLoginPage } from "./page_login";
+import { renderProfilePage } from "./page_profile";
+import { renderRevanchePage } from "./page_revanche";
+import { renderWelcomePage } from "./page_welcome";
 
 interface GameState
 {
@@ -39,13 +44,12 @@ function pushStateToHistory(): void
 /* ************************************************************************** */
 /* Navigate manually to a page and add to history                             */
 /* ************************************************************************** */
-function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
+export function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
 {
     setGameState(page, pushHistory, playerLeft, playerRight);
     if (page !== "game" && game)
     {
         game.destroy();
-        game = null;
     }
     if (page === "welcome")
     {
@@ -203,16 +207,8 @@ function render_page_on_load_or_refresh(): void
 /* ************************************************************************** */
 /* Event listener to be executed when page is loaded                          */
 /* ************************************************************************** */
-function run_when_content_loaded(event: Event): void
+export function run_when_content_loaded(event: Event): void
 {
     add_history_navigation_to_window();
     render_page_on_load_or_refresh();
 }
-
-/*
-https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
-The DOMContentLoaded event fires when the HTML document has been completely 
-parsed, and all deferred scripts (<script defer src="…"> and 
-<script type="module">) have downloaded and executed.
-*/
-document.addEventListener("DOMContentLoaded", run_when_content_loaded);

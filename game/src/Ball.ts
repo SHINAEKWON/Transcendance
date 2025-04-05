@@ -1,4 +1,10 @@
-class Ball extends MovingGameElement
+import { Board } from "./Board";
+import { MovingGameElement } from "./MovingGameElement";
+import { GameElement } from "./GameElement";
+import { Paddle } from "./Paddle";
+import { Position } from "./Game";
+
+export class Ball extends MovingGameElement
 {
     constructor(ballId: string, parentElement: GameElement, classList: string[] = [])
     {

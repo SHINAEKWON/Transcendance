@@ -1,4 +1,6 @@
-function renderLoginPage()
+import { navigateTo } from "./page_navigation";
+
+export function renderLoginPage()
 {
     const app: HTMLElement | null = document.getElementById("app");
     
