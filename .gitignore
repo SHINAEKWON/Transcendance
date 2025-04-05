@@ -1,5 +1,4 @@
 .env
-backend/node_modules
-backend/game/build
-backend/game/node_modules
-backend/game/styles/tailwind_out.css
+game/node_modules
+game/build
+game/styles/tailwind_out.css
