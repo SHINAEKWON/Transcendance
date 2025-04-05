@@ -1,57 +1,51 @@
 
 class Paddle extends MovingGameElement
 {
-    upKey: string;
-    downKey: string;
-    
-    player: Player;
-    position: string;
+    private upKey: string;
+    private downKey: string;
+    private position: Position;
 
-    constructor(position: string, player: Player, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
+    constructor(position: Position, player: Player, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
     {
-        let leftInitialRelative: number;
-        let topInitialRelative: number;
-        let widthFraction: number;
-        let heightFraction: number;
+        let leftInitialRelative: number = 0;
+        let topInitialRelative: number = 0;
+        let widthFraction: number = 0;
+        let heightFraction: number = 0;
 
-        if (position === "left")
+        if (position === Position.Left || position === Position.Right)
         {
-            leftInitialRelative = 0;
             topInitialRelative = 42.5;
             widthFraction = 0.3;
             heightFraction = 15;
+
+            if (position === Position.Left)
+                leftInitialRelative = 0;
+            else if (position === Position.Right)
+                leftInitialRelative = 100;
         }
-        else if (position === "top")
+        else if (position === Position.Top || position === Position.Bottom)
         {
             leftInitialRelative = 50;
-            topInitialRelative = 0;
             widthFraction = 15;
             heightFraction = 0.3;
+
+            if (position === Position.Top)
+                topInitialRelative = 0;
+            else if (position === Position.Bottom)
+                topInitialRelative = 100;
         }
-        else if (position === "right")
-        {
-            leftInitialRelative = 100;
-            topInitialRelative = 42.5;
-            widthFraction = 0.3;
-            heightFraction = 15;
-        }
-        else
-        {
-            leftInitialRelative = 50;
-            topInitialRelative = 100;
-            widthFraction = 15;
-            heightFraction = 0.3;
-        }
+
 
         super(player.getName() + "_paddle_" + player.countPaddles(), leftInitialRelative, topInitialRelative, widthFraction, heightFraction, player.getColor(), 1, parentElement, classList);
         
-        this.player = player;
         this.upKey = upKey;
         this.downKey = downKey;
         this.position = position;
         
         this.initializeEventListeners();
     }
+
+    getPosition(): Position { return this.position; }
 
     initializeSpeed()
     {
@@ -60,7 +54,7 @@ class Paddle extends MovingGameElement
     
     keyDownHandler(event: KeyboardEvent): void
     {
-        if (this.position == "left" || this.position == "right")
+        if (this.position == Position.Left || this.position == Position.Right)
         {
             switch (event.key)
             {

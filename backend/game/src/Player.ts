@@ -8,16 +8,16 @@ type Players =
 
 class Player
 {
-    score: number;
-    name: string;
+    private name: string;
+    private color: string;
+    private position: Position;
+    private paddles: Paddle[] = [];
 
-    position: string;
+    private score: number;
 
-    paddles: Paddle[] = [];
     
-    color: string;
 
-    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: GameElement, position: string)
+    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: GameElement, position: Position)
     {
         this.score = 0;
         this.name = name;
@@ -33,6 +33,8 @@ class Player
     
     getColor(): string { return this.color; }
     getName(): string { return this.name; }
+    getPosition(): Position { return this.position; }
+    getScore(): number { return this.score; }
 
     countPaddles(): number
     {

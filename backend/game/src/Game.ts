@@ -5,10 +5,23 @@ const GAME_PAUSED: number = 2;
 const GAME_ENDED: number = 3;
 
 // direction constants
-const LEFT: number = 0;
-const RIGHT: number = 1;
-const UP: number = 2;
-const DOWN: number = 3;
+enum Direction
+{
+    Left,
+    Up,
+    Right,
+    Down
+}
+
+// position constants
+enum Position
+{
+    Left,
+    Top,
+    Right,
+    Bottom,
+    None
+}
 
 // score constants
 const score_winning: number = 1;
@@ -28,11 +41,14 @@ class Game
 
     constructor(nameLeft: string, nameRight: string)
     {
-        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-white"], 2, 
-        nameLeft, "yellow", [["w", "s"]], 
-        "alex", "red", [["r", "t"]], 
-        nameRight, "cyan", [["ArrowUp", "ArrowDown"]], 
-        "hi", "blue", [["b", "n"]]);
+        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-white"], 1, 
+        nameLeft, "yellow", [["w", "s"], ["e", "d"]], 
+        //"alex", "red", [["ArrowLeft", "ArrowRight"]], 
+        //nameRight, "cyan", [["ArrowUp", "ArrowDown"]], 
+        //"hi", "blue", [["a", "d"]]);
+        null, null, null,
+        null, null, null,
+        null, null, null);
 
         this.msgMain = new Message("NEW GAME", MAINMESSAGE, this.board, ["text-center", "text-red-500", "text-4xl", "border-dotted", "border-2", "border-red-500"]);
         this.msgSide = new Message("Press SPACE to start...", SIDEMESSAGE, this.board, ["text-center", "text-red-500", "text-2xl", "border-dotted", "border-2", "border-red-500"]);
@@ -105,10 +121,10 @@ class Game
 
     checkGameEnded(): boolean
     {
-        const leadingPlayer: Player | null = this.board.getLeadingPlayer();
+        const leadingPlayer: Player | null = this.board.getLoosingPlayer();
         if (leadingPlayer !== null)
         {
-            if (leadingPlayer.score >= score_winning)
+            if (leadingPlayer.getScore() >= score_winning)
                 return true;
         }
         return false;
@@ -134,12 +150,12 @@ class Game
     {
         this.changeState(GAME_ENDED);
 
-        const winningPlayer: Player | null = this.board.getLeadingPlayer();
+        const loosingPlayer: Player | null = this.board.getLoosingPlayer();
 
-        if (winningPlayer !== null)
+        if (loosingPlayer !== null)
         {
-            this.msgMain.changeText("Player " + winningPlayer.name + " wins!");
-            this.msgMain.changeTextColor(winningPlayer.color);
+            this.msgMain.changeText("Player " + loosingPlayer.getName() + " looses!");
+            this.msgMain.changeTextColor(loosingPlayer.getColor());
         }
         this.showMessages();
     }

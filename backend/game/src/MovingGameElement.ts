@@ -26,6 +26,7 @@ abstract class MovingGameElement extends GameElement
         classList: string[] = [])
     {
         super(elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList);
+
         this.initialSpeed = speed;
         this.leftNewRelative = this.getLeftInitialRelative();
         this.topNewRelative = this.getTopInitialRelative();
@@ -80,7 +81,6 @@ abstract class MovingGameElement extends GameElement
             ||  this.speedX > 0 && !this.isInsideRight(insideElement)))
             { 
                 this.setNewPosition(this.leftNewRelative - this.speedX, this.topNewRelative - this.speedY);
-                return ;
             }
             this.draw();
         }

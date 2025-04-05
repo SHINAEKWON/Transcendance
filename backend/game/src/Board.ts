@@ -53,23 +53,23 @@ class Board extends GameElement
 
         if (name_left !== null && color_left !== null && keys_left !== null)
         {
-            playerLeft = new Player(name_left, color_left, keys_left, this, "left");
-            this.hasLeftWall = false;
+            playerLeft = new Player(name_left, color_left, keys_left, this, Position.Left);
+            this.leftWall = false;
         }
         if (name_top !== null && color_top !== null && keys_top !== null)
         {
-            playerTop = new Player(name_top, color_top, keys_top, this, "top");
-            this.hasTopWall = false;
+            playerTop = new Player(name_top, color_top, keys_top, this, Position.Top);
+            this.topWall = false;
         }
         if (name_right !== null && color_right !== null && keys_right !== null)
         {
-            playerRight = new Player(name_right, color_right, keys_right, this, "right");
-            this.hasRightWall = false;
+            playerRight = new Player(name_right, color_right, keys_right, this, Position.Right);
+            this.rightWall = false;
         }
         if (name_bottom !== null && color_bottom !== null && keys_bottom !== null)
         {
-            playerBottom = new Player(name_bottom, color_bottom, keys_bottom, this, "bottom");
-            this.hasBottomWall = false;
+            playerBottom = new Player(name_bottom, color_bottom, keys_bottom, this, Position.Bottom);
+            this.bottomWall = false;
         }
 
         this.players = 
@@ -103,9 +103,7 @@ class Board extends GameElement
     {
         for (let i=0; i < this.balls.length; ++i)
         {
-            this.balls[i].activate();
-            this.balls[i].reinitializePosition();
-            this.balls[i].initializeSpeed();
+            this.balls[i].reinitialize();
         }
     }
 
@@ -150,95 +148,70 @@ class Board extends GameElement
         } 
     }
 
-    //TODO: check if two players have same score
-    getLeadingPlayer(): Player | null
+    getLoosingPlayer(): Player | null
     {
-        let leadingPlayer: Player | null = null;
+        let loosingPlayer: Player | null = null;
+        let secondPlayer: Player | null = null
+
         for (const direction in this.players)
         {
             const player = this.players[direction as keyof Players];
             if (player !== null)
             {
-                if (leadingPlayer !== null)
+                if (loosingPlayer !== null)
                 {
-                    if (player.score > leadingPlayer.score)
-                        leadingPlayer = player;
+                    if (player.getScore() > loosingPlayer.getScore())
+                    {
+                        secondPlayer = loosingPlayer;
+                        loosingPlayer = player;
+                    }
                 }
                 else
                 {
-                    leadingPlayer = player;
+                    loosingPlayer = player;
                 }
             }
         
         }
-        return leadingPlayer;
+        if (secondPlayer !== null)
+        {
+            if (loosingPlayer !== null)
+            {
+                if (loosingPlayer.getScore() == secondPlayer.getScore())
+                    return null;
+            }
+        }
+        return loosingPlayer;
     }
 
     checkBalls(): boolean
     {
+        let outPosition: Position;
+
         for (let i=0; i < this.balls.length; ++i)
         {
             if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this) == true)
-                this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
+            {
+                
+            }
         
             else if (this.balls[i].isActive() == true && this.ballHitsPaddle(this.balls[i]) !== null)
             {
-                let paddle: Paddle | null = this.ballHitsPaddle(this.balls[i]);
-                if (paddle != null)
-                {
-                    if (paddle.position === "left" || paddle.position === "right")
-                        this.balls[i].setSpeedComponents(this.balls[i].getSpeedX() * -1, this.balls[i].getSpeedY());
-                    else
-                        this.balls[i].setSpeedComponents(this.balls[i].getSpeedX(), this.balls[i].getSpeedY() * -1);
-                    this.balls[i].increaseSpeed(0.1);
-                }
+                this.balls[i].increaseSpeed(0.1);
             }
 
-            else if (this.balls[i].isActive() == true && this.balls[i].isLeftOut(this) == true)
+            else if (this.balls[i].isActive() == true && (outPosition = this.balls[i].isOut(this)) !== Position.None)
             {
                 this.balls[i].desactivate();
                 
-                if (this.players.left !== null)
+                if (outPosition == Position.Left && this.players.left !== null)
                     this.players.left.increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerRight.name);
-                //this.msgMain.changeTextColor("yellow");
-
-                return true;
-            }
-            
-            else if (this.balls[i].isActive() == true && this.balls[i].isRightOut(this) == true)
-            {
-                this.balls[i].desactivate();
-
-                if (this.players.right !== null)
+                if (outPosition == Position.Right && this.players.right !== null)
                     this.players.right.increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerLeft.name);
-                //this.msgMain.changeTextColor("cyan");
-                
-                return true;
-            }
-            
-            else if (this.balls[i].isActive() == true && this.balls[i].isTopOut(this) == true)
-            {
-                this.balls[i].desactivate();
-
-                if (this.players.top !== null)
+                if (outPosition == Position.Top && this.players.top !== null)
                     this.players.top.increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerLeft.name);
-                //this.msgMain.changeTextColor("cyan");
-                
-                return true;
-            }
-            
-            else if (this.balls[i].isActive() == true && this.balls[i].isBottomOut(this) == true)
-            {
-                this.balls[i].desactivate();
-
-                if (this.players.bottom !== null)
+                if (outPosition == Position.Bottom && this.players.bottom !== null)
                     this.players.bottom.increaseScore();
-                //this.msgMain.changeText("Point for " + this.playerLeft.name);
-                //this.msgMain.changeTextColor("cyan");
-                
                 return true;
             }
         }

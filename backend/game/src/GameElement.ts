@@ -27,10 +27,10 @@ abstract class GameElement
     // Event listeners can be added (to the document) by a GameElement
     eventListeners: { [key: string]: EventListener } = {};
     
-    hasLeftWall: boolean = true;
-    hasTopWall: boolean = true;
-    hasRightWall: boolean = true;
-    hasBottomWall: boolean = true;
+    protected leftWall: boolean = true;
+    protected topWall: boolean = true;
+    protected rightWall: boolean = true;
+    protected bottomWall: boolean = true;
 
     
 
@@ -97,7 +97,12 @@ abstract class GameElement
     getRightCurrentAbsolute(): number { return (this.rightCurrentAbsolute); }
     getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
     getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
-    
+
+    hasLeftWall(): boolean { return this.leftWall; }
+    hasTopWall(): boolean { return this.topWall; }
+    hasRightWall(): boolean { return this.rightWall; }
+    hasBottomWall(): boolean { return this.bottomWall; }
+
     activate(): void
     {
         this.isactive = true;
@@ -168,77 +173,21 @@ abstract class GameElement
         return false;
     }
     
-    rightTouchesLeft(ofElement: GameElement): boolean
-    {
-        if (this.isactive == true && ofElement.isactive == true)
-        {
-            this.getAndSetCurrentGeometry();
-            ofElement.getAndSetCurrentGeometry();
-        
-            if (this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
-            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
-                return false;
-            return true;
-        }
-        return false;
-    }
-    
-    leftTouchesRight(ofElement: GameElement): boolean
-    {
-        if (this.isactive == true && ofElement.isactive == true)
-        {
-            this.getAndSetCurrentGeometry();
-            ofElement.getAndSetCurrentGeometry();
-        
-            if (this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute
-            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute)
-                return false;
-            return true;
-        }
-        return false;
-    }
-
-    topTouchesBottom(ofElement: GameElement): boolean
-    {
-        if (this.isactive == true && ofElement.isactive == true)
-        {
-            this.getAndSetCurrentGeometry();
-            ofElement.getAndSetCurrentGeometry();
-        
-            if (this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute
-            || this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute)
-                return false;
-            return true;
-        }
-        return false;
-    }
-
-    bottomTouchesTop(ofElement: GameElement): boolean
-    {
-        if (this.isactive == true && ofElement.isactive == true)
-        {
-            this.getAndSetCurrentGeometry();
-            ofElement.getAndSetCurrentGeometry();
-        
-            if (this.bottomCurrentAbsolute < ofElement.topCurrentAbsolute
-            || this.topCurrentAbsolute > ofElement.bottomCurrentAbsolute
-            || this.rightCurrentAbsolute < ofElement.leftCurrentAbsolute
-            || this.leftCurrentAbsolute > ofElement.rightCurrentAbsolute)
-                return false;
-            return true;
-        }
-        return false;
-    }
-
     touches(element: GameElement): boolean
     {
-        return (this.rightTouchesLeft(element) || this.leftTouchesRight(element) || this.topTouchesBottom(element) || this.bottomTouchesTop(element));
+        if (this.isactive == true && element.isactive == true)
+            {
+                this.getAndSetCurrentGeometry();
+                element.getAndSetCurrentGeometry();
+            
+                if (this.rightCurrentAbsolute < element.leftCurrentAbsolute
+                || this.leftCurrentAbsolute > element.rightCurrentAbsolute
+                || this.bottomCurrentAbsolute < element.topCurrentAbsolute
+                || this.topCurrentAbsolute > element.bottomCurrentAbsolute)
+                    return false;
+                return true;
+            }
+            return false;
     }
     
     hide(): void

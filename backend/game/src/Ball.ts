@@ -5,7 +5,7 @@ class Ball extends MovingGameElement
         super(ballId, 48.5, 48.5, 3, null, "white", 0.5, parentElement, classList);
     }
 
-    initializeSpeed()
+    initializeSpeed(): void
     {
         // initialize x-speed
         let speedX = (Math.random() * 2 - 1) * this.getInitialSpeed();
@@ -21,57 +21,99 @@ class Ball extends MovingGameElement
         this.setSpeedComponents(speedX, speedY);
     }
 
+    reinitialize(): void
+    {
+        this.activate();
+        this.reinitializePosition();
+        this.initializeSpeed();
+    }
+
+    changeDirectionY(): void
+    {
+        this.setSpeedComponents(this.getSpeedX(), this.getSpeedY() * -1);
+    }
+
+    changeDirectionX(): void
+    {
+        this.setSpeedComponents(this.getSpeedX() * -1, this.getSpeedY());
+    }
+
     hitsWall(board: Board): boolean
     {
-        if (board.hasLeftWall == true && this.isInsideLeft(board) == false)
+        if (board.hasLeftWall() == true && this.isInsideLeft(board) == false)
+        {
+            this.changeDirectionX();
             return true
-        if (board.hasTopWall == true && this.isInsideTop(board) == false)
+        }
+        else if (board.hasTopWall() == true && this.isInsideTop(board) == false)
+        {
+            this.changeDirectionY();
             return true;
-        if (board.hasRightWall == true && this.isInsideRight(board) == false)
+        }
+        else if (board.hasRightWall() == true && this.isInsideRight(board) == false)
+        {
+            this.changeDirectionX();
+            return true
+        }
+        else if (board.hasBottomWall() == true && this.isInsideBottom(board) == false)
+        {
+            this.changeDirectionY();
             return true;
-        if (board.hasBottomWall == true && this.isInsideBottom(board) == false)
-            return true;
+        }
         return (false);
     }
 
     hitsPaddle(paddle: Paddle): boolean
     {
-        return this.touches(paddle);
+        if (this.touches(paddle) == true)
+        {
+            if (paddle.getPosition() == Position.Left || paddle.getPosition() == Position.Right)
+                this.changeDirectionX();
+            else if (paddle.getPosition() == Position.Top || paddle.getPosition() == Position.Bottom)
+                this.changeDirectionY();
+            return true;
+        }
+        return false;
     }
 
     isLeftOut(board: Board): boolean
     {
-        if (board.hasLeftWall == true || this.isInsideLeft(board))
+        if (board.hasLeftWall() == true || this.isInsideLeft(board))
             return (false);
         return (true);
     }
     
     isRightOut(board: Board): boolean
     {
-        if (board.hasRightWall == true || this.isInsideRight(board))
+        if (board.hasRightWall() == true || this.isInsideRight(board))
             return (false);
         return (true);
     }
     
     isTopOut(board: Board): boolean
     {
-        if (board.hasTopWall == true || this.isInsideTop(board))
+        if (board.hasTopWall() == true || this.isInsideTop(board))
             return (false);
         return (true);
     }
     
     isBottomOut(board: Board): boolean
     {
-        if (board.hasBottomWall == true || this.isInsideBottom(board))
+        if (board.hasBottomWall() == true || this.isInsideBottom(board))
             return (false);
         return (true);
     }
     
-    isOut(board: Board): boolean
+    isOut(board: Board): Position
     {
-        if (this.isLeftOut(board) == true || this.isRightOut(board) == true
-        || this.isTopOut(board) == true || this.isBottomOut(board) == true)
-            return (true);
-        return (false);
+        if (this.isLeftOut(board) == true)
+            return Position.Left;
+        else if(this.isRightOut(board) == true)
+            return Position.Right;
+        else if (this.isTopOut(board) == true)
+            return Position.Top;
+        else if (this.isBottomOut(board) == true)
+            return Position.Bottom;
+        return Position.None;
     }
 }
