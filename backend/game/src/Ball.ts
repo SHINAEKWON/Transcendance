@@ -71,6 +71,7 @@ class Ball extends MovingGameElement
                 this.changeDirectionX();
             else if (paddle.getPosition() == Position.Top || paddle.getPosition() == Position.Bottom)
                 this.changeDirectionY();
+            this.changeBackgroundColor(paddle.element.style.backgroundColor);
             return true;
         }
         return false;
