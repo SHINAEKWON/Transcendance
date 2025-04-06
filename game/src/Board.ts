@@ -1,8 +1,8 @@
-import { Ball } from "./Ball";
-import { GameElement } from "./GameElement";
-import { Players, Player } from "./Player";
-import { Paddle } from "./Paddle";
-import { Position } from "./Game";
+import { Ball } from "./Ball.js";
+import { GameElement } from "./GameElement.js";
+import { Players, Player } from "./Player.js";
+import { Paddle } from "./Paddle.js";
+import { Position } from "./Game.js";
 
 export class Board extends GameElement
 {

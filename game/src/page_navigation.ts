@@ -1,9 +1,9 @@
-import { game, renderGamePage } from "./page_game";
-import { renderCreateAccountPage } from "./page_create_account";
-import { renderLoginPage } from "./page_login";
-import { renderProfilePage } from "./page_profile";
-import { renderRevanchePage } from "./page_revanche";
-import { renderWelcomePage } from "./page_welcome";
+import { game, renderGamePage } from "./page_game.js";
+import { renderCreateAccountPage } from "./page_create_account.js";
+import { renderLoginPage } from "./page_login.js";
+import { renderProfilePage } from "./page_profile.js";
+import { renderRevanchePage } from "./page_revanche.js";
+import { renderWelcomePage } from "./page_welcome.js";
 
 interface GameState
 {

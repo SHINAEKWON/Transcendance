@@ -1,7 +1,7 @@
-import { MovingGameElement } from "./MovingGameElement";
-import { GameElement } from "./GameElement";
-import { Player } from "./Player";
-import { Position } from "./Game";
+import { MovingGameElement } from "./MovingGameElement.js";
+import { GameElement } from "./GameElement.js";
+import { Player } from "./Player.js";
+import { Position } from "./Game.js";
 
 export class Paddle extends MovingGameElement
 {

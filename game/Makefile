@@ -7,10 +7,9 @@ build:
 	npx @tailwindcss/cli -i styles/tailwind_in.css -o styles/tailwind_out.css
 
 clean:
-	rm -r build
+	rm -rf build
 
-fclean:
-	rm -r build
+fclean: clean
 	rm -r node_modules
 	
 re: clean build

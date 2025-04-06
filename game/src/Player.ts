@@ -1,8 +1,8 @@
-import { Paddle } from "./Paddle";
-import { GameElement } from "./GameElement";
-import { Ball } from "./Ball";
-import { Board } from "./Board";
-import { Position } from "./Game";
+import { Paddle } from "./Paddle.js";
+import { GameElement } from "./GameElement.js";
+import { Ball } from "./Ball.js";
+import { Board } from "./Board.js";
+import { Position } from "./Game.js";
 
 export type Players =
 {

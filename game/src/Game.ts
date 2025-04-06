@@ -1,7 +1,8 @@
-import { Board } from "./Board";
-import { Ball } from "./Ball";
-import { Player } from "./Player";
-import { navigateTo } from "./page_navigation";
+import { Board } from "./Board.js";
+import { Ball } from "./Ball.js";
+import { Player } from "./Player.js";
+import { navigateTo } from "./page_navigation.js";
+import { nullifyGame } from "./page_game.js";
 
 
 // Game status constants
@@ -74,6 +75,7 @@ export class Game
         else if (this.state == GAME_ENDED)
         {
             this.state = GAME_NEW;
+            nullifyGame();
             navigateTo("revanche", true, "hello", "ciao");
         }
     }

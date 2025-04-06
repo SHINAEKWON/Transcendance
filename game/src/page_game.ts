@@ -1,6 +1,11 @@
-import { Game } from "./Game";
+import { Game } from "./Game.js";
 
 export let game: Game | null = null;
+
+export function nullifyGame(): void
+{
+    game = null;
+}
 
 export function renderGamePage(player1: string | null, player2: string | null)
 {

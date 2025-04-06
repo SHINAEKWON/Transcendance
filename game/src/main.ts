@@ -1,4 +1,4 @@
-import { run_when_content_loaded } from "./page_navigation";
+import { run_when_content_loaded } from "./page_navigation.js";
 
 /*
 https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event

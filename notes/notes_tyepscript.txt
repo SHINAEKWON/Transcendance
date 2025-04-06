@@ -42,6 +42,11 @@ npx @tailwindcss/cli -i ./styles/tailwind_in.css -o ./styles/tailwind_out.css   
 
 --> The above command (npx @tailwindcss/cli ...) searches for all tailwind classes in the .ts files
     and adds them to tailwind_out.css
+    
+    
+I changed in tsconfig.json:
+- "compilerOptions"->"module" to "ES6" (so it does not use CommonJS to import modules which would not work)
+- "compilerOptions"->"moduleResolution" to "node" (instead of "classic") because --resolveJsonModule would not work otherwise (don't know what it is needed for, though)
 
 
 ********************************************************************************

@@ -1,4 +1,4 @@
-import { navigateTo } from "./page_navigation";
+import { navigateTo } from "./page_navigation.js";
 
 export function renderRevanchePage(player1: string | null, player2: string | null)
 {
