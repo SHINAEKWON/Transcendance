@@ -36,5 +36,8 @@ RUN npm install
 COPY . .
 
 RUN npx tsc
-RUN npx @tailwindcss/cli -i styles/tailwind_in.css -o styles/tailwind_out.css
+RUN npx @tailwindcss/cli -i public/styles/tailwind_in.css -o public/styles/tailwind_out.css
 
+RUN npm run build
+
+CMD ["npm", "start"]

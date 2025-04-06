@@ -49,6 +49,23 @@ I changed in tsconfig.json:
 - "compilerOptions"->"moduleResolution" to "node" (instead of "classic") because --resolveJsonModule would not work otherwise (don't know what it is needed for, though)
 
 
+
+
+
+npm install --save-dev fastify fastify-static @fastify/static        - Installs fastify and fastify-static to npm
+npm install --save-dev @types/node                                   - Allows typescript to recognize built-in node.js types
+
+In tsconfig.json:
+- change rootDir to "."
+- add include and exclude directives
+
+In package.json, add scripts:
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/server/index.js"
+  },
+
+
 ********************************************************************************
 package.json
 - https://www.geeksforgeeks.org/node-js-package-json/
