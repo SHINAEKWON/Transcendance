@@ -7,7 +7,7 @@ export function nullifyGame(): void
     game = null;
 }
 
-export function renderGamePage(player1: string | null, player2: string | null)
+export function renderGamePage()
 {
     const app: HTMLElement | null = document.getElementById("app");
     
@@ -16,14 +16,10 @@ export function renderGamePage(player1: string | null, player2: string | null)
         app.innerHTML = `
 
         `;
-    
-        if (player1 && player2)
+        if (!game)
         {
-            if (!game)
-            {
-                game = new Game(player1, player2);
-                game.loop();
-            }
+            game = new Game();
+            game.loop();
         }
     }
 }

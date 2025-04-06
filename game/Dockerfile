@@ -1,0 +1,40 @@
+FROM node:22-alpine
+
+# Définir le répertoire de travail
+# - https://www.geeksforgeeks.org/docker-workdir-instruction/
+#   WORKDIR instruction is used to set the working directory for all the 
+#   subsequent Dockerfile instructions.  Some frequently used instructions in a 
+#   Dockerfile are RUN, ADD, CMD, ENTRYPOINT, and COPY. If the WORKDIR is not 
+#   manually created, it gets created automatically -> we do not need to have
+#   the /app folder inside our project.
+WORKDIR /app
+
+# Copier package.json et package-lock.json pour optimiser le cache Docker
+# - with WORKDIR instruction, it will copy the files to /app in the container.
+COPY package.json package-lock.json ./
+
+# Installer uniquement les dépendances nécessaires
+# - with WORKDIR, it runs in side the /app folder of the container.
+# - This command reads the package.json and package-lock.json files and 
+#   installs all dependencies listed in these files in the node_modules folder. 
+#   If the file package-lock.json exists, it will install the exact versions 
+#   listed in this package-lock.json file. If package-lock.json does not exist,
+#   it will install the most recent version in the version ranges listed in the 
+#   file package.json.
+# - From ChatGPT:
+#   The --legacy-peer-deps flag is used with the npm install command to 
+#   instruct npm to ignore peer dependency conflicts and install packages as if 
+#   it were an older version of npm.
+#   While --legacy-peer-deps can be useful to bypass errors, it should be used 
+#   with caution. Ignoring peer dependency conflicts might lead to Unresolved 
+#   Issues or Inconsistent Builds.
+# - TODO: SHOULD WE REMOVE THE --legacy-peer-deps FLAG ?
+RUN npm install
+
+# Copier le reste du projet
+# - with WORKDIR instruction, it will copy the files to /app in the container.
+COPY . .
+
+RUN npx tsc
+RUN npx @tailwindcss/cli -i styles/tailwind_in.css -o styles/tailwind_out.css
+

@@ -1,3 +1,5 @@
+# this is a makefile to locally compile the ts files
+
 buildall:
 	npm install
 	npx tsc

@@ -39,13 +39,13 @@ export class Game
     animationFrameID: number | null = null;
         eventListeners: { [key: string]: EventListener } = {};
 
-    constructor(nameLeft: string, nameRight: string)
+    constructor()
     {
         this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-white"], 1, 
-        nameLeft, "yellow", [["w", "s"]], 
-        "alex", "red", [["ArrowLeft", "ArrowRight"]], 
-        nameRight, "cyan", [["ArrowUp", "ArrowDown"]], 
-        "hi", "blue", [["a", "d"]]);
+        "left", "yellow", [["w", "s"]], 
+        "top", "red", [["ArrowLeft", "ArrowRight"]], 
+        "right", "cyan", [["ArrowUp", "ArrowDown"]], 
+        "bottom", "blue", [["a", "d"]]);
         //null, null, null,
         //null, null, null,
         //null, null, null);
@@ -76,7 +76,7 @@ export class Game
         {
             this.state = GAME_NEW;
             nullifyGame();
-            navigateTo("revanche", true, "hello", "ciao");
+            navigateTo("game", true);
         }
     }
     

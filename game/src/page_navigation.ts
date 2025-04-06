@@ -1,29 +1,18 @@
 import { game, renderGamePage } from "./page_game.js";
-import { renderCreateAccountPage } from "./page_create_account.js";
-import { renderLoginPage } from "./page_login.js";
-import { renderProfilePage } from "./page_profile.js";
-import { renderRevanchePage } from "./page_revanche.js";
-import { renderWelcomePage } from "./page_welcome.js";
 
 interface GameState
 {
     page: string;
-    playerLeft: string | null;
-    playerRight: string | null;
 }
 
 // Global object to track the state of the pages/game
 let gameState: GameState = {
     page: "",
-    playerLeft: null,
-    playerRight: null,
 };
 
-function setGameState(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
+function setGameState(page: string, pushHistory: boolean = false): void
 {
     gameState.page = page;
-    gameState.playerLeft = playerLeft;
-    gameState.playerRight = playerRight;
     if (pushHistory == true)
     {
         pushStateToHistory();
@@ -44,36 +33,16 @@ function pushStateToHistory(): void
 /* ************************************************************************** */
 /* Navigate manually to a page and add to history                             */
 /* ************************************************************************** */
-export function navigateTo(page: string, pushHistory: boolean = false, playerLeft: string | null = null, playerRight: string | null = null): void
+export function navigateTo(page: string, pushHistory: boolean = false): void
 {
-    setGameState(page, pushHistory, playerLeft, playerRight);
+    setGameState(page, pushHistory);
     if (page !== "game" && game)
     {
         game.destroy();
     }
-    if (page === "welcome")
+    if (page === "game")
     {
-        renderWelcomePage();
-    }
-    else if (page === "game")
-    {
-        renderGamePage(playerLeft, playerRight);
-    }
-    else if (page === "revanche")
-    {
-        renderRevanchePage(playerLeft, playerRight);
-    }
-    else if (page === "createAccount")
-    {
-        renderCreateAccountPage();
-    }
-    else if (page === "login")
-    {
-        renderLoginPage();
-    }
-    else if (page === "profile")
-    {
-        renderProfilePage(playerLeft);
+        renderGamePage();
     }
     else
     {
@@ -113,11 +82,11 @@ function history_navigation(event: PopStateEvent)
 {
     if (!event.state)
     {
-        navigateTo("welcome", false);
+        navigateTo("game", false);
     }
     else
     {
-        navigateTo(event.state.page, false, event.state.playerLeft, event.state.playerRight);
+        navigateTo(event.state.page, false);
     }
 }
 
@@ -160,37 +129,13 @@ instead of throwing an error.
 */
 function render_page_on_load_or_refresh(): void
 {
-    if (location.hash === "#game" && history.state?.playerLeft && history.state?.playerRight)
+    if (location.hash === "#game")
     {
-        navigateTo("game", false, history.state?.playerLeft, history.state?.playerRight);
-    }
-    else if (location.hash === "#revanche" && history.state?.playerLeft && history.state?.playerRight)
-    {
-        navigateTo("revanche", false, history.state?.playerLeft, history.state?.playerRight);
-    }
-    else if (location.hash === "#createAccount")
-    {
-        navigateTo("createAccount", false);
-    }
-    else if (location.hash === "#login")
-    {
-        navigateTo("login", false);
-    }
-    else if (location.hash === "#welcome")
-    {
-        navigateTo("welcome", false);
-    }
-    else if (location.hash === "#profile" && history.state?.playerLeft)
-    {
-        navigateTo("profile", false, history.state?.playerLeft);
-    }
-    else if (location.hash === "")
-    {
-        navigateTo("welcome", true);
+        navigateTo("game", false);
     }
     else
     {
-        navigateTo("welcome", true);
+        navigateTo("game", true);
     }
 }
 
