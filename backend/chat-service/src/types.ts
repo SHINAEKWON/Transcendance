@@ -1,5 +1,8 @@
 export interface ChatMessage {
-    userId: string;
-    text: string;
-    timestamp: string;
-  }
+  id?: number;
+  senderId: string;
+  receiverId: string | null; // null = global
+  content: string;
+  timestamp: string;
+}
+
