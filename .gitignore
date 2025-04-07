@@ -1,3 +1,5 @@
 .env
 node_modules
-
+frontend/package-lock.json
+backend/user-service/package-lock.json
+backend/chat-service/package-lock.json
