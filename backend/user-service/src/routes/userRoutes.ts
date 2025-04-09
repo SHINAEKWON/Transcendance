@@ -27,6 +27,10 @@ export async function userRoutes(app: FastifyInstance) {
     return await deleteUser(Number(id));
   });
 
+  // app.delete('/users/:id', async (req, res) => {
+  //   const { id } = req.params as { id: string };
+  //   return await deleteUser(Number(id));
+  // });
 app.get('/users/:id/blocked/:targetId', async (req, res) => {
   const { id, targetId } = req.params as { id: string; targetId: string };
   const blocked = await isUserBlocked(id, targetId);
