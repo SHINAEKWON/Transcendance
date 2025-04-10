@@ -65,7 +65,14 @@ export class Router {
                 if (typeof page.init === "function") {
                     page.init();
                 }
-            } else {
+            }else if (pageName === "guest") {
+                const page: any = this.routes[pageName];
+                this.appElement.innerHTML = page.render();
+               
+                if (typeof page.setup === "function") {
+                    page.setup();
+                }
+            }else {
                 this.appElement.innerHTML = this.routes[pageName].render();
             }
     

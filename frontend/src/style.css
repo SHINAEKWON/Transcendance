@@ -209,6 +209,11 @@ button:hover {
   font-weight: bold;
 }
 
+.avatar-selected {
+  border-color: #09ff00 !important; 
+  box-shadow: 0 0 12px #09ff00;
+  transform: scale(1.1);
+}
 
 .bg-neon-green {
   --tw-bg-opacity: 1;
