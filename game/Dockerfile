@@ -35,9 +35,8 @@ RUN npm install
 # - with WORKDIR instruction, it will copy the files to /app in the container.
 COPY . .
 
-RUN npx tsc
-RUN npx @tailwindcss/cli -i public/styles/tailwind_in.css -o public/styles/tailwind_out.css
-
 RUN npm run build
+
+EXPOSE 3000
 
 CMD ["npm", "start"]

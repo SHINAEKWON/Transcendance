@@ -34,8 +34,12 @@ const fastify = Fastify({
     - prefix: '/': defines URL path used to access static files
 */
 fastify.register(fastifyStatic, {
-    root: path.join(__dirname, '../../public'),
+    root: path.join(__dirname, '../public'),
     prefix: '/',
+});
+
+fastify.get('/', async (request, reply) => {
+    return reply.sendFile('index.html');
 });
 
 /*

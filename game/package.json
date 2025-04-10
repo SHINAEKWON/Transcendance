@@ -4,7 +4,11 @@
   "main": "server/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build:css": "npx @tailwindcss/cli -i public/styles/tailwind_in.css -o public/styles/tailwind_out.css",
+    "build": "tsc && npm run build:css && npm run copy-public && npm run copy-src",
+    "copy-public": "ncp ./public ./build/public",
+    "copy-src": "ncp ./build/src ./build/public/src",
+    "dev": "tsc --watch",
     "start": "node build/server/index.js"
   },
   "keywords": [],
@@ -16,6 +20,7 @@
     "@types/node": "^22.14.0",
     "fastify": "^5.2.2",
     "fastify-static": "^4.7.0",
+    "ncp": "^2.0.0",
     "tailwindcss": "^4.0.14",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.8.2"
