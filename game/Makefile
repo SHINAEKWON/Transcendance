@@ -1,17 +1,13 @@
 # this is a makefile to locally compile the ts files
 
-buildall:
-	npm install
-	npx tsc
-
 build:
+	npm install
 	npx tsc
 	npx @tailwindcss/cli -i styles/tailwind_in.css -o styles/tailwind_out.css
 
 clean:
 	rm -rf build
-
-fclean: clean
-	rm -r node_modules
+	rm -f styles/tailwind_out.css
+	rm -rf node_modules
 	
 re: clean build
