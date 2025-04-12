@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc-watch --onSuccess \"node build/index.js\"",
-    "build": "tsc && npx @tailwindcss/cli -i styles/tailwind_in.css -o styles/tailwind_out.css",
+    "build": "tsc && npx @tailwindcss/cli -i styles/tailwind_in.css -o build/tailwind_out.css",
     "start": "node build/index.js"
   },
   "keywords": [],

@@ -26,26 +26,26 @@ const fastify = Fastify({
     logger: true 
 });
 
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, '../public'),
-  prefix: '/public/', // URL prefix to access files in 'public'
-});
-
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, '../styles'),
-  prefix: '/styles/', // URL prefix to access files in 'styles'
-});
-
+// Register the static plugin to serve all static files
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../build'),
-  prefix: '/build/', // URL prefix to access files in 'build'
+  decorateReply: true,
 });
+
+// fastify.register(fastifyStatic, {
+//   root: path.join(__dirname, '../styles'),
+//   prefix: '/styles/', // URL prefix to access files in 'styles'
+// });
+
+// fastify.register(fastifyStatic, {
+//   root: path.join(__dirname, '../build'),
+//   prefix: '/build/', // URL prefix to access files in 'build'
+// });
 
 // Serve 'index.html' from the 'public' directory when the root URL is accessed
 fastify.get('/', async (request, reply) => {
   return reply.sendFile('index.html');  // Make sure 'index.html' is in the 'public' folder
 });
-
 
 // Start the server
 const start = async () => {
