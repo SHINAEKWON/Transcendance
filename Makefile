@@ -24,7 +24,11 @@ run:
 # Execute a command in a running container:
 # - opening an interactive terminal session inside the container (-it)
 # - running a shell (sh)
+<<<<<<< HEAD
 # exec should be executed when the container is already running        
+=======
+# exec should be executed when the container is already running
+>>>>>>> alex_test_nodejs_fastify
 exec:
 	docker exec -it game sh
 
@@ -33,7 +37,11 @@ ls:
 
 ps:
 	docker ps -a
+<<<<<<< HEAD
        
+=======
+	
+>>>>>>> alex_test_nodejs_fastify
 clean: stop prune
 
 reset: stop prune build run

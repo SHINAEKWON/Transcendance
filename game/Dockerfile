@@ -33,7 +33,8 @@ RUN npm install
 
 # Copier le reste du projet
 # - with WORKDIR instruction, it will copy the files to /app in the container.
-COPY . .
+COPY public/index.html ./build/index.html
+COPY . ./
 
 RUN npm run build
 
