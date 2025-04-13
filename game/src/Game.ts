@@ -1,9 +1,5 @@
 import { Board } from "./Board.js";
-import { Ball } from "./Ball.js";
 import { Player } from "./Player.js";
-import { navigateTo } from "./page_navigation.js";
-import { nullifyGame } from "./page_game.js";
-
 
 // Game status constants
 const GAME_NEW: number = 0;
@@ -41,7 +37,7 @@ export class Game
 
     constructor()
     {
-        this.board = new Board("board", 10, 10, 75, 80, null, null, ["border-white"], 1, 
+        this.board = new Board("board", 10, 10, 80, 80, "black", null, ["border-white"], 10, 
         "left", "yellow", [["w", "s"]], 
         "top", "red", [["ArrowLeft", "ArrowRight"]], 
         "right", "cyan", [["ArrowUp", "ArrowDown"]], 
@@ -74,9 +70,6 @@ export class Game
             this.pause();
         else if (this.state == GAME_ENDED)
         {
-            this.state = GAME_NEW;
-            nullifyGame();
-            navigateTo("game", true);
         }
     }
     

@@ -1,10 +1,10 @@
 import { Ball } from "./Ball.js";
-import { GameElement } from "./GameElement.js";
+import { A_GameElement } from "./A_GameElement.js";
 import { Players, Player } from "./Player.js";
 import { Paddle } from "./Paddle.js";
 import { Position } from "./Game.js";
 
-export class Board extends GameElement
+export class Board extends A_GameElement
 {
     balls: Ball[] = [];
     players: Players;
@@ -16,7 +16,7 @@ export class Board extends GameElement
         widthFraction: number,
         heightFraction: number | null,
         backgroundColor: string | null,
-        parentElement: GameElement | null,
+        parentElement: A_GameElement | null,
         classList: string[],
         count_balls: number,
         name_left: string | null,
@@ -89,7 +89,7 @@ export class Board extends GameElement
         for (let i=0; i < count_balls; ++i)
         {
             this.balls.push(new Ball("ball" + i, this, ["aspect-square", "rounded-full"]));
-            this.balls[i].changeText(String(i));
+            //this.balls[i].changeText(String(i));
         }
     }
 

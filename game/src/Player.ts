@@ -1,5 +1,5 @@
 import { Paddle } from "./Paddle.js";
-import { GameElement } from "./GameElement.js";
+import { A_GameElement } from "./A_GameElement.js";
 import { Ball } from "./Ball.js";
 import { Board } from "./Board.js";
 import { Position } from "./Game.js";
@@ -21,9 +21,7 @@ export class Player
 
     private score: number;
 
-    
-
-    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: GameElement, position: Position)
+    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: A_GameElement, position: Position)
     {
         this.score = 0;
         this.name = name;

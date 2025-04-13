@@ -1,6 +1,6 @@
-import { GameElement } from "./GameElement.js";
+import { A_GameElement } from "./A_GameElement.js";
 
-export abstract class MovingGameElement extends GameElement
+export abstract class A_MovingGameElement extends A_GameElement
 {
 
     /* ********************************************************************** */
@@ -24,7 +24,7 @@ export abstract class MovingGameElement extends GameElement
         heightFraction: number | null,
         backgroundColor: string, 
         speed: number, 
-        parentElement: GameElement, 
+        parentElement: A_GameElement, 
         classList: string[] = [])
     {
         super(elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList);
@@ -70,7 +70,7 @@ export abstract class MovingGameElement extends GameElement
         this.setSpeedComponents(this.speedX * (1 + dSpeed), this.speedY * (1 + dSpeed));
     }
     
-    move(insideElement: GameElement | null = null): void
+    move(insideElement: A_GameElement | null = null): void
     {
         if (this.isActive() == true)
         {

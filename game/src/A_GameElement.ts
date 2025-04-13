@@ -5,7 +5,7 @@
     See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
 */
 
-export abstract class GameElement
+export abstract class A_GameElement
 {
     /* ********************************************************************** */
     /* Attributes                                                             */
@@ -46,7 +46,7 @@ export abstract class GameElement
         widthFraction: number,
         heightFraction: number | null,
         backgroundColor: string | null,
-        parentElement: GameElement | null,
+        parentElement: A_GameElement | null,
         classList: string[]
     )
     {
@@ -121,7 +121,7 @@ export abstract class GameElement
         this.bottomCurrentAbsolute = this.element.getBoundingClientRect().bottom;
     }
 
-    isInsideTop(ofElement: GameElement): boolean
+    isInsideTop(ofElement: A_GameElement): boolean
     {
         if (this.isactive == true && ofElement.isactive == true)
         {
@@ -134,7 +134,7 @@ export abstract class GameElement
         return false; 
     }
     
-    isInsideBottom(ofElement: GameElement): boolean
+    isInsideBottom(ofElement: A_GameElement): boolean
     {
         if (this.isactive == true && ofElement.isactive == true)
         {
@@ -147,7 +147,7 @@ export abstract class GameElement
         return false; 
     }
     
-    isInsideLeft(ofElement: GameElement): boolean
+    isInsideLeft(ofElement: A_GameElement): boolean
     {
         if (this.isactive == true && ofElement.isactive == true)
         {
@@ -160,7 +160,7 @@ export abstract class GameElement
         return false;
     }
     
-    isInsideRight(ofElement: GameElement): boolean
+    isInsideRight(ofElement: A_GameElement): boolean
     {
         if (this.isactive == true && ofElement.isactive == true)
         {
@@ -173,7 +173,7 @@ export abstract class GameElement
         return false;
     }
     
-    touches(element: GameElement): boolean
+    touches(element: A_GameElement): boolean
     {
         if (this.isactive == true && element.isactive == true)
             {

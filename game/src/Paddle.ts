@@ -1,15 +1,15 @@
-import { MovingGameElement } from "./MovingGameElement.js";
-import { GameElement } from "./GameElement.js";
+import { A_MovingGameElement } from "./A_MovingGameElement.js";
+import { A_GameElement } from "./A_GameElement.js";
 import { Player } from "./Player.js";
 import { Position } from "./Game.js";
 
-export class Paddle extends MovingGameElement
+export class Paddle extends A_MovingGameElement
 {
     private upKey: string;
     private downKey: string;
     private position: Position;
 
-    constructor(position: Position, player: Player, upKey: string, downKey: string, parentElement: GameElement, classList: string[] = [])
+    constructor(position: Position, player: Player, upKey: string, downKey: string, parentElement: A_GameElement, classList: string[] = [])
     {
         let leftInitialRelative: number = 0;
         let topInitialRelative: number = 0;
@@ -29,7 +29,7 @@ export class Paddle extends MovingGameElement
         }
         else if (position === Position.Top || position === Position.Bottom)
         {
-            leftInitialRelative = 50;
+            leftInitialRelative = 42.5;
             widthFraction = 15;
             heightFraction = 0.3;
 

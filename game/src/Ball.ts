@@ -1,14 +1,14 @@
 import { Board } from "./Board.js";
-import { MovingGameElement } from "./MovingGameElement.js";
-import { GameElement } from "./GameElement.js";
+import { A_MovingGameElement } from "./A_MovingGameElement.js";
+import { A_GameElement } from "./A_GameElement.js";
 import { Paddle } from "./Paddle.js";
 import { Position } from "./Game.js";
 
-export class Ball extends MovingGameElement
+export class Ball extends A_MovingGameElement
 {
-    constructor(ballId: string, parentElement: GameElement, classList: string[] = [])
+    constructor(ballId: string, parentElement: A_GameElement, classList: string[] = [])
     {
-        super(ballId, 48.5, 48.5, 3, null, "white", 0.5, parentElement, classList);
+        super(ballId, 48.5, 48.5, 1.5, null, "white", 0.5, parentElement, classList);
     }
 
     initializeSpeed(): void

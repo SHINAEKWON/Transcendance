@@ -1,4 +1,15 @@
-import { run_when_content_loaded } from "./page_navigation.js";
+import { Router } from "./Router.js";
+import { PageGame } from "./PageGame.js";
+
+
+// Define global router to be everywhere accessible
+const router = new Router();
+router.addPage("welcome", new PageGame());
+
+function run_when_content_loaded(): void
+{
+    router.init();
+}
 
 /*
 https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
