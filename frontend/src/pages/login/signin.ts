@@ -1,7 +1,7 @@
 export class SigninPage {
     render(): string {
         return `
-            <div class="max-w-md mx-auto bg-gray-800  p-8 rounded-lg shadow-lg">
+            <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Sign In</h2>
                 
                 <form id="signin-form" class="space-y-6">
@@ -33,5 +33,38 @@ export class SigninPage {
                 </div>
             </div>
         `;
+    }
+
+    private loginButtonHandler() {
+    
+        const form = document.getElementById('signin-form') as HTMLFormElement;
+
+        // If form == NULL
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                idNumber: (document.getElementById('login') as HTMLInputElement).value,
+                password: (document.getElementById('password') as HTMLInputElement).value
+            };
+
+            try {
+                const result = await fetch('http://0.0.0.0:3001/api/auth/signin', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json"},
+                    credentials: 'include',
+                    body: JSON.stringify(formData)
+                });
+
+                if (!result.ok)
+                    throw new Error((await result.json()).message);
+
+                console.log("Login information of following user sent to BE for a check : ", formData.idNumber);
+
+            } catch (err: any) {
+                alert('Failed to connect to server!');
+                console.log(formData.idNumber, " failed to connect!" + err.message);
+            }
+        });
     }
 }

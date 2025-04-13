@@ -1,0 +1,73 @@
+.containerPlayAgain
+{
+    width: 80%;
+    height: 80%;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -53%);
+    
+    background-color: black;
+    
+    z-index: 1;
+}
+
+.inputAgainHeading
+{
+    width: 100%;
+    
+    position: absolute;
+    top: 0;
+    
+    text-align: center;
+}
+
+.againButtons
+{
+    width: 90%;
+    height: 70%;
+    
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    
+    transform: translate(-50%, -5%);
+}
+
+.btnAgain
+{
+    width: 30%;
+    height: 15%;
+
+    position: absolute;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btnRevanche
+{
+    top: 10%;
+}
+
+.btnRevanche:hover
+{
+    background-color: #45a049;
+}
+
+.btnEnd
+{
+    top: 76%;
+}
+
+.btnEnd:hover
+{
+    background-color: #45a049;
+}

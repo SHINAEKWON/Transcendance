@@ -1,5 +1,8 @@
 export class SignupPage {
     render(): string {
+        // Shin Ae : Event Handler, attach this render to Submit Button Handler
+        // SetTimeOut allows to wait the loading of render part.
+        setTimeout(this.submitButtonHandler.bind(this), 0);
         return `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
@@ -54,4 +57,55 @@ export class SignupPage {
             </div>
         `;
     }
+
+    private submitButtonHandler() {
+        const form = document.getElementById('signup-form') as HTMLFormElement;
+
+        // If form == NULL
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                idNumber: (document.getElementById('idNumber') as HTMLInputElement).value,
+                firstName: (document.getElementById('firstName') as HTMLInputElement).value,
+                lastName: (document.getElementById('lastName') as HTMLInputElement).value,
+                nickname: (document.getElementById('nickname') as HTMLInputElement).value,
+                email: (document.getElementById('email') as HTMLInputElement).value,
+                password: (document.getElementById('password') as HTMLInputElement).value,
+                address: (document.getElementById('postalAddress') as HTMLInputElement).value,
+                telephone: (document.getElementById('phoneNumber') as HTMLInputElement).value
+            };
+
+            try {
+                const result = await fetch('http://0.0.0.0:3001/api/auth/register', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include',
+                    body: JSON.stringify(formData),
+                });
+
+                if (!result.ok)
+                    throw new Error((await result.json()).message);
+
+                alert('Account successfully created!');
+                console.log("Account created for following user:");
+                console.log(formData.idNumber);
+            } catch (err: any) {
+                alert('Failed to create account!');
+                console.log("Failed to create account!" + err.message);
+            }
+        });
+    }
 }
+
+async function testConnection() {
+    const response = await fetch("http://0.0.0.0:3001/api/forms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "KWON", email: "tradekwon@kwon.com"}),
+    });
+    const result = await response.json();
+    console.log("server reply, result");
+}
+
+testConnection();
