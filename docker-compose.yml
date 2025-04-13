@@ -1,31 +1,71 @@
 
 services:
+  gateway:
+    build:
+      context: ./backend/gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "5000:5000"
+    networks:
+      - transnet
+    depends_on:
+      - auth-service
+      - user-service
+      - game-service
+      - chat-service
+
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: auth
+    networks:
+      - transnet
+    expose:
+      - "4000"
+    
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile
+    container_name: user
+    networks:
+      - transnet
+    expose:
+      - "4001"
+
+  game-service:
+    build:
+      context: ./backend/game-service
+      dockerfile: Dockerfile
+    container_name: game
+    networks:
+      - transnet
+    expose:
+      - "4002"
+
+  chat-service:
+    build:
+      context: ./backend/chat-service
+      dockerfile: Dockerfile
+    container_name: chat
+    networks:
+      - transnet
+    expose:
+      - "4003"
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - app-data:/app/data
     ports:
       - "3000:3000"
     container_name: front
     networks:
       - transnet
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - app-data:/app/data
-    ports:
-    - "3001:3001"
-    container_name: back
-    networks:
-      - transnet
-
-volumes:
-  app-data:
+    depends_on:
+      - gateway
 
 networks:
   transnet:

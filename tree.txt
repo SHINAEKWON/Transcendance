@@ -1,0 +1,54 @@
+.
+├── backend
+│   ├── auth-service
+│   │   ├── ARCHIVE_Dockerfile
+│   │   ├── ARCHIVE_index.js
+│   │   ├── Dockerfile
+│   │   ├── game
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── chat-service
+│   │   ├── db
+│   │   ├── Dockerfile
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── game-service
+│   │   └── Dockerfile
+│   ├── gateway-service
+│   │   ├── Dockerfile
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── request.rest
+│   └── user-service
+│       ├── db
+│       ├── Dockerfile
+│       ├── package.json
+│       ├── src
+│       └── tsconfig.json
+├── docker-compose.yml
+├── en.subject.pdf
+├── frontend
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   └── images
+│   ├── src
+│   │   ├── i18n
+│   │   ├── main.ts
+│   │   ├── pages
+│   │   ├── router.ts
+│   │   ├── style.css
+│   │   └── translations
+│   └── tsconfig.json
+├── Makefile
+├── package-lock.json
+└── tree.txt
+
+20 directories, 31 files

@@ -1,0 +1,32 @@
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - app-data:/app/data
+    ports:
+      - "3000:3000"
+    container_name: front
+    networks:
+      - transnet
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - app-data:/app/data
+    ports:
+    - "3001:3001"
+    container_name: back
+    networks:
+      - transnet
+
+volumes:
+  app-data:
+
+networks:
+  transnet:
+    driver: bridge
