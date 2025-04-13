@@ -13,9 +13,14 @@ declare module 'fastify' {
 }
 
 const app = Fastify({ logger: true });
-app.register(fastifySocketIO);
+app.register(fastifySocketIO, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
 
-const PORT = 4002;
+const PORT = 4003;
 
 app.ready().then(async () => {
   const db = await initDB();

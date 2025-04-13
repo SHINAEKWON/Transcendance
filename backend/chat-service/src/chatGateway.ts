@@ -1,59 +1,53 @@
 import { Server, Socket } from 'socket.io';
-import { saveMessage, isBlocked } from './messageManager';
-import { Database } from 'sqlite';
+import { saveMessage } from './messageManager';
 
-export function registerChatGateway(io: Server, db: Database) {
-  io.on('connection', (socket: Socket) => {
-    console.log(`🟢 User connected: ${socket.id}`);
+interface ExtendedSocket extends Socket {
+  userId?: string;
+}
 
-    // Message reçu
-    socket.on('chatMessage', async (msg) => {
-      const { receiverId, content } = msg;
+export function registerChatGateway(io: Server, db: any) {
+  const userSocketMap = new Map<string, string>();
+  io.on('connection', (socket: ExtendedSocket) => {
+    // 🔐 Lire l'userId depuis le client
+    const userId = socket.handshake.auth.userId;
+    if (!userId) {
+      console.log("❌ Connexion refusée (pas d'userId)");
+      socket.disconnect();
+      return;
+    }
+    userSocketMap.set(userId, socket.id);
+    socket.userId = userId;
+    console.log(`🟢 Utilisateur connecté : userId=${userId}, socket.id=${socket.id}`);
 
-      if (!content || typeof content !== 'string') return;
+    // 📩 Réception message
+    socket.on("chatMessage", async (msg) => {
+      console.log('receive message ', msg);
+      const { content, receiverId } = msg;
+      if (!content) return;
 
       const message = {
-        senderId: socket.id,
+        senderId: userId,
         receiverId: receiverId || null,
         content: content.trim(),
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       };
 
-      // Vérifie blocage
-      if (receiverId && await isBlocked(message.senderId, receiverId)) {
-        console.log(`❌ Message bloqué : ${message.senderId} -> ${receiverId}`);
-        return;
-      }
-
-      // Sauvegarde
       await saveMessage(db, message);
 
-      // Envoi ciblé ou global
       if (receiverId) {
-        socket.to(receiverId).emit('newMessage', message);
+        console.log('send message to', receiverId);
+        const targetSocketId = userSocketMap.get(receiverId);
+        if (targetSocketId) {
+          io.to(targetSocketId).emit("newMessage", message);
+        }
       } else {
-        io.emit('newMessage', message);
+        io.emit("newMessage", message);
       }
     });
 
-    // Invitation à jouer
-    socket.on('inviteToGame', ({ to }) => {
-      io.to(to).emit('gameInvitation', {
-        from: socket.id,
-        message: '🎮 Tu as reçu une invitation à jouer !'
-      });
-    });
-
-    // Notification de tournoi
-    socket.on('notifyTournament', ({ userId, matchTime }) => {
-      io.to(userId).emit('tournamentUpdate', {
-        message: `🏆 Ton match commence à ${matchTime}`,
-        time: matchTime
-      });
-    });
-
-    socket.on('disconnect', () => {
-      console.log(`🔴 Disconnected: ${socket.id}`);
+    // 🔴 Déconnexion
+    socket.on("disconnect", () => {
+      console.log(`🔴 userId=${socket.userId} s'est déconnecté`);
     });
   });
 }

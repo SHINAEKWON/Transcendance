@@ -1,6 +1,6 @@
 import { Database } from 'sqlite';
 import { ChatMessage } from './types';
-import fetch from 'node-fetch';
+
 
 type BlockResponse = { blocked: boolean };
 

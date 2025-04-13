@@ -1,6 +1,7 @@
 import { Router } from './router.js';
 import { WelcomePage } from './pages/welcome.js';
 import { ProfilePage } from './pages/profile.js';
+import { ProfileGuestPage } from './pages/profileGuest.js';
 import { GamePage } from './pages/game/game.js';
 import { TournamentsPage } from './pages/tournaments.js';
 import { ChatPage } from './pages/chat.js';
@@ -30,6 +31,7 @@ const router = new Router({
     signup: new SignupPage(),
     signin: new SigninPage(),
     guest: new GuestPage(),
+    profileGuest: new ProfileGuestPage(),
 
 });
 
@@ -87,9 +89,81 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Mettre à jour la sidebar au chargement
     updateSidebar();
-    window.addEventListener('hashchange', updateSidebar);
+    // window.addEventListener('hashchange', updateSidebar);
 
     router.init(); // ✅ Initialiser `router`
 
+    // ✅ Connexion automatique + WebSocket chat
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+
+        const socket = io("http://localhost:4003", {
+            auth: {
+                userId: user.id
+            }
+        });
+
+        socket.on("connect", () => {
+            console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
+        });
+
+        socket.on("newMessage", (msg) => {
+            console.log("💬 Nouveau message reçu :", msg);
+            alert(msg.content);
+        });
+
+        (window as any).socket = socket;
+
+        if (!window.location.hash || window.location.hash === "#welcome") {
+            window.location.hash = "#profileGuest";
+        }
+    }
+    // ✅ Gestion du chat dans la sidebar
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+
+        if (target.classList.contains("open-chat")) {
+            const user = target.getAttribute("data-user");
+            const chatWindow = document.getElementById("chat-window")!;
+            const chatTitle = document.getElementById("chat-title")!;
+            const chatMessages = document.getElementById("chat-messages")!;
+
+            chatTitle.textContent = `💬 Chat with ${user}`;
+            chatMessages.innerHTML = "";
+
+            chatWindow.classList.remove("hidden");
+        }
+
+        if (target.id === "chat-close") {
+            document.getElementById("chat-window")?.classList.add("hidden");
+        }
+    });
+
+    const chatSendBtn = document.getElementById("chat-send-btn");
+    chatSendBtn?.addEventListener("click", () => {
+        const chatInput = document.getElementById("chat-input") as HTMLInputElement;
+        const chatMessages = document.getElementById("chat-messages")!;
+    
+        const messageText = chatInput.value.trim();
+        if (messageText !== "") {
+            // 👤 Ton message (bleu)
+            const userMessage = document.createElement("div");
+            userMessage.className = "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]";
+            userMessage.textContent = messageText;
+            chatMessages.appendChild(userMessage);
+            chatMessages.scrollTo(0, chatMessages.scrollHeight);
+            chatInput.value = "";
+    
+            // 💬 Simuler une réponse (violet neon)
+            setTimeout(() => {
+                const response = document.createElement("div");
+                response.className = "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
+                response.textContent = "Coucou 👋";
+                chatMessages.appendChild(response);
+                chatMessages.scrollTo(0, chatMessages.scrollHeight);
+            }, 1000);
+        }
+    });
    
 });

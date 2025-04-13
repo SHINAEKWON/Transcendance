@@ -107,6 +107,13 @@ export class GuestPage {
           const user = await res.json();
           console.log("✅ User created:", user);
           alert(`Welcome ${user.username} 🕹️`);
+
+           // Sauvegarde du user dans localStorage
+           localStorage.setItem("transcendenceUser", JSON.stringify(user));
+ 
+           // Redirection vers la page de profil
+           window.location.hash = "#profileGuest";
+
         } catch (err) {
           console.error("❌ Failed to create user:", err);
           alert("Something went wrong...");

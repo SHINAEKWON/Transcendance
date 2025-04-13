@@ -20,6 +20,7 @@
     "live-server": "^1.2.2",
     "typescript": "^5.8.2",
     "@tailwindcss/cli": "^4.0.15",
+    "socket.io-client": "^4.8.1",
     "@tailwindcss/postcss": "^4.0.15"
   }
 }
