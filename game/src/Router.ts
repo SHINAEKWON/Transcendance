@@ -3,6 +3,7 @@ import { A_Page } from "./A_Page";
 export class Router
 {
     pages: Map<string, A_Page>;
+    currentPage: A_Page | null = null;
 
     constructor(pages: Map<string, A_Page> | null = null)
     {
@@ -112,6 +113,8 @@ export class Router
         if (pageToLoad != undefined)
         {
             console.log(`Load page: ${pageName}`);
+            this.currentPage?.leave();
+            this.currentPage = pageToLoad;
             pageToLoad.load();
         }
         else

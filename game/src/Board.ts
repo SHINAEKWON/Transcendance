@@ -223,4 +223,19 @@ export class Board extends A_GameElement
         }
         return false;
     }
+
+    removeEventListeners(): void
+    {
+        for (let i = 0; i < this.balls.length; ++i)
+        {
+            this.balls[i].removeEventListeners();
+        }
+        this.players.left?.removeEventListeners();
+        this.players.top?.removeEventListeners();
+        this.players.right?.removeEventListeners();
+        this.players.bottom?.removeEventListeners();
+
+        super.removeEventListeners();
+    }
+
 }

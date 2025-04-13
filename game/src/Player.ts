@@ -75,4 +75,12 @@ export class Player
         }
         return null;
     }
+
+    removeEventListeners(): void
+    {
+        for (let i = 0; i < this.paddles.length; ++i)
+        {
+            this.paddles[i].removeEventListeners();
+        }
+    }
 }

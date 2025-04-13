@@ -18,6 +18,7 @@ export class PageGame extends A_Page
 
     leave(): void
     {
+        this.game?.destroy();
         this.nullifyGame();
     }
 

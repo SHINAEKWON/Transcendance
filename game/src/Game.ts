@@ -30,10 +30,10 @@ export class Game
 {
     private readonly score_winning: number = 1;
 
-    board: Board;
-    state: number;
-    animationFrameID: number | null = null;
-        eventListeners: { [key: string]: EventListener } = {};
+    private board: Board;
+    private state: number;
+    private animationFrameID: number | null = null;
+    private eventListeners: { [key: string]: EventListener } = {};
 
     constructor()
     {
@@ -50,19 +50,19 @@ export class Game
         this.initializeEventListeners();
     }
 
-    initializeEventListeners(): void
+    private initializeEventListeners(): void
     {
         this.eventListeners["keydown"] = this.keyDownHandler.bind(this) as EventListener;
         
         document.addEventListener("keydown", this.eventListeners["keydown"]);
     }
 
-    changeState(newState: number): void
+    private changeState(newState: number): void
     {
         this.state = newState;
     }
 
-    pressSpace(): void
+    private pressSpace(): void
     {
         if (this.state == GAME_NEW || this.state == GAME_PAUSED)
             this.start();
@@ -70,10 +70,11 @@ export class Game
             this.pause();
         else if (this.state == GAME_ENDED)
         {
+            //window.location.hash = "no page";
         }
     }
     
-    keyDownHandler(event: KeyboardEvent): void
+    private keyDownHandler(event: KeyboardEvent): void
     {
         switch (event.key)
         {
@@ -84,17 +85,17 @@ export class Game
         }
     }
 
-    start(): void
+    private start(): void
     {
         this.changeState(GAME_STARTED);
     }
 
-    pause(): void
+    private pause(): void
     {
         this.changeState(GAME_PAUSED);
     }
 
-    checkGameEnded(): boolean
+    private checkGameEnded(): boolean
     {
         const leadingPlayer: Player | null = this.board.getLoosingPlayer();
         if (leadingPlayer !== null)
@@ -105,7 +106,7 @@ export class Game
         return false;
     }
 
-    ballout(): void
+    private ballout(): void
     {
         if (this.board.countActiveBalls() == 0)
         {
@@ -120,14 +121,14 @@ export class Game
         }
     }
 
-    end(): void
+    private end(): void
     {
         this.changeState(GAME_ENDED);
 
         const loosingPlayer: Player | null = this.board.getLoosingPlayer();
     }
 
-    update(): void
+    private update(): void
     {
         if (this.state == GAME_STARTED)
         {
@@ -145,7 +146,7 @@ export class Game
         this.animationFrameID = requestAnimationFrame(()=>this.loop());
     }
     
-    stopLoop(): void
+    private stopLoop(): void
     {
         if (this.animationFrameID !== null)
         {
@@ -154,7 +155,7 @@ export class Game
         }
     }
 
-    removeEventListeners(): void
+    private removeEventListeners(): void
     {
         for (const event in this.eventListeners)
         {
@@ -165,6 +166,8 @@ export class Game
             }
         }
         this.eventListeners = {};
+
+        this.board.removeEventListeners();
     }
     
     destroy(): void
