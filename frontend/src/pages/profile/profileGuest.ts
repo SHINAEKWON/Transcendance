@@ -23,7 +23,7 @@ export class ProfileGuestPage implements Page{
                      </button>
  
                      <button id="sendToAhmed" class="bg-neon-green text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition">
-                     Send to Ahmed
+                     Send to Shin Ae
                  </button>
                     </div>
                 </div>
@@ -51,8 +51,8 @@ export class ProfileGuestPage implements Page{
                 if (socket) {
                     console.log("sendToAhmed");
                     socket.emit("chatMessage", {
-                        content: "Salut Ahmed !",
-                        receiverId: 21 // ou receiverId si DM
+                        content: "Minecraft Evolution!!!!",
+                        receiverId: 24 // ou receiverId si DM
                     });
                 }else {
                     console.log('soket null')
@@ -68,8 +68,8 @@ export class ProfileGuestPage implements Page{
                 if (socket) {
                     console.log("sendToAsma");
                     socket.emit("chatMessage", {
-                        content: "Salut Asma !",
-                        receiverId: 22 // ou receiverId si DM
+                        content: "CC Asma ca va !",
+                        receiverId: 25 // ou receiverId si DM
                     });
                 }
             });

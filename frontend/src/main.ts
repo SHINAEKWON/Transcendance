@@ -1,7 +1,7 @@
 import { Router } from './router.js';
 import { WelcomePage } from './pages/welcome.js';
-import { ProfilePage } from './pages/profile.js';
-import { ProfileGuestPage } from './pages/profileGuest.js';
+import { ProfilePage } from './pages/profile/profile.js';
+import { ProfileGuestPage } from './pages/profile/profileGuest.js';
 import { GamePage } from './pages/game/game.js';
 import { TournamentsPage } from './pages/tournaments.js';
 import { ChatPage } from './pages/chat.js';
@@ -15,6 +15,7 @@ import { SignupPage } from './pages/login/signup.js';
 import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
 import { Navbar } from './pages/navbar.js';
+import { EditProfilePage } from './pages/profile/editProfile.js';
 
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
@@ -33,6 +34,7 @@ const router = new Router({
     signin: new SigninPage(),
     guest: new GuestPage(),
     profileGuest: new ProfileGuestPage(),
+    editProfile: new EditProfilePage()
 
 });
 
