@@ -15,7 +15,7 @@ declare module 'fastify' {
 const app = Fastify({ logger: true });
 app.register(fastifySocketIO, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://asekmani.42.fr:3000",
     methods: ["GET", "POST"]
   }
 });

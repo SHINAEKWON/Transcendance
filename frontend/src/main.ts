@@ -16,6 +16,7 @@ import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
 import { Navbar } from './pages/navbar.js';
 
+
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
     welcome: new WelcomePage(),
@@ -92,10 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // window.addEventListener('hashchange', updateSidebar);
 
     router.init(); // ✅ Initialiser `router`
+    console.log("after router init")
 
     // ✅ Connexion automatique + WebSocket chat
     const savedUser = localStorage.getItem("transcendenceUser");
     if (savedUser) {
+        console.log("savedUser ok")
         const user = JSON.parse(savedUser);
 
         const socket = io("http://localhost:4003", {

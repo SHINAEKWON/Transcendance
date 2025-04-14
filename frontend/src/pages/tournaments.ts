@@ -1,11 +1,11 @@
 import { getTranslation } from "../i18n/i18n.js";
 import { tournamentsTranslations } from "../translations/tournaments.js";
 
-export class TournamentsPage {
-    render(): string {
+export class TournamentsPage implements Page {
+    render() {
         const t = (key: keyof typeof tournamentsTranslations) => getTranslation("tournaments", key);
 
-        return `
+        let html = `
             <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">${t("title")}</h2>
                 <div class="space-y-6">
@@ -34,5 +34,10 @@ export class TournamentsPage {
                 </div>
             </div>
         `;
+
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
     }
 }

@@ -1,8 +1,8 @@
 import { getTranslation } from "../i18n/i18n.js"; 
 import { profileTranslations } from "../translations/profile.js";
 
-export class ProfilePage {
-    render(): string {
+export class ProfilePage implements Page{
+    render() {
         // Assurez-vous que la clé est valide pour "profile"
         const t = (key: keyof typeof profileTranslations) => getTranslation("profile", key);
 
@@ -49,7 +49,7 @@ export class ProfilePage {
             </div>
         `).join("");
 
-        return `
+        let html = `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl">
                 <!-- Header -->
                 <div class="flex justify-between items-start mb-8">
@@ -105,5 +105,13 @@ export class ProfilePage {
                 </div>
             </div>
         `;
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
+        
+
+
+        
     }
 }

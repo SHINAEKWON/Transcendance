@@ -1,6 +1,6 @@
-export class SigninPage {
-    render(): string {
-        return `
+export class SigninPage implements Page{
+    render() {
+        const html = `
             <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Sign In</h2>
                 
@@ -33,6 +33,11 @@ export class SigninPage {
                 </div>
             </div>
         `;
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
+        this.loginButtonHandler();
     }
 
     private loginButtonHandler() {

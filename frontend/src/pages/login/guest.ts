@@ -1,6 +1,6 @@
-export class GuestPage {
-    render(): string {
-      return `
+export class GuestPage implements Page{
+    render() {
+      const html = `
         <div class="flex items-center justify-center bg-dark-blue">
           <div class="bg-gray-800 bg-opacity-90 p-8 rounded-2xl shadow-lg w-full max-w-3xl text-center space-y-8">
             <h2 class="text-4xl font-gaming text-neon-blue animate-glow">Play as Guest</h2>
@@ -54,6 +54,12 @@ export class GuestPage {
     </script>
 
       `;
+
+      const app = document.getElementById('app');
+      if(app){
+          app.innerHTML = html;
+      }
+      this.setup();
       
     }
     
