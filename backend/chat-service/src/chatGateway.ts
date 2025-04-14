@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { saveMessage } from './messageManager';
+import { saveMessage } from './messageManager.js';
 
 interface ExtendedSocket extends Socket {
   userId?: string;

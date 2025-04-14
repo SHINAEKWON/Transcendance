@@ -24,6 +24,8 @@ services:
       - transnet
     expose:
       - "4000"
+    volumes:
+      - auth-data:/app/data
     
   user-service:
     build:
@@ -34,6 +36,8 @@ services:
       - transnet
     expose:
       - "4001"
+    volumes:
+      - user-data:/app/data
 
   game-service:
     build:
@@ -44,6 +48,8 @@ services:
       - transnet
     expose:
       - "4002"
+    volumes:
+      - game-data:/app/data
 
   chat-service:
     build:
@@ -54,6 +60,8 @@ services:
       - transnet
     expose:
       - "4003"
+    volumes:
+      - chat-data:/app/data
 
   frontend:
     build:
@@ -70,3 +78,9 @@ services:
 networks:
   transnet:
     driver: bridge
+
+volumes:
+  auth-data:
+  user-data:
+  game-data:
+  chat-data: 

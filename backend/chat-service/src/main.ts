@@ -2,8 +2,8 @@
 import Fastify from 'fastify';
 import fastifySocketIO from 'fastify-socket.io';
 import { Server as SocketIOServer } from 'socket.io';
-import { initDB } from './db';
-import { registerChatGateway } from './chatGateway';
+import { initDB } from './db.js';
+import { registerChatGateway } from './chatGateway.js';
 
 // 🪄 DÉCLARATION pour TypeScript
 declare module 'fastify' {
