@@ -19,18 +19,18 @@ export class GuestPage implements Page{
               <div class="flex justify-center gap-10 flex-wrap">
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar1" class="hidden" />
-                  <img src="./public/images/avatar1.png" alt="Avatar 1"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-purple transition" />
+                  <img src="./public/images/guestAvatar1.png" alt="Avatar 1"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-purple transition" />
                 </label>
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar2" class="hidden" />
-                  <img src="./public/images/avatar2.png" alt="Avatar 2"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-orange transition" />
+                  <img src="./public/images/guestAvatar2.png" alt="Avatar 2"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-orange transition" />
                 </label>
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar3" class="hidden" />
-                  <img src="./public/images/avatar3.png" alt="Avatar 3"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-blue transition" />
+                  <img src="./public/images/guestAvatar3.png" alt="Avatar 3"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-green transition" />
                 </label>
               </div>
             </div>
@@ -138,11 +138,11 @@ export class GuestPage implements Page{
 
     getAvatarUrl(avatarValue: string): string {
         const avatars: Record<string, string> = {
-          avatar1: './public/images/avatar1.png',
-          avatar2: './public/images/avatar2.png',
-          avatar3: './public/images/avatar3.png'
+          avatar1: './public/images/guestAvatar1.png',
+          avatar2: './public/images/guestAvatar2.png',
+          avatar3: './public/images/guestAvatar3.png'
         };
-        return avatars[avatarValue] ?? './public/images/avatar1.png';
+        return avatars[avatarValue] ?? './public/images/guestAvatar1.png';
       }
       
   }
