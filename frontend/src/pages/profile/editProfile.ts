@@ -30,7 +30,7 @@ export class EditProfilePage implements Page {
                 return `
                 <div class="flex flex-col items-center space-y-2">
                     <label for="customAvatarUpload" class="cursor-pointer">
-                        <div class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center border-2 border-dashed  #9ca3af hover:scale-105 transition">
+                        <div class="w-30 h-30 bg-gray-700 rounded-full flex items-center justify-center border-2 border-dashed  #9ca3af hover:scale-105 transition">
                             <span class="text-gray-400 text-xl">+</span>
                         </div>
                     </label>
@@ -41,7 +41,7 @@ export class EditProfilePage implements Page {
 
             return `
             <div class="flex flex-col items-center space-y-2">
-                <img src="${avatar.src}" style="border-color: ${avatar.borderColor}" class="w-20 h-20 rounded-full border-4 hover:scale-105 cursor-pointer transition">
+                <img src="${avatar.src}" style="border-color: ${avatar.borderColor}" class="w-30 h-30 rounded-full border-4 hover:scale-105 cursor-pointer transition">
                 <p class="text-sm font-semibold" style="color: ${avatar.textColor}">${avatar.label}</p>
             </div>`;
         }).join("");
