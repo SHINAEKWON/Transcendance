@@ -45,37 +45,41 @@ const createTable = () => {
 };
 
 // Fonction pour ajouter un utilisateur à la base de données
-export const createUser = (user: User) => {
-  
-  const idNumber = user.getId(); 
-  const firstName = user.getFirstName(); 
-  const lastName = user.getLastName(); 
-  const password = user.getPassword(); 
-  const nickname = user.getNickName(); 
-  const email = user.getEmail(); 
-  const status = user.getStatus(); 
-  const address = user.getAddress(); 
-  const telephone = user.getTelephone(); 
-  const matchNb = user.getMatchNb(); 
-  const winNb = user.getWinNb(); 
-  const loseNb = user.getloseNb(); 
-  const friends = user.getFriends(); 
-  const blockedUsers = user.getBlockedUsers();
-  
-  const insertQuery = `
-  INSERT INTO users (idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-  
-  db.run(insertQuery, [idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers], function (err) {
-    if (err) {
-      console.error("Erreur d'insertion :", err.message);
-    } else {
-      console.log('Utilisateur ajouté avec l\'ID:', this.lastID);
-    }
+export const createUser = (user: User): Promise<User> => {
+  return new Promise((resolve, reject) => {
+    const idNumber = user.getId(); 
+    const firstName = user.getFirstName(); 
+    const lastName = user.getLastName(); 
+    const password = user.getPassword(); 
+    const nickname = user.getNickName(); 
+    const email = user.getEmail(); 
+    const status = user.getStatus(); 
+    const address = user.getAddress(); 
+    const telephone = user.getTelephone(); 
+    const matchNb = user.getMatchNb(); 
+    const winNb = user.getWinNb(); 
+    const loseNb = user.getloseNb(); 
+    const friends = user.getFriends(); 
+    const blockedUsers = user.getBlockedUsers();
+    
+    const insertQuery = `
+    INSERT INTO users (idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    
+      db.run(insertQuery, [idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers], function (err) {
+        if (err) {
+          console.error("Erreur d'insertion :", err.message);
+          reject (new Error(err.message));
+        } else {
+          console.log('Utilisateur ajouté avec l\'ID:', this.lastID);
+          resolve(user);
+        }
+    });
   });
 };
 
+createTable();
 
 // // Fonction pour verifier si un utilisateur existe
 // export const checkCredentials = (email: string, password: string): Promise<User | null> => {
@@ -135,4 +139,3 @@ export const createUser = (user: User) => {
 
 // Appeler createTable à l'initialisation pour s'assurer que la table existe
 
-createTable();

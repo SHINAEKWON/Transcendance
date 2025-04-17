@@ -4,15 +4,21 @@
     "type": "module", 
     "main": "src/main.ts",
     "scripts": {
-        "start": "node --loader ts-node/esm src/main.ts"
+        "build": "tsc",
+        "start": "node --loader ts-node/esm src/main.ts",
+        "dev": "nodemon src/main.ts"
     },
+    "license": "ISC",
     "dependencies": {
-        "@fastify/http-proxy": "^11.1.2",
-        "fastify": "^5.2.2"
+        "@fastify/http-proxy": "^9.0.0",
+        "fastify": "^4.29.0",
+        "dotenv": "^16.4.7",
+        "@fastify/cors": "^9.0.0"
     },
     "devDependencies": {
        "ts-node": "^10.9.2",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "nodemon": "^3.0.0"
     }
 }
   

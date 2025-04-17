@@ -17,7 +17,13 @@ app.register(cors, {
             return;
         }
 
-        const allowedOrigins = ['http://0.0.0.0:3000', 'http://localhost:3000'];
+        const allowedOrigins = [
+          'http://0.0.0.0:3000',
+          'http://localhost:3000',
+          'http://127.0.0.1:3000',
+          'http://0.0.0.0:5000',
+          'http://localhost:5000',
+          'http://127.0.0.1:5000'];
         if (allowedOrigins.includes(origin)) {
             cb(null, true);
         } else {
@@ -32,13 +38,20 @@ app.get ("/", async (request, reply) => {
 });
 
 // Backend Router
+
+const PORT = 4000;
+
+app.setErrorHandler((err, request, reply) => {
+    console.error('🔥 글로벌 에러 발생:', err);
+    reply.status(500).send({ error: 'Something broke!' });
+});
+
 app.register(formRoutes);
 
-
-app.listen ({ port: 3001, host: "0.0.0.0" }, (err, address) => {
+app.listen ({ port: PORT, host: "0.0.0.0" }, (err, address) => {
     if (err) {
         app.log.error(err);
         process.exit(1);
     }
-    app.log.info('Server is now listening at 0.0.0.0:3001');
+    app.log.info('Server is now listening at http://localhost:${PORT}');
 });

@@ -77,35 +77,41 @@ export class SignupPage {
             };
 
             try {
-                const result = await fetch('http://0.0.0.0:3001/api/auth/register', {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                console.log('formData : ', formData);
+                
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify(formData),
                 });
-
-                if (!result.ok)
-                    throw new Error((await result.json()).message);
+                
+                if (!response.ok) {
+                    const msg = await response.text();
+                    throw new Error(`(${response.status}) ${msg}`);
+                  }
+                  
+                const data = await response.json();
 
                 alert('Account successfully created!');
                 console.log("Account created for following user:");
                 console.log(formData.idNumber);
             } catch (err: any) {
                 alert('Failed to create account!');
-                console.log("Failed to create account!" + err.message);
+                console.log("Failed to create account! : " + err.message);
             }
         });
     }
 }
 
-async function testConnection() {
-    const response = await fetch("http://0.0.0.0:3001/api/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "KWON", email: "tradekwon@kwon.com"}),
-    });
-    const result = await response.json();
-    console.log("server reply, result");
-}
+// async function testConnection() {
+//     const response = await fetch("/api/auth/forms", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ name: "KWON", email: "tradekwon@kwon.com"}),
+//     });
+//     const result = await response.json();
+//     console.log("server reply, result");
+// }
 
-testConnection();
+// testConnection();

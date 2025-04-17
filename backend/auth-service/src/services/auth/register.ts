@@ -8,8 +8,6 @@ import bcrypt from 'bcrypt';
 export async function newUserRegister( request: FastifyRequest,
     reply: FastifyReply ) {
 
-    // console.log("from newuserRegister, DEBUG BODY :", request.body);
-
     const { 
       idNumber,
       firstName,
@@ -58,7 +56,12 @@ export async function newUserRegister( request: FastifyRequest,
     // Ajout de l'utilisateur à la base de données
     const createdUser = await userModel.createUser(newUser);
 
-    return { message: "Utilisateur créé avec succès", user: createdUser };
+    // return reply.status(200).send({
+    //   message: "OK",
+    //   user: createdUser
+    // });
+    return createdUser;
+
   } catch (error: unknown) {
     // Typage explicite de l'erreur
     if (error instanceof Error) {

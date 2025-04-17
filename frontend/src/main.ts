@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPage = window.location.hash.slice(1) || 'welcome';
     
         if (overlay) {
+
             if (currentPage === 'welcome') {
                 overlay.classList.remove('fade-in');
                 overlay.classList.add('fade-out'); // Disparaît en fondu
