@@ -38,6 +38,7 @@ export function registerChatGateway(io: Server, db: any) {
         console.log('send message to', receiverId);
         const targetSocketId = userSocketMap.get(receiverId);
         if (targetSocketId) {
+          console.log('send message to targetSocketId', targetSocketId);
           io.to(targetSocketId).emit("newMessage", message);
         }
       } else {

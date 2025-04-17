@@ -1,17 +1,14 @@
+import { getUsersList } from '../services/userService.js';
+import { User } from "../models/user";
+import { Socket } from 'socket.io-client';
 export class Sidebar {
-    render(): string {
-        return `
+    render() {
+        const html = `
         <div class="flex flex-col h-full">
             <!-- Liste d’amis scrollable -->
             <div class="flex-1 pr-1" style="overflow: auto; max-height: 500px">
-                <ul class="space-y-4" id="friends-list">
-                    ${this.renderFriend("Ahlem", "./public/images/avatar11.png")}
-                    ${this.renderFriend("ShinAe", "./public/images/avatar11.png")}
-                    ${this.renderFriend("Alex", "./public/images/avatar10.png")}
-                    ${this.renderFriend("Bob", "./public/images/avatar10.png")}
-                    ${this.renderFriend("Maya", "./public/images/avatar11.png")}
-                    ${this.renderFriend("jacque", "./public/images/avatar10.png")}
-                    ${this.renderFriend("zed", "./public/images/avatar11.png")}
+                <ul id="list-user" class="space-y-4"> 
+                    
                 </ul>
             </div>
 
@@ -46,21 +43,170 @@ export class Sidebar {
             </div>
         </div>
         `;
+        const app = document.getElementById('sidebar');
+        if (app) {
+            app.innerHTML = html;
+        }
+        this.renderFriend().then(() => {
+
+            this.chatEvents();
+
+
+        });
+
+
+
     }
 
-    renderFriend(name: string, avatarUrl: string): string {
-        return `
-        <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between">
-            <div class="flex items-center">
-                <img src="${avatarUrl}" class="w-12 h-12 rounded-full border border-blue-400 shadow-[0_0_10px_#3b82f6]">
-                <p class="ml-4 text-white font-semibold">${name}</p>
-            </div>
-            <button 
-                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded open-chat shadow-md hover:shadow-blue-400"
-                data-user="${name}"
-            >
-                💬
-            </button>
-        </li>`;
+
+
+    async renderFriend() {
+
+        await getUsersList().then((users: User[]) => {
+            const usersHtml = document.getElementById("list-user");
+            let result: string = '';
+            if (users && users.length > 0) {
+                users.forEach((user: User) => {
+                    result += `
+                    <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between">
+                        <div class="flex items-center">
+                            <img src="${user.avatar}" class="w-12 h-12 rounded-full border border-blue-400 shadow-[0_0_10px_#3b82f6]">
+                            <p class="ml-4 text-white font-semibold">${user.username}</p>
+                        </div>
+                        <button 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded open-chat shadow-md hover:shadow-blue-400"
+                            data-nbmessage="0" data-id="${user.id}" data-user="${user.username}" data-avatar="${user.avatar}"
+                        >
+                            💬
+                        </button>
+                    </li>`;
+                })
+                if (usersHtml) {
+                    usersHtml.innerHTML = result;
+
+                }
+
+
+
+
+            }
+
+        });
+
+
+    }
+
+    chatEvents() {
+        const socket = getSocket()!;
+        socket.on("newMessage", (msg) => {
+            const chatMessages = document.getElementById("chat-messages")!;
+            console.log("💬 Nouveau message reçu :", msg);
+            // 💬 Simuler une réponse (violet neon)
+            setTimeout(() => {
+                const chatWindow = document.getElementById("chat-window");
+                if (chatWindow) {
+                    let chatUserId = chatWindow.getAttribute("data-id");
+                    if (chatUserId && msg.senderId == chatUserId) {
+                        const response = document.createElement("div");
+                        response.className = "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
+                        response.textContent = msg.content;
+                        chatMessages.appendChild(response);
+                        chatMessages.scrollTo(0, chatMessages.scrollHeight);
+                    } else {
+                        // 🚨 Chat fermé avec cet utilisateur → trouver le bouton et le notifier
+                        const buttons = document.getElementsByClassName("open-chat");
+                        for (let i = 0; i < buttons.length; i++) {
+                            const btn = buttons[i] as HTMLElement;
+                            if (btn.getAttribute("data-id") === msg.senderId) {
+                                // 🔢 Incrémenter le compteur
+                                let nb = parseInt(btn.getAttribute("data-nbmessage") || "0");
+                                nb++;
+                                btn.setAttribute("data-nbmessage", nb.toString());
+                                btn.textContent = `💬 (${nb})`;
+
+                                // 🔁 Ajoute l'animation une seule fois
+                                btn.classList.add("pulse");
+                                break;
+                            }
+                        }
+
+                    }
+                }
+
+            }, 100);
+        });
+
+        const chatButtons = document.getElementsByClassName("open-chat");
+
+        for (let i = 0; i < chatButtons.length; i++) {
+            const btn = chatButtons[i] as HTMLElement;
+
+            btn.addEventListener("click", () => {
+
+                const user = btn.getAttribute("data-user");
+                const userId = btn.getAttribute("data-id");
+                const username = btn.getAttribute("data-user");
+                const avatar = btn.getAttribute("data-avatar");
+
+                const chatWindow = document.getElementById("chat-window")!;
+                const chatTitle = document.getElementById("chat-title")!;
+                const chatMessages = document.getElementById("chat-messages")!;
+
+                // 🔧 Ajouter les attributs dynamiques
+                chatWindow.setAttribute("data-id", userId || "");
+                chatWindow.setAttribute("data-user", username || "");
+                chatWindow.setAttribute("data-avatar", avatar || "");
+
+                chatTitle.textContent = `💬 Chat with ${user}`;
+                chatMessages.innerHTML = "";
+                chatWindow.classList.remove("hidden");
+                btn.textContent = "💬";
+                btn.classList.remove("pulse");
+
+            });
+        }
+
+        const closeBtn = document.getElementById("chat-close");
+        closeBtn?.addEventListener("click", () => {
+            document.getElementById("chat-window")?.classList.add("hidden");
+        });
+
+
+
+        const chatSendBtn = document.getElementById("chat-send-btn");
+        chatSendBtn?.addEventListener("click", () => {
+            const chatInput = document.getElementById("chat-input") as HTMLInputElement;
+
+
+            const messageText = chatInput.value.trim();
+            if (messageText !== "") {
+                // 👤 Ton message (bleu)
+                const userMessage = document.createElement("div");
+                userMessage.className = "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]";
+                userMessage.textContent = messageText;
+                // Envoyer un message
+                const chatMessages = document.getElementById("chat-messages")!;
+                if (socket) {
+                    const chatWindow = document.getElementById("chat-window")!;
+                    const userId = chatWindow.getAttribute("data-id");
+                    socket.emit("chatMessage", {
+                        content: messageText,
+                        receiverId: userId
+                    });
+                }
+                chatMessages.appendChild(userMessage);
+                chatMessages.scrollTo(0, chatMessages.scrollHeight);
+                chatInput.value = "";
+
+
+            }
+        });
+
     }
 }
+
+function getSocket(): Socket | undefined {
+    return (window as any).socket;
+}
+
+
