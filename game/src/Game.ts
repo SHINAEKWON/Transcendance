@@ -38,13 +38,14 @@ export class Game
     constructor()
     {
         this.board = new Board("board", 10, 10, 80, 80, "black", null, ["border-white"], 10, 
-        "left", "yellow", [["w", "s"]], 
-        "top", "red", [["ArrowLeft", "ArrowRight"]], 
-        "right", "cyan", [["ArrowUp", "ArrowDown"]], 
-        "bottom", "blue", [["a", "d"]]);
-        //null, null, null,
-        //null, null, null,
-        //null, null, null);
+            "left", "yellow", [["w", "s"]], 
+            "top", "red", [["ArrowLeft", "ArrowRight"]], 
+            "right", "cyan", [["ArrowUp", "ArrowDown"]], 
+            "bottom", "blue", [["a", "d"]]
+            //null, null, null,
+            //null, null, null,
+            //null, null, null
+        );
 
         this.state = GAME_NEW;
         this.initializeEventListeners();

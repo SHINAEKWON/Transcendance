@@ -5,10 +5,8 @@ export class PageGame extends A_Page
 {
     game: Game | null = null;
 
-    load(): void
+    load_page(): void
     {
-        this.clear();
-
         if (this.game == null)
         {
             this.game = new Game();

@@ -1,10 +1,12 @@
 import { Router } from "./Router.js";
 import { PageGame } from "./PageGame.js";
+import { PageWelcome } from "./PageWelcome.js";
 
 
 // Define global router to be everywhere accessible
 const router = new Router();
-router.addPage("welcome", new PageGame());
+router.addPage("page", new PageGame());
+router.addPage("welcome", new PageWelcome());
 
 function run_when_content_loaded(): void
 {

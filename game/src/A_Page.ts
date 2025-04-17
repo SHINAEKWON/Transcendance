@@ -3,7 +3,12 @@ export abstract class A_Page
     app: HTMLElement | null = document.getElementById("app");
     sidebar: HTMLElement | null = document.getElementById("sidebar");
 
-    clear(): void
+    constructor()
+    {
+        
+    }
+
+    private clear(): void
     {
         if (this.app)
         {
@@ -11,6 +16,12 @@ export abstract class A_Page
         }
     }
 
-    abstract load(): void;
+    load(): void
+    {
+        this.clear();
+        this.load_page();
+    }
+
+    protected abstract load_page(): void;
     abstract leave(): void;
 }
