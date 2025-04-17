@@ -1,8 +1,14 @@
 import Fastify from 'fastify';
 import proxy from '@fastify/http-proxy';
+import cors from '@fastify/cors';
 
 const app = Fastify();
 const PORT = 5000;
+
+await app.register(cors, {
+  origin: ['http://localhost:3000'], // autorise le frontend
+  credentials: true
+});
 
 // ici on connecte (Auth routes) sur http://localhost:4000
 app.register(proxy, {

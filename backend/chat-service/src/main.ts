@@ -4,6 +4,8 @@ import fastifySocketIO from 'fastify-socket.io';
 import { Server as SocketIOServer } from 'socket.io';
 import { initDB } from './db';
 import { registerChatGateway } from './chatGateway';
+import { chatRoutes } from './routes/chatRoutes';
+
 
 // 🪄 DÉCLARATION pour TypeScript
 declare module 'fastify' {
@@ -20,6 +22,7 @@ app.register(fastifySocketIO, {
   }
 });
 
+app.register(chatRoutes);
 const PORT = 4003;
 
 app.ready().then(async () => {
