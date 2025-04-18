@@ -2,7 +2,7 @@ import { A_Element } from "./A_Element.js"
 
 export class RedirectButton extends A_Element
 {
-    dataPage: string;
+    targetPage: string;
 
     constructor(
         elementId: string, 
@@ -14,7 +14,7 @@ export class RedirectButton extends A_Element
         viaColor: string,
         toColor: string,
         hoverColor: string,
-        dataPage: string,
+        targetPage: string,
         text: string,
         classList: string[]
     )
@@ -39,8 +39,23 @@ export class RedirectButton extends A_Element
         classList.push(viaColor);
         classList.push(toColor);
         classList.push(hoverColor);
+
         super(elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, null, null, classList);
-        this.dataPage = dataPage;
+
+        this.targetPage = targetPage;
         this.changeText(text);
+        this.initializeEventListeners();
+    }
+
+    initializeEventListeners(): void
+    {
+        this.eventListeners["click"] = this.redirect.bind(this) as EventListener;
+        
+        this.element.addEventListener("click", this.eventListeners["click"]);
+    }
+
+    redirect(): void
+    {
+        window.location.hash = this.targetPage;
     }
 }

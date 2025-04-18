@@ -11,7 +11,7 @@ export class PageWelcome extends A_Page
     {
         this.signUpButton = new RedirectButton("signupbutton", 50, 30, 10, null, "from-purple-800", "via-pink-400", "to-yellow-400", "hover:ring-purple-400", "signup", "Sign Up", []);
         this.signInButton = new RedirectButton("signinbutton", 50, 50, 10, null, "from-blue-800", "via-blue-400", "to-yellow-400", "hover:ring-blue-400", "signin", "Sign In", []);
-        this.guestButton = new RedirectButton("guestbutton", 50, 70, 10, null, "from-green-500", "via-green-300", "to-yellow-400", "hover:ring-green-400", "guest", "Guest", []);
+        this.guestButton = new RedirectButton("gamebutton", 50, 70, 10, null, "from-green-500", "via-green-300", "to-yellow-400", "hover:ring-green-400", "game", "Game", []);
     }
 
     leave(): void
