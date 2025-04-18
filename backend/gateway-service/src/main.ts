@@ -25,44 +25,15 @@ app.register(cors, {
   credentials: true,
 });
 
-// app.register(proxy, {
-//   upstream: 'http://auth:4000',
-//   prefix: '/api/auth',
-//   rewritePrefix: '',
-//   preHandler: (request,reply, done) => {
-//     console.log('[Proxy Handling to 4000]');
-//     done();
-//   },
-// });
-
-// app.register(proxy, {
-//   upstream: 'http://auth:4000',
-//   prefix: '/api/auth',
-//   rewritePrefix: '',
-//   preHandler: (req, reply, done) => {
-//     console.log('[Proxy Handling to 4000]');
-//     done();
-//   },
-//   onResponse: (request, reply, res) => {
-//     console.log('[Gateway] 응답 수신 완료');
-//     res.pipe(reply.raw);
-//   },
-//   onError: (req, reply, error) => {
-//     console.error('[Gateway] 에러 발생:', error.message);
-//     reply.status(500).send({ error: 'Gateway Error' });
-//   }
-// });
-
 app.register(proxy, {
   upstream: 'http://auth:4000',
   prefix: '/api/auth',
   rewritePrefix: '',
   preHandler: (req, reply, done) => {
-    console.log('[Gateway] 프록시 시도 중...');
+    console.log('Trying proxy -> Gateway...');
     done();
   }
 });
-
 
 
 app.register(proxy, {
@@ -84,15 +55,11 @@ app.register(proxy, {
 });
 
 
-// app.listen({ port: PORT }, (err) => {
-//   if (err) {
-//     console.error(err);
-//     throw err;
-//     process.exit(1);
-//   }
-//   console.log(`🚪 Gateway ready at http://localhost:${PORT}`);
-// });
-
-app.listen({ port: PORT, host: '0.0.0.0' }, () => {
-  console.log('Gateway running');
+app.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
+  if (err) {
+    console.error(err);
+    throw err;
+    process.exit(1);
+  }
+  console.log(`🚪 Gateway ready at http://localhost:${PORT}`);
 });

@@ -36,7 +36,8 @@ export class SignupPage {
                         <div class="md:col-span-2">
                             <label class="block text-neon-purple mb-1" for="password">Password</label>
                             <input type="password" id="password" name="password" required
-                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
+                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" 
+                                maxlength='30' />
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-neon-green mb-1" for="postalAddress">Postal Address <span class="text-gray-400 text-sm">(optional)</span></label>

@@ -20,49 +20,31 @@ export class User {
     private idNumber: string;
     private firstName: string;
     private lastName: string;
+    private nickName: string;
     private password: string;
-    private nickname: string;
-    private status: UserStatus;
     private email: string;
     private address: string; // Optional
-    private telephone: number; // Optional
-    private matchNb: number;
-    private winNb: number;
-    private loseNb: number;
-    private friends: string[];
-    private blockedUsers: string[];
+    private telephone: string; // Optional
 
     // Initialization
     constructor(
         idNumber: string,
         firstName: string,
         lastName: string,
+        nickName: string,
         password: string, // should be encrypted
-        nickname: string,
-        status: string,
         email: string,
         address?: string,
-        telephone?: number,
-        // matchNb?: number,
-        // winNb?: number,
-        // loseNb?: number,
-        // friends?: string[],
-        // blockedUsers?: string[]
+        telephone?: string,
     ){
         this.idNumber = idNumber;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.nickName = nickName
         this.password = password;
-        this.nickname = nickname;
         this.email = email;
         this.address = address ?? '';
-        this.telephone = telephone ?? 0;
-        this.matchNb = 0;
-        this.winNb = 0;
-        this.loseNb = 0;
-        this.friends = [];
-        this.blockedUsers = [];
-        this.status = 'online';
+        this.telephone = telephone ?? '';
     }
 
     // Getters 
@@ -79,16 +61,12 @@ export class User {
         return this.lastName;
       }
     
+      getNickName(): string {
+        return this.nickName;
+      }
+      
       getPassword(): string {
         return this.password;
-      }
-    
-      getNickName(): string {
-        return this.nickname;
-      }
-    
-      getStatus(): string {
-        return this.status;
       }
     
       getEmail(): string {
@@ -99,27 +77,8 @@ export class User {
         return this.address;
       }
     
-      getTelephone(): number {
+      getTelephone(): string {
         return this.telephone;
-      }
-    
-      getMatchNb(): number {
-        return this.matchNb;
-      }
-      getWinNb(): number {
-        return this.winNb;
-      }
-    
-      getloseNb(): number {
-        return this.loseNb;
-      }
-    
-      getFriends(): string[] {
-        return this.friends;
-      }
-    
-      getBlockedUsers(): string[] {
-        return this.blockedUsers;
       }
 
 
@@ -142,6 +101,24 @@ export class User {
         console.log("Current record : " + this.winNb + " wins, " + this.loseNb + " losts");
     }
 
+      // getMatchNb(): number {
+      //   return this.matchNb;
+      // }
+      // getWinNb(): number {
+      //   return this.winNb;
+      // }
+    
+      // getloseNb(): number {
+      //   return this.loseNb;
+      // }
+    
+      // getFriends(): string[] {
+      //   return this.friends;
+      // }
+    
+      // getBlockedUsers(): string[] {
+      //   return this.blockedUsers;
+      // }
     lostMatch(): void {
         this.matchNb += 1;
         this.loseNb += 1;

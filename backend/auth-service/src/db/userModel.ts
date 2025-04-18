@@ -1,6 +1,6 @@
-import sqlite3 from 'sqlite3'; // Utilisation de `sqlite3` pour interagir avec la base de données
-import { User } from '../models/user/Users'; // Importer ta classe User
-import bcrypt from 'bcrypt';
+import sqlite3 from 'sqlite3' // Utilisation de `sqlite3` pour interagir avec la base de données
+import { User } from '../models/user/Users.js'; // Importer ta classe User
+import * as bcrypt from 'bcrypt';
 
 // Ouvrir la base de données
 const db = new sqlite3.Database('./data/user_db.sqlite', (err) => {
@@ -22,17 +22,11 @@ const createTable = () => {
       idNumber TEXT NOT NULL UNIQUE,
       firstName TEXT NOT NULL,
       lastName TEXT NOT NULL,
+      nickName TEXT NOT NULL,
       password TEXT NOT NULL,
-      nickname TEXT NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
       address TEXT,
-      telephone INTEGER UNIQUE,
-      matchNb  INTEGER DEFAULT 0,
-      winNb INTEGER DEFAULT 0,
-      loseNb INTEGER DEFAULT 0,
-      friends TEXT,
-      blockedUsers TEXT,
-      status TEXT CHECK (status IN ('online', 'offline')) DEFAULT 'offline'
+      telephone TEXT UNIQUE
     );
   `;
   db.run(createTableQuery, (err) => {
@@ -45,85 +39,70 @@ const createTable = () => {
 };
 
 // Fonction pour ajouter un utilisateur à la base de données
-export const createUser = (user: User): Promise<User> => {
-  return new Promise((resolve, reject) => {
-    const idNumber = user.getId(); 
-    const firstName = user.getFirstName(); 
-    const lastName = user.getLastName(); 
-    const password = user.getPassword(); 
-    const nickname = user.getNickName(); 
-    const email = user.getEmail(); 
-    const status = user.getStatus(); 
-    const address = user.getAddress(); 
-    const telephone = user.getTelephone(); 
-    const matchNb = user.getMatchNb(); 
-    const winNb = user.getWinNb(); 
-    const loseNb = user.getloseNb(); 
-    const friends = user.getFriends(); 
-    const blockedUsers = user.getBlockedUsers();
-    
-    const insertQuery = `
-    INSERT INTO users (idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    
-      db.run(insertQuery, [idNumber, firstName, lastName, password, nickname, email, status, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers], function (err) {
-        if (err) {
-          console.error("Erreur d'insertion :", err.message);
-          reject (new Error(err.message));
-        } else {
-          console.log('Utilisateur ajouté avec l\'ID:', this.lastID);
-          resolve(user);
-        }
-    });
+export const createUser = (user: User) => {
+  
+  const idNumber = user.getId(); 
+  const firstName = user.getFirstName(); 
+  const lastName = user.getLastName(); 
+  const nickName = user.getNickName();
+  const password = user.getPassword(); 
+  const email = user.getEmail(); 
+  const address = user.getAddress(); 
+  const telephone = user.getTelephone(); 
+  
+  const insertQuery = `
+  INSERT INTO users (idNumber, firstName, lastName, nickName, password, email, address, telephone)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  db.run(insertQuery, [idNumber, firstName, lastName, nickName, password, email, address, telephone], function (err) {
+    if (err) {
+      console.error("Erreur d'insertion :", err.message);
+    } else {
+      console.log('Utilisateur ajouté avec l\'ID:', this.lastID);
+    }
   });
 };
 
-createTable();
 
-// // Fonction pour verifier si un utilisateur existe
-// export const checkCredentials = (email: string, password: string): Promise<User | null> => {
-//   return new Promise((resolve, reject) => {
-//     const query = `SELECT * FROM users WHERE email = ?`;
-//     interface UserRow {
-//       username: string;
-//       email: string;
-//       password: string;
-//       wins: number;
-//       losses: number;
-//     }
-// //verification de l'email
-//     db.get(query, [email], async (err, row: UserRow | undefined) => {
-//       if (err){
-//         console.log('erreur lors de la verification des identifiants: ', err);
-//         return reject(err);
-//       }
-//       if (!row){
-//         console.log("email incorrect ou n'a pas ete trouve");
-//         return resolve(null); //l'email n'as pas ete trouve
-//       }
-// //verifiaction du mot de passe
-//       const isPasswordValid = await bcrypt.compare(password, row.password);
-//       if (!isPasswordValid){
-//         console.log("mot de passe incorrect");
-//         return resolve(null) // mauvais mot de passe
-//       }
-//       //email et mot de passe correct
-//       console.log("utilisateur trouve :D \n ",row.username,"\n",row.email,"\n",row.password);
-//       // => on reconstruit l'objet User :D
-//       const user: User = {
-//         username: row.username,
-//         email: row.email,
-//         password: row.password,  // Assure-toi de ne pas renvoyer le mot de passe dans un contexte réel
-//         stats: {
-//           wins: row.wins,
-//           losses: row.losses
-//         },
-//       };
-//       return resolve(user);
-//     });
-//   });
-// };
+// Fonction pour verifier si un utilisateur existe
+export const checkCredentials = (email: string, password: string): Promise<User | null> => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM users WHERE email = ?`;
+    interface UserRow {
+      idNumber: string;
+      firstName: string;
+      lastName: string;
+      nickName: string;
+      email: string;
+      password: string;
+      address: string;
+      telephone: string;
+    }
+//verification de l'email
+    db.get(query, [email], async (err, row: UserRow | undefined) => {
+      if (err){
+        console.log('erreur lors de la verification des identifiants: ', err);
+        return reject(err);
+      }
+      if (!row){
+        console.log("email incorrect ou n'a pas ete trouve : \n", email);
+        return resolve(null); //l'email n'as pas ete trouve
+      }
+//verifiaction du mot de passe
+      const isPasswordValid = await bcrypt.compare(password, row.password);
+      if (!isPasswordValid){
+        console.log("mot de passe incorrect");
+        return resolve(null) // mauvais mot de passe
+      }
+      //email et mot de passe correct
+      console.log("utilisateur trouve :D \n ",row.firstName,"\n",row.email,"\n",row.password);
+      // => on reconstruit l'objet User :D
+      const user =  new User(row.idNumber,row.firstName,row.lastName,row.nickName,row.email,row.password,row.address,row.telephone);
+      return resolve(user);
+    });
+  });
+};
 
 
 // Fonction pour fermer la base de données proprement
@@ -139,3 +118,4 @@ createTable();
 
 // Appeler createTable à l'initialisation pour s'assurer que la table existe
 
+createTable();
