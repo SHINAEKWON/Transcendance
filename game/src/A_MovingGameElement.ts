@@ -16,7 +16,8 @@ export abstract class A_MovingGameElement extends A_GameElement
     /* ********************************************************************** */
     /* Constructor                                                            */
     /* ********************************************************************** */
-    constructor(
+    constructor({elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, backgroundColor, speed, parentElement, classList}:
+    {
         elementId: string, 
         leftNewRelative: number, 
         topNewRelative: number, 
@@ -25,9 +26,20 @@ export abstract class A_MovingGameElement extends A_GameElement
         backgroundColor: string, 
         speed: number, 
         parentElement: A_GameElement, 
-        classList: string[] = [])
+        classList: string[]
+    })
     {
-        super(elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList);
+        super(
+        {
+            elementId: elementId, 
+            leftInitialRelative: leftNewRelative, 
+            topInitialRelative: topNewRelative, 
+            widthFraction: widthFraction, 
+            heightFraction: heightFraction, 
+            backgroundColor: backgroundColor, 
+            parentElement: parentElement, 
+            classList: classList
+        });
 
         this.initialSpeed = speed;
         this.leftNewRelative = this.getLeftInitialRelative();

@@ -1,16 +1,9 @@
-/*
-    I assign position: absolute; to all elements.
-    It means that position is indicated relative to parent element (or body if no parent).
-
-    See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
-*/
-
-export abstract class A_Element
+export abstract class A_Element<T extends HTMLElement>
 {
     /* ********************************************************************** */
     /* Attributes                                                             */
     /* ********************************************************************** */
-    element: HTMLDivElement;
+    protected element: T;
 
     // This stores the initial position relative to the parent
     protected readonly leftInitialRelative: number;
@@ -24,21 +17,23 @@ export abstract class A_Element
     
     protected isactive: boolean = true;
     
-    // Event listeners can be added (to the document) by a GameElement
+    // Event listeners can be added (to the document) by an A_Element
     eventListeners: { [key: string]: EventListener } = {};
 
-    constructor(
+    constructor({elementId, tagName, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList}:
+    {
         elementId: string, 
+        tagName: string,
         leftInitialRelative: number, 
         topInitialRelative: number,
         widthFraction: number,
         heightFraction: number | null,
         backgroundColor: string | null,
-        parentElement: A_Element | null,
+        parentElement: A_Element<HTMLElement> | null,
         classList: string[]
-    )
+    })
     {
-        this.element = document.createElement('div');
+        this.element = document.createElement(tagName) as T;
         this.element.id = elementId;
 
         if (parentElement)
@@ -55,7 +50,14 @@ export abstract class A_Element
         this.leftInitialRelative = leftInitialRelative;
         this.topInitialRelative = topInitialRelative;
 
+        /*
+        I assign position: absolute; to all elements.
+        It means that position is indicated relative to parent element (or body if no parent).
+
+        See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
+        */
         this.element.classList.add("absolute");
+
         if (backgroundColor !== null)
             this.changeBackgroundColor(backgroundColor);
 
@@ -64,6 +66,7 @@ export abstract class A_Element
         
         this.element.style.left = `${this.leftInitialRelative}%`;
         this.element.style.top = `${this.topInitialRelative}%`;
+        
         this.element.style.width = `${widthFraction}%`;
         if (heightFraction !== null)
             this.element.style.height = `${heightFraction}%`;
@@ -82,6 +85,10 @@ export abstract class A_Element
     getRightCurrentAbsolute(): number { return (this.rightCurrentAbsolute); }
     getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
     getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
+
+    getBackgroundColor(): string { return (this.element.style.backgroundColor); }
+
+    getElementId(): string { return (this.element.id); }
 
     activate(): void
     {

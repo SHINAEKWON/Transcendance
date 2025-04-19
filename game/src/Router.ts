@@ -122,5 +122,4 @@ export class Router
             console.error(`Error: Impossible to load page "${pageName}"`);
         }
     }
-
 }

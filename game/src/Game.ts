@@ -37,15 +37,30 @@ export class Game
 
     constructor()
     {
-        this.board = new Board("board", 10, 10, 80, 80, "black", null, ["border-white"], 10, 
-            "left", "yellow", [["w", "s"]], 
-            "top", "red", [["ArrowLeft", "ArrowRight"]], 
-            "right", "cyan", [["ArrowUp", "ArrowDown"]], 
-            "bottom", "blue", [["a", "d"]]
-            //null, null, null,
-            //null, null, null,
-            //null, null, null
-        );
+        this.board = new Board(
+        {
+            elementId: "board", 
+            leftInitialRelative: 10, 
+            topInitialRelative: 10, 
+            widthFraction: 80, 
+            heightFraction: 80, 
+            backgroundColor: "black", 
+            parentElement: null, 
+            classList: ["border-white"], 
+            count_balls: 10, 
+            name_left: "left", 
+            color_left: "yellow", 
+            keys_left: [["w", "s"]], 
+            name_top: "top", 
+            color_top: "red", 
+            keys_top: [["ArrowLeft", "ArrowRight"]], 
+            name_right: "right", 
+            color_right: "cyan", 
+            keys_right: [["ArrowUp", "ArrowDown"]], 
+            name_bottom: "bottom", 
+            color_bottom: "blue", 
+            keys_bottom: [["a", "d"]]
+        });
 
         this.state = GAME_NEW;
         this.initializeEventListeners();

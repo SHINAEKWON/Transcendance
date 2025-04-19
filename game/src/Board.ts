@@ -9,7 +9,8 @@ export class Board extends A_GameElement
     balls: Ball[] = [];
     players: Players;
     
-    constructor(
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, name_top, color_top, keys_top, name_right, color_right, keys_right, name_bottom, color_bottom, keys_bottom}:
+    {
         elementId: string, 
         leftInitialRelative: number, 
         topInitialRelative: number,
@@ -31,7 +32,7 @@ export class Board extends A_GameElement
         name_bottom: string | null,
         color_bottom: string | null,
         keys_bottom: [string, string][] | null
-    )
+    })
     {
         if (name_left === null || color_left === null || keys_left === null)
         {
@@ -50,8 +51,18 @@ export class Board extends A_GameElement
             classList.push("border-b");
         }
             
-        super(elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList);
-
+        super(
+        {
+            elementId: elementId,
+            leftInitialRelative: leftInitialRelative,
+            topInitialRelative: topInitialRelative, 
+            widthFraction: widthFraction, 
+            heightFraction: heightFraction, 
+            backgroundColor: backgroundColor, 
+            parentElement: parentElement, 
+            classList: classList
+        });
+        
         let playerLeft: Player | null = null;
         let playerTop: Player | null = null;
         let playerRight: Player | null = null;
@@ -59,22 +70,22 @@ export class Board extends A_GameElement
 
         if (name_left !== null && color_left !== null && keys_left !== null)
         {
-            playerLeft = new Player(name_left, color_left, keys_left, this, Position.Left);
+            playerLeft = new Player({name: name_left, color: color_left, paddleKeys: keys_left, parentElement: this, position: Position.Left});
             this.leftWall = false;
         }
         if (name_top !== null && color_top !== null && keys_top !== null)
         {
-            playerTop = new Player(name_top, color_top, keys_top, this, Position.Top);
+            playerTop = new Player({name: name_top, color: color_top, paddleKeys: keys_top, parentElement: this, position: Position.Top});
             this.topWall = false;
         }
         if (name_right !== null && color_right !== null && keys_right !== null)
         {
-            playerRight = new Player(name_right, color_right, keys_right, this, Position.Right);
+            playerRight = new Player({name: name_right, color: color_right, paddleKeys: keys_right, parentElement: this, position: Position.Right});
             this.rightWall = false;
         }
         if (name_bottom !== null && color_bottom !== null && keys_bottom !== null)
         {
-            playerBottom = new Player(name_bottom, color_bottom, keys_bottom, this, Position.Bottom);
+            playerBottom = new Player({name: name_bottom, color: color_bottom, paddleKeys: keys_bottom, parentElement: this, position: Position.Bottom});
             this.bottomWall = false;
         }
 
@@ -88,7 +99,7 @@ export class Board extends A_GameElement
 
         for (let i=0; i < count_balls; ++i)
         {
-            this.balls.push(new Ball("ball" + i, this, ["aspect-square", "rounded-full"]));
+            this.balls.push(new Ball({ballId: "ball" + i, parentElement: this, classList: ["aspect-square", "rounded-full"]}));
             //this.balls[i].changeText(String(i));
         }
     }

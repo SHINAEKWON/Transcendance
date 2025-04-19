@@ -1,10 +1,12 @@
 import { A_Element } from "./A_Element.js"
 
-export class RedirectButton extends A_Element
+export class RedirectButton extends A_Element<HTMLDivElement>
 {
-    targetPage: string;
+    private targetPage: string;
+    private checkFunction: null | (() => boolean);
 
-    constructor(
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, fromColor, viaColor, toColor, hoverColor, targetPage, text, checkFunction, classList}: 
+    {
         elementId: string, 
         leftInitialRelative: number, 
         topInitialRelative: number, 
@@ -16,35 +18,41 @@ export class RedirectButton extends A_Element
         hoverColor: string,
         targetPage: string,
         text: string,
+        checkFunction: null | (() => boolean),
         classList: string[]
-    )
+    })
     {
-        classList.push("rounded-full");
-        classList.push("bg-gradient-to-br");
-        classList.push("shadow-lg");
-        classList.push("hover:scale-110");
-        classList.push("hover:ring-4");
-        classList.push("transition");
-        classList.push("cursor-pointer");
-        classList.push("flex");
-        classList.push("items-center");
-        classList.push("justify-center");
-        classList.push("text-center");
-        classList.push("font-bold");
-        classList.push("text-white");
-        classList.push("text-sm");
-        classList.push("leading-tight");
-        classList.push("aspect-square");
-        classList.push(fromColor);
-        classList.push(viaColor);
-        classList.push(toColor);
-        classList.push(hoverColor);
+        classList.push
+        (
+            "rounded-full", 
+            "bg-gradient-to-br",
+            "shadow-lg",
+            "hover:scale-110",
+            "hover:ring-4",
+            "transition",
+            "cursor-pointer",
+            "flex",
+            "items-center",
+            "justify-center",
+            "text-center",
+            "font-bold",
+            "text-white",
+            "text-sm",
+            "leading-tight",
+            "aspect-square",
+            fromColor,
+            viaColor,
+            toColor,
+            hoverColor
+        );
 
-        super(elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, null, null, classList);
+        super({elementId: elementId, tagName: "div", leftInitialRelative: leftInitialRelative, topInitialRelative: topInitialRelative, widthFraction: widthFraction, heightFraction: heightFraction, backgroundColor: null, parentElement: null, classList: classList});
 
         this.targetPage = targetPage;
         this.changeText(text);
         this.initializeEventListeners();
+
+        this.checkFunction = checkFunction;
     }
 
     initializeEventListeners(): void
@@ -56,6 +64,8 @@ export class RedirectButton extends A_Element
 
     redirect(): void
     {
-        window.location.hash = this.targetPage;
+        if (this.checkFunction == null 
+        || (this.checkFunction != null && this.checkFunction() == true))
+            window.location.hash = this.targetPage;
     }
 }

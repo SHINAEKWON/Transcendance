@@ -9,7 +9,15 @@ export class Paddle extends A_MovingGameElement
     private downKey: string;
     private position: Position;
 
-    constructor(position: Position, player: Player, upKey: string, downKey: string, parentElement: A_GameElement, classList: string[] = [])
+    constructor({position, player, upKey, downKey, parentElement, classList}:
+    {
+        position: Position, 
+        player: Player, 
+        upKey: string, 
+        downKey: string, 
+        parentElement: A_GameElement, 
+        classList: string[]
+    })
     {
         let leftInitialRelative: number = 0;
         let topInitialRelative: number = 0;
@@ -40,8 +48,18 @@ export class Paddle extends A_MovingGameElement
         }
 
 
-        super(player.getName() + "_paddle_" + player.countPaddles(), leftInitialRelative, topInitialRelative, widthFraction, heightFraction, player.getColor(), 1, parentElement, classList);
-        
+        super(
+        {
+            elementId: player.getName() + "_paddle_" + player.countPaddles(), 
+            leftNewRelative: leftInitialRelative, topNewRelative: topInitialRelative,
+            widthFraction: widthFraction, 
+            heightFraction: heightFraction, 
+            backgroundColor: player.getColor(), 
+            speed: 1, 
+            parentElement: parentElement, 
+            classList: classList
+        });
+
         this.upKey = upKey;
         this.downKey = downKey;
         this.position = position;

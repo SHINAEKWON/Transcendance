@@ -21,7 +21,14 @@ export class Player
 
     private score: number;
 
-    constructor(name: string, color: string, paddleKeys: [string, string][], parentElement: A_GameElement, position: Position)
+    constructor({name, color, paddleKeys, parentElement, position}:
+    {
+        name: string, 
+        color: string, 
+        paddleKeys: [string, string][], 
+        parentElement: A_GameElement, 
+        position: Position
+    })
     {
         this.score = 0;
         this.name = name;
@@ -31,7 +38,7 @@ export class Player
 
         for (let i = 0; i < paddleKeys.length; ++i)
         {
-            this.paddles.push(new Paddle(position, this, paddleKeys[i][0], paddleKeys[i][1], parentElement));
+            this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], parentElement: parentElement, classList: []}));
         }
     }
     

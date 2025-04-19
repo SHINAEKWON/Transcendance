@@ -6,9 +6,25 @@ import { Position } from "./Game.js";
 
 export class Ball extends A_MovingGameElement
 {
-    constructor(ballId: string, parentElement: A_GameElement, classList: string[] = [])
+    constructor({ballId, parentElement, classList}:
     {
-        super(ballId, 48.5, 48.5, 1.5, null, "white", 0.5, parentElement, classList);
+        ballId: string, 
+        parentElement: A_GameElement, 
+        classList: string[]
+    })
+    {
+        super(
+        {
+            elementId: ballId, 
+            leftNewRelative: 48.5, 
+            topNewRelative: 48.5, 
+            widthFraction: 1.5, 
+            heightFraction: null, 
+            backgroundColor: "white", 
+            speed: 0.5, 
+            parentElement: parentElement, 
+            classList: classList
+        });
     }
 
     initializeSpeed(): void
@@ -77,7 +93,7 @@ export class Ball extends A_MovingGameElement
                 this.changeDirectionX();
             else if (paddle.getPosition() == Position.Top || paddle.getPosition() == Position.Bottom)
                 this.changeDirectionY();
-            this.changeBackgroundColor(paddle.element.style.backgroundColor);
+            this.changeBackgroundColor(paddle.getBackgroundColor());
             return true;
         }
         return false;

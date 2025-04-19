@@ -1,7 +1,7 @@
 import { A_Element } from "./A_Element.js";
  
 
-export abstract class A_GameElement extends A_Element
+export abstract class A_GameElement extends A_Element<HTMLDivElement>
 {
     /* ********************************************************************** */
     /* Attributes                                                             */
@@ -14,7 +14,8 @@ export abstract class A_GameElement extends A_Element
     /* ********************************************************************** */
     /* Constructor                                                            */
     /* ********************************************************************** */
-    constructor(
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList}:
+    {
         elementId: string, 
         leftInitialRelative: number, 
         topInitialRelative: number,
@@ -23,9 +24,20 @@ export abstract class A_GameElement extends A_Element
         backgroundColor: string | null,
         parentElement: A_GameElement | null,
         classList: string[]
-    )
+    })
     {
-        super(elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList);
+        super(
+        {
+            elementId: elementId, 
+            tagName: "div", 
+            leftInitialRelative: leftInitialRelative, 
+            topInitialRelative: topInitialRelative, 
+            widthFraction: widthFraction, 
+            heightFraction: heightFraction, 
+            backgroundColor: backgroundColor, 
+            parentElement: parentElement, 
+            classList: classList
+        });
     }
 
     /* ********************************************************************** */
