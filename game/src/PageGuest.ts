@@ -17,108 +17,134 @@ export class PageGuest extends A_Page
     labelNameBottom: LabelElement | null = null;
     inputNameBottom: InputElement | null = null;
 
+    labelCountBalls: LabelElement | null = null;
+    inputCountBalls: InputElement | null = null;
+
     playGuestButton: RedirectButton | null = null;
     
-    protected load_page(): void
+    protected load_page(params: URLSearchParams): void
     {
-        this.inputNameLeft = new InputElement({
-            elementId: "inputNameLeft", 
-            leftInitialRelative: 30, 
-            topInitialRelative: 60, 
-            widthFraction: 10, 
-            heightFraction: 5, 
-            parentElement: null, 
-            type: "text", 
-            required: true, 
-            classList: []
-        });
         this.labelNameLeft = new LabelElement({
             elementId: "labelNameLeft", 
-            leftInitialRelative: 30, 
+            leftInitialRelative: 5, 
             topInitialRelative: 40, 
-            widthFraction: 10, 
+            widthFraction: 30, 
             heightFraction: 5, 
             text: "Enter left player nickname:", 
             forInput: this.inputNameLeft, 
             parentElement: null, 
-            classList: []
+            classList: ["text-yellow-400"]
         });
-
-        this.inputNameTop = new InputElement({
-            elementId: "inputNameTop", 
-            leftInitialRelative: 50, 
-            topInitialRelative: 30, 
-            widthFraction: 10, 
+        this.inputNameLeft = new InputElement({
+            elementId: "inputNameLeft", 
+            leftInitialRelative: 5, 
+            topInitialRelative: 45, 
+            widthFraction: 30, 
             heightFraction: 5, 
             parentElement: null, 
             type: "text", 
             required: true, 
             classList: []
         });
+
         this.labelNameTop = new LabelElement({
             elementId: "labelNameTop", 
-            leftInitialRelative: 50, 
+            leftInitialRelative: 35, 
             topInitialRelative: 20, 
-            widthFraction: 10, 
+            widthFraction: 30, 
             heightFraction: 5, 
             text: "Enter top player nickname:", 
             forInput: this.inputNameTop, 
             parentElement: null, 
-            classList: []
+            classList: ["text-red-400"]
         });
-
-        this.inputNameRight = new InputElement({
-            elementId: "inputNameRight", 
-            leftInitialRelative: 70, 
-            topInitialRelative: 60, 
-            widthFraction: 10, 
+        this.inputNameTop = new InputElement({
+            elementId: "inputNameTop", 
+            leftInitialRelative: 35, 
+            topInitialRelative: 25, 
+            widthFraction: 30, 
             heightFraction: 5, 
             parentElement: null, 
             type: "text", 
             required: true, 
             classList: []
         });
+
         this.labelNameRight = new LabelElement({
             elementId: "labelNameRight", 
-            leftInitialRelative: 70, 
+            leftInitialRelative: 65, 
             topInitialRelative: 40, 
-            widthFraction: 10, 
+            widthFraction: 30, 
             heightFraction: 5, 
             text: "Enter right player nickname:", 
             forInput: this.inputNameRight, 
             parentElement: null, 
-            classList: []
+            classList: ["text-cyan-400"]
         });
-
-        this.inputNameBottom = new InputElement({
-            elementId: "inputNameBottom", 
-            leftInitialRelative: 50, 
-            topInitialRelative: 80, 
-            widthFraction: 10, 
+        this.inputNameRight = new InputElement({
+            elementId: "inputNameRight", 
+            leftInitialRelative: 65, 
+            topInitialRelative: 45, 
+            widthFraction: 30, 
             heightFraction: 5, 
             parentElement: null, 
             type: "text", 
             required: true, 
             classList: []
         });
+
         this.labelNameBottom = new LabelElement({
             elementId: "labelNameBottom", 
-            leftInitialRelative: 50, 
-            topInitialRelative: 70, 
-            widthFraction: 10, 
+            leftInitialRelative: 35, 
+            topInitialRelative: 60, 
+            widthFraction: 30, 
             heightFraction: 5, 
             text: "Enter bottom player nickname:", 
             forInput: this.inputNameBottom, 
             parentElement: null, 
-            classList: ["block", "text-red-400", "mb-3", "text-lg"]
+            classList: ["text-blue-400"]
         });
-    
+        this.inputNameBottom = new InputElement({
+            elementId: "inputNameBottom", 
+            leftInitialRelative: 35, 
+            topInitialRelative: 65, 
+            widthFraction: 30, 
+            heightFraction: 5, 
+            parentElement: null, 
+            type: "text", 
+            required: true, 
+            classList: []
+        });
+
+        this.labelCountBalls = new LabelElement({
+            elementId: "labelCountBalls",
+            leftInitialRelative: 80,
+            topInitialRelative: 75,
+            widthFraction: 10,
+            heightFraction: 5,
+            text: "Enter number of balls",
+            forInput: this.inputCountBalls,
+            parentElement: null,
+            classList: ["text-white"]
+        });
+        this.inputCountBalls = new InputElement({
+            elementId: "inputCountBalls",
+            leftInitialRelative: 80,
+            topInitialRelative: 80,
+            widthFraction: 10,
+            heightFraction: 5,
+            parentElement: null,
+            type: "number",
+            required: true,
+            classList: []
+        });
+
         this.playGuestButton = new RedirectButton({
             elementId: "playGuestButton", 
-            leftInitialRelative: 50, 
-            topInitialRelative: 90, 
+            leftInitialRelative: 45, 
+            topInitialRelative: 80, 
             widthFraction: 10, 
-            heightFraction: null, 
+            heightFraction: 10, 
             fromColor: "from-purple-800", 
             viaColor: "via-pink-400", 
             toColor: "to-yellow-400", 
@@ -126,13 +152,14 @@ export class PageGuest extends A_Page
             targetPage: "game", 
             text: "Play as guest",
             checkFunction: this.checkInput.bind(this),
+            getQueryFunction: this.getNameQuery.bind(this),
             classList: []
         });
     }
 
     leave(): void
     {
-        
+
     }
 
     private inputtedLeftName(): boolean
@@ -172,5 +199,45 @@ export class PageGuest extends A_Page
             return (true);
         alert("Input at least one name");
         return (false);
+    }
+
+    private getNameQuery(): string
+    {
+        let playerQuery: string = "";
+        let name: string | null = this.inputNameLeft != null ? this.inputNameLeft.getTrimmedValue() : null;
+
+        if (name != null)
+            playerQuery += `playerLeft=${encodeURIComponent(name)}`;
+        name = this.inputNameTop != null ? this.inputNameTop.getTrimmedValue() : null;
+        if (name != null)
+        {
+            if (playerQuery != "")
+                playerQuery += "&";
+            playerQuery += `playerTop=${encodeURIComponent(name)}`;
+        }
+        name = this.inputNameRight != null ? this.inputNameRight.getTrimmedValue() : null;
+        if (name != null)
+        {
+            if (playerQuery != "")
+                playerQuery += "&";
+            playerQuery += `playerRight=${encodeURIComponent(name)}`;
+        }
+        name = this.inputNameBottom != null ? this.inputNameBottom.getTrimmedValue() : null;
+        if (name != null)
+        {
+            if (playerQuery != "")
+                playerQuery += "&";
+            playerQuery += `playerBottom=${encodeURIComponent(name)}`;
+        }
+        name = this.inputCountBalls != null ? this.inputCountBalls.getTrimmedValue() : null;
+        let cntBalls: number = Number(name) || 1;
+        if (cntBalls > 100)
+            cntBalls = 100;
+        else if (cntBalls < 1)
+            cntBalls = 1;
+        cntBalls = Math.floor(cntBalls);
+        playerQuery += `&cntBalls=${cntBalls}`;
+
+        return playerQuery;
     }
 }

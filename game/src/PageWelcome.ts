@@ -7,7 +7,7 @@ export class PageWelcome extends A_Page
     signInButton: RedirectButton | null = null;
     guestButton: RedirectButton | null = null;
 
-    load_page(): void
+    load_page(params: URLSearchParams): void
     {
         this.signUpButton = new RedirectButton({
             elementId: "signupbutton", 
@@ -22,6 +22,7 @@ export class PageWelcome extends A_Page
             targetPage: "signup", 
             text: "Sign Up", 
             checkFunction: null, 
+            getQueryFunction: () => "",
             classList: []
         });
         this.signInButton = new RedirectButton({
@@ -37,6 +38,7 @@ export class PageWelcome extends A_Page
             targetPage: "signin", 
             text: "Sign In", 
             checkFunction: null, 
+            getQueryFunction: () => "",
             classList: []
         });
         this.guestButton = new RedirectButton({
@@ -52,12 +54,13 @@ export class PageWelcome extends A_Page
             targetPage: "guest", 
             text: "Guest", 
             checkFunction: null, 
+            getQueryFunction: () => "",
             classList: []
         });
     }
 
-    leave(): void
+    leave(): string
     {
-
+        return "";
     }
 }

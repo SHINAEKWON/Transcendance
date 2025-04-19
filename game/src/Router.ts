@@ -99,7 +99,7 @@ export class Router
         let [pageName, queryString]: [string, string] = this.splitPageString(page);
         let pageToLoad: A_Page | undefined = this.pages.get(pageName);
 
-        //const params = new URLSearchParams(queryString);
+        const params: URLSearchParams = new URLSearchParams(queryString);
     
         if (pageToLoad == undefined)
         {
@@ -115,7 +115,7 @@ export class Router
             console.log(`Load page: ${pageName}`);
             this.currentPage?.leave();
             this.currentPage = pageToLoad;
-            pageToLoad.load();
+            pageToLoad.load(params);
         }
         else
         {

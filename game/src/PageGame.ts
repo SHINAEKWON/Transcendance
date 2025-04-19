@@ -5,19 +5,27 @@ export class PageGame extends A_Page
 {
     game: Game | null = null;
 
-    load_page(): void
+    load_page(params: URLSearchParams): void
     {
         if (this.game == null)
         {
-            this.game = new Game();
+            const playerLeft: string | null = params.get("playerLeft");
+            const playerTop: string | null = params.get("playerTop");
+            const playerRight: string | null = params.get("playerRight");
+            const playerBottom: string | null = params.get("playerBottom");
+
+            const cntBalls: string | null = params.get("cntBalls");
+
+            this.game = new Game(playerLeft, playerTop, playerRight, playerBottom, cntBalls);
             this.game.loop();
         }
     }
 
-    leave(): void
+    leave(): string
     {
         this.game?.destroy();
         this.nullifyGame();
+        return "";
     }
 
     private nullifyGame(): void

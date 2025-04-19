@@ -4,8 +4,9 @@ export class RedirectButton extends A_Element<HTMLDivElement>
 {
     private targetPage: string;
     private checkFunction: null | (() => boolean);
+    private getQueryFunction: () => string;
 
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, fromColor, viaColor, toColor, hoverColor, targetPage, text, checkFunction, classList}: 
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, fromColor, viaColor, toColor, hoverColor, targetPage, text, checkFunction, getQueryFunction, classList}: 
     {
         elementId: string, 
         leftInitialRelative: number, 
@@ -19,6 +20,7 @@ export class RedirectButton extends A_Element<HTMLDivElement>
         targetPage: string,
         text: string,
         checkFunction: null | (() => boolean),
+        getQueryFunction: () => string,
         classList: string[]
     })
     {
@@ -53,6 +55,8 @@ export class RedirectButton extends A_Element<HTMLDivElement>
         this.initializeEventListeners();
 
         this.checkFunction = checkFunction;
+        this.getQueryFunction = getQueryFunction;
+
     }
 
     initializeEventListeners(): void
@@ -66,6 +70,12 @@ export class RedirectButton extends A_Element<HTMLDivElement>
     {
         if (this.checkFunction == null 
         || (this.checkFunction != null && this.checkFunction() == true))
-            window.location.hash = this.targetPage;
+        {
+            const query: string = this.getQueryFunction();
+            if (query != "")
+                window.location.hash = `${this.targetPage}?${query}`;
+            else
+                window.location.hash = `${this.targetPage}`;
+        }
     }
 }

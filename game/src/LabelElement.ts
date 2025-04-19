@@ -19,10 +19,9 @@ export class LabelElement extends A_Element<HTMLLabelElement>
     {
         classList.push
         (
-            "block", 
-            "text-red-400", 
+            "block",  
             "mb-3", 
-            "text-lg"
+            "text-sm"
         );
 
         super(

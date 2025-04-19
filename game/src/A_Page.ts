@@ -16,12 +16,12 @@ export abstract class A_Page
         }
     }
 
-    load(): void
+    load(params: URLSearchParams): void
     {
         this.clear();
-        this.load_page();
+        this.load_page(params);
     }
 
-    protected abstract load_page(): void;
+    protected abstract load_page(params: URLSearchParams): void;
     abstract leave(): void;
 }
