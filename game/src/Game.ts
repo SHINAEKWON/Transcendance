@@ -1,31 +1,11 @@
 import { Board } from "./Board.js";
 import { Player } from "./Player.js";
-import { LabelElement } from "./LabelElement.js";
 
 // Game status constants
 const GAME_NEW: number = 0;
 const GAME_STARTED: number = 1;
 const GAME_PAUSED: number = 2;
 const GAME_ENDED: number = 3;
-
-// direction constants
-enum Direction
-{
-    Left,
-    Up,
-    Right,
-    Down
-}
-
-// position constants
-export enum Position
-{
-    Left,
-    Top,
-    Right,
-    Bottom,
-    None
-}
 
 export class Game
 {
@@ -35,12 +15,6 @@ export class Game
     private state: number;
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
-
-    private labelLeftPlayer: LabelElement;
-    private labelTopPlayer: LabelElement;
-    private labelRightPlayer: LabelElement;
-    private labelBottomPlayer: LabelElement;
-
 
     constructor(playerLeft: string | null, playerTop: string | null, playerRight: string | null, playerBottom: string | null, cntBalls: string | null)
     {
@@ -71,52 +45,6 @@ export class Game
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
-
-        this.labelLeftPlayer = new LabelElement({
-            elementId: "labelPlayerLeft", 
-            leftInitialRelative: 1, 
-            topInitialRelative: 47.5, 
-            widthFraction: 8, 
-            heightFraction: 5, 
-            text: playerLeft == null ? "" : playerLeft, 
-            forInput: null, 
-            parentElement: null, 
-            classList: ["text-yellow-400"]
-        });
-
-        this.labelTopPlayer = new LabelElement({
-            elementId: "labelPlayerTop", 
-            leftInitialRelative: 46, 
-            topInitialRelative: 2.5, 
-            widthFraction: 8, 
-            heightFraction: 5, 
-            text: playerTop == null ? "" : playerTop, 
-            forInput: null, 
-            parentElement: null, 
-            classList: ["text-red-400"]
-        });
-        this.labelRightPlayer = new LabelElement({
-            elementId: "labelPlayerRight", 
-            leftInitialRelative: 91, 
-            topInitialRelative: 47.5, 
-            widthFraction: 8, 
-            heightFraction: 5, 
-            text: playerRight == null ? "" : playerRight, 
-            forInput: null, 
-            parentElement: null, 
-            classList: ["text-cyan-400"]
-        });
-        this.labelBottomPlayer = new LabelElement({
-            elementId: "labelPlayerBottom", 
-            leftInitialRelative: 46, 
-            topInitialRelative: 92.5, 
-            widthFraction: 8, 
-            heightFraction: 5, 
-            text: playerBottom == null ? "" : playerBottom, 
-            forInput: null, 
-            parentElement: null, 
-            classList: ["text-blue-400"]
-        });
     }
 
     private initializeEventListeners(): void

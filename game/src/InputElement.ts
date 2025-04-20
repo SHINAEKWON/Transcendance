@@ -1,4 +1,5 @@
 import { A_Element } from "./A_Element.js";
+import { HTMLElementTag } from "./constants.js";
  
 
 export class InputElement extends A_Element<HTMLInputElement>
@@ -32,7 +33,7 @@ export class InputElement extends A_Element<HTMLInputElement>
         super(
         {
             elementId: elementId, 
-            tagName: "input", 
+            tagName: HTMLElementTag.Input, 
             leftInitialRelative: leftInitialRelative, 
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 

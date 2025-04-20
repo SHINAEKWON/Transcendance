@@ -1,3 +1,5 @@
+import { HTMLElementTag } from "./constants.js";
+
 export abstract class A_Element<T extends HTMLElement>
 {
     /* ********************************************************************** */
@@ -23,7 +25,7 @@ export abstract class A_Element<T extends HTMLElement>
     constructor({elementId, tagName, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList}:
     {
         elementId: string, 
-        tagName: string,
+        tagName: HTMLElementTag,
         leftInitialRelative: number, 
         topInitialRelative: number,
         widthFraction: number,

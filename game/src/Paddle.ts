@@ -1,7 +1,7 @@
 import { A_MovingGameElement } from "./A_MovingGameElement.js";
 import { A_GameElement } from "./A_GameElement.js";
 import { Player } from "./Player.js";
-import { Position } from "./Game.js";
+import { Position } from "./constants.js";
 
 export class Paddle extends A_MovingGameElement
 {
@@ -46,7 +46,6 @@ export class Paddle extends A_MovingGameElement
             else if (position === Position.Bottom)
                 topInitialRelative = 100;
         }
-
 
         super(
         {

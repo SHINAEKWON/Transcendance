@@ -1,4 +1,5 @@
 import { A_Element } from "./A_Element.js";
+import { HTMLElementTag } from "./constants.js";
 import { InputElement } from "./InputElement.js";
  
 
@@ -27,7 +28,7 @@ export class LabelElement extends A_Element<HTMLLabelElement>
         super(
         {
             elementId: elementId, 
-            tagName: "label", 
+            tagName: HTMLElementTag.Label, 
             leftInitialRelative: leftInitialRelative, 
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 

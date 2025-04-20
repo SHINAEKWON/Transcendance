@@ -1,4 +1,5 @@
 import { A_Element } from "./A_Element.js";
+import { HTMLElementTag } from "./constants.js";
  
 
 export abstract class A_GameElement extends A_Element<HTMLDivElement>
@@ -29,7 +30,7 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
         super(
         {
             elementId: elementId, 
-            tagName: "div", 
+            tagName: HTMLElementTag.Div, 
             leftInitialRelative: leftInitialRelative, 
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
