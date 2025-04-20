@@ -2,6 +2,7 @@ import { Router } from "./Router.js";
 import { PageGame } from "./PageGame.js";
 import { PageWelcome } from "./PageWelcome.js";
 import { PageGuest } from "./PageGuest.js";
+import { PageSignup } from "./PageSignup.js";
 
 
 // Define global router to be everywhere accessible
@@ -9,6 +10,7 @@ const router = new Router();
 router.addPage("game", new PageGame());
 router.addPage("welcome", new PageWelcome());
 router.addPage("guest", new PageGuest());
+router.addPage("signup", new PageSignup());
 
 function run_when_content_loaded(): void
 {

@@ -139,7 +139,8 @@ export class PageGuest extends A_Page
             classList: []
         });
 
-        this.playGuestButton = new RedirectButton({
+        this.playGuestButton = new RedirectButton(
+        {
             elementId: "playGuestButton", 
             leftInitialRelative: 45, 
             topInitialRelative: 80, 
