@@ -1,8 +1,13 @@
+import { passwordChecker } from "../../frontapp/password_policy/passwordpolicy.js";
+
 export class SignupPage {
     render(): string {
         // Shin Ae : Event Handler, attach this render to Submit Button Handler
         // SetTimeOut allows to wait the loading of render part.
-        setTimeout(this.submitButtonHandler.bind(this), 0);
+        setTimeout(() => {
+            this.submitButtonHandler();
+            passwordChecker();
+        }, 0);
         return `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
@@ -33,11 +38,19 @@ export class SignupPage {
                             <input type="email" id="email" name="email" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
-                        <div class="md:col-span-2">
+                        <div class="md:col-span-2 password-container">
                             <label class="block text-neon-purple mb-1" for="password">Password</label>
                             <input type="password" id="password" name="password" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" 
                                 maxlength='30' />
+                            <ul id="password-requirements" class="text-sm mt-2 text-red-500">
+                            <li id="length">❌ Between 12 and 30 characters</li>
+                            <li id="uppercase">❌ Include a uppercase letter</li>
+                            <li id="lowercase">❌ Include a lowercase letter</li>
+                            <li id="number">❌ Include a number</li>
+                            <li id="special">❌ Include a special character</li>
+                            <li id="repeat">❌ Avoid 3 consecutive identical characters</li>
+                            </ul>
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-neon-green mb-1" for="postalAddress">Postal Address <span class="text-gray-400 text-sm">(optional)</span></label>
@@ -50,7 +63,7 @@ export class SignupPage {
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                     </div>
-                    <button type="submit"
+                    <button type="submit" disabled
                         class="w-full mt-4 py-2 bg-neon-purple hover:bg-neon-green transition text-white font-semibold rounded-lg shadow">
                         Create Account
                     </button>
@@ -104,15 +117,3 @@ export class SignupPage {
         });
     }
 }
-
-// async function testConnection() {
-//     const response = await fetch("/api/auth/forms", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ name: "KWON", email: "tradekwon@kwon.com"}),
-//     });
-//     const result = await response.json();
-//     console.log("server reply, result");
-// }
-
-// testConnection();

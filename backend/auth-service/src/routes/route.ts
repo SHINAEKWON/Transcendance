@@ -1,13 +1,8 @@
 import fastify, { FastifyInstance } from 'fastify';
-import receivedfromfront from '../services/testreceived.js';
 import { newUserRegister } from '../services/auth/register.js';
 import { userSignin } from '../services/auth/signin.js';
 
 export default async function formRoutes(app: FastifyInstance) {
-    app.post('/forms', async (request, reply) => {
-        receivedfromfront();
-        reply.send({ message: 'Forms route OK' });
-    });
 
     app.post('/register', async (request, reply) => {
         

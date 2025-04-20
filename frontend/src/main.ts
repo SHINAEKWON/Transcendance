@@ -32,7 +32,6 @@ const router = new Router({
     signin: new SigninPage(),
     guest: new GuestPage(),
     profileGuest: new ProfileGuestPage(),
-
 });
 
 // ✅ Rendre `router` accessible dans `window` pour d'autres scripts
@@ -48,10 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(appElement){
         appElement.innerHTML = new Navbar().render();
     }
-   
-
-    
-
    
     function updateSidebar() {
         const appElement: HTMLElement | null = document.getElementById('sidebar');
