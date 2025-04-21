@@ -39,7 +39,8 @@ export class SignupPage {
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div class="md:col-span-2 password-container">
-                            <label class="block text-neon-purple mb-1" for="password">Password</label>
+                            <label class="flex text-neon-purple mb-1" for="password">Password&nbsp;
+                            <img src="/public/elements/Blue_question_mark_icon.png" width="30px" /></label>
                             <input type="password" id="password" name="password" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" 
                                 maxlength='30' />
@@ -63,7 +64,7 @@ export class SignupPage {
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                     </div>
-                    <button type="submit" disabled
+                    <button type="submit"
                         class="w-full mt-4 py-2 bg-neon-purple hover:bg-neon-green transition text-white font-semibold rounded-lg shadow">
                         Create Account
                     </button>

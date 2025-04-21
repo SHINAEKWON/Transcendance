@@ -20,10 +20,14 @@ export function passwordChecker() {
       };
 
       const allValid = Object.values(checks).every(v => v);
-      if (!allValid) {
-        alert("Password must meet all the requirements!");
-      }
       submitButton.disabled = !allValid;
+      
+      if (!allValid) {
+        passwordInput.setCustomValidity("Password must meet all requirements");
+      } else {
+        passwordInput.setCustomValidity("");
+      }
+      passwordInput.reportValidity();
 
       for (const key in checks) {
         const typedKey = key as keyof typeof checks;

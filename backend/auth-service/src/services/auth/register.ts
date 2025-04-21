@@ -3,6 +3,7 @@ import { User } from '../../models/user/Users.js';
 import { UserStatus } from '../../models/user/Users.js';
 import * as userModel from '../../db/userModel.js';
 import bcrypt from 'bcrypt';
+import { isPasswordValid } from './passwordcheck.js'
 
 
 export async function newUserRegister( request: FastifyRequest,
@@ -42,6 +43,10 @@ export async function newUserRegister( request: FastifyRequest,
   // Validation simple
   if (!idNumber || !firstName || !lastName || !password || !nickname || !email) {
     return reply.status(400).send({ message: "Tous les champs ne sont pas requis." });
+  }
+
+  if (!isPasswordValid(password)) {
+    return reply.status(400).send({ message: "Invalid password" });
   }
 
   try {
