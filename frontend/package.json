@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsc --watch\" \"npx @tailwindcss/cli -i ./src/style.css -o ./dist/output.css ./dist/frontapp/password_policy/passwordpolicy.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
+    "dev": "concurrently \"tsc --watch\" \"npx @tailwindcss/cli -i ./src/style.css -o ./dist/output.css ./dist/frontapp/signup_policy/passwordpolicy.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
     "prod": "live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist",
-    "build": "tsc && npx tailwindcss -i ./src/style.css -o ./dist/output.css ./dist/frontapp/password_policy/passwordpolicy.css --minify --mount=/dist:dist",
+    "build": "tsc && npx tailwindcss -i ./src/style.css -o ./dist/output.css ./dist/frontapp/signup_policy/passwordpolicy.css --minify --mount=/dist:dist",
     "start": "npm run dev"
   },
   "keywords": [],

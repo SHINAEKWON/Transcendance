@@ -1,4 +1,6 @@
-import { passwordChecker } from "../../frontapp/password_policy/passwordpolicy.js";
+import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js";
+import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
+import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
 
 export class SignupPage {
     render(): string {
@@ -7,6 +9,8 @@ export class SignupPage {
         setTimeout(() => {
             this.submitButtonHandler();
             passwordChecker();
+            firstnameChecker();
+            lastnameChecker();
         }, 0);
         return `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
