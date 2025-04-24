@@ -1,5 +1,5 @@
 
-import { initDB } from './db';
+import { initDB } from './db.js';
 
 export type Message = {
   id?: number;

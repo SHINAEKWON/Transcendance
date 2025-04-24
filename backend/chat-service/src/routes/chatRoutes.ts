@@ -1,7 +1,7 @@
 
 import { FastifyInstance } from 'fastify';
-import { initDB } from '../db';
-import { getConversation, createMessage } from '../messageModel';
+import { initDB } from '../db.js';
+import { getConversation, createMessage } from '../messageModel.js';
 
 export async function chatRoutes(app: FastifyInstance) {
     // Récupérer les messages entre deux utilisateurs

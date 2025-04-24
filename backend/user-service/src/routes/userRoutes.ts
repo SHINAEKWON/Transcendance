@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { getAllUsers, getUser, createUser, updateUser, deleteUser, isUserBlocked, blockUser, unblockUser } from '../userModel';
+import { getAllUsers, getUser, createUser, updateUser, deleteUser, isUserBlocked, blockUser, unblockUser } from '../userModel.js';
 
 export async function userRoutes(app: FastifyInstance) {
   app.get('/users', async (req, res) => {

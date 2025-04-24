@@ -1,7 +1,8 @@
 import { getUsersList } from '../services/userService.js';
 import { getConversation } from '../services/chatService.js';
 import { User } from "../models/user";
-import { Socket } from 'socket.io-client';
+
+declare var Socket: any;
 
 export class Sidebar {
 
@@ -93,7 +94,7 @@ export class Sidebar {
         const socket = getSocket()!; // hedhi pour récupérer l'objet socket.io
 
         // Nouveau message recu via socket
-        socket.on("newMessage", (msg) => {
+        socket.on("newMessage", (msg: any) => {
             const chatMessages = document.getElementById("chat-messages")!;
 
             setTimeout(() => {
@@ -237,6 +238,6 @@ export class Sidebar {
 }
 
 // ici c'est une fonction utilitaire pour acceder à l’objet socket.io
-function getSocket(): Socket | undefined {
+function getSocket(): any | undefined {
     return (window as any).socket;
 }

@@ -1,4 +1,4 @@
-import { Socket } from "socket.io-client";
+
 
 export class ProfileGuestPage implements Page{
     render() {
@@ -70,6 +70,6 @@ export class ProfileGuestPage implements Page{
 
 }
 
-function getSocket(): Socket | undefined {
+function getSocket(): any | undefined {
     return (window as any).socket;
 } 

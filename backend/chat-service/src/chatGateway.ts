@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { saveMessage } from './messageManager';
+import { saveMessage } from './messageManager.js';
 
 interface ExtendedSocket extends Socket {
   userId?: string;
@@ -19,6 +19,19 @@ export function registerChatGateway(io: Server, db: any) {
     socket.userId = userId;
     console.log(`🟢 Utilisateur connecté : userId=${userId}, socket.id=${socket.id}`);
 
+     // 📩 Réception message
+     socket.on("paddleMove", async (msg) => {
+      console.log("receive paddleMove")
+      console.log(msg)
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        console.log("to "+targetSocketId)
+        io.to(targetSocketId).emit("paddleMove", msg);
+      }
+      
+      console.log(msg)
+     });
     // 📩 Réception message
     socket.on("chatMessage", async (msg) => {
       console.log('receive message ', msg);

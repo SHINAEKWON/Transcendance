@@ -6,7 +6,7 @@ const app = Fastify();
 const PORT = 5000;
 
 await app.register(cors, {
-  origin: ['http://localhost:3000'], // autorise le frontend
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'], // autorise le frontend
   credentials: true
 });
 
@@ -36,7 +36,7 @@ app.register(proxy, {
 });
 
 
-app.listen({ port: PORT }, (err) => {
+app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) {
     console.error(err);
     process.exit(1);

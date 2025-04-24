@@ -2,7 +2,7 @@ import { Router } from './router.js';
 import { WelcomePage } from './pages/welcome.js';
 import { ProfilePage } from './pages/profile/profile.js';
 import { ProfileGuestPage } from './pages/profile/profileGuest.js';
-import { GamePage } from './pages/game/game.js';
+import { GamePage } from './pages/game/GamePage.js';
 import { TournamentsPage } from './pages/tournaments.js';
 import { ChatPage } from './pages/chat.js';
 import { LanguagePage } from './pages/language.js';
@@ -16,7 +16,8 @@ import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
 import { Navbar } from './pages/navbar.js';
 import { EditProfilePage } from './pages/profile/editProfile.js';
-
+import { PageGame } from './pages/game/PageGame.js';
+import { io } from "socket.io-client";
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -29,7 +30,7 @@ const router = new Router({
     localPlay: new LocalPlayPage(),  // 🎮 Mode Local
     aiPlay: new AIPlayPage(),        // 🤖 Mode IA
     onlinePlay: new OnlinePlayPage(), // 🌐 Mode Online
-    gameboard: new GameBoard(), // à Ajouer 
+    gameboard: new PageGame(), // à Ajouer 
     signup: new SignupPage(),
     signin: new SigninPage(),
     guest: new GuestPage(),
@@ -47,6 +48,8 @@ window.addEventListener('hashchange', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+
+    initSocket();
     const appElement: HTMLElement | null = document.getElementById('navbar');
     if(appElement){
         appElement.innerHTML = new Navbar().render();
@@ -97,21 +100,31 @@ document.addEventListener('DOMContentLoaded', () => {
     router.init(); // ✅ Initialiser `router`
     console.log("after router init")
 
+    
+    
+});
+
+function initSocket(){
     // ✅ Connexion automatique + WebSocket chat
     const savedUser = localStorage.getItem("transcendenceUser");
     if (savedUser) {
         console.log("savedUser ok")
         const user = JSON.parse(savedUser);
 
-        const socket = io("http://localhost:4003", {
-            auth: {
-                userId: ""+user.id
-            }
-        });
+        const socket = io({
+            path: "/socket.io",
+            transports: ["websocket"],
+            auth: { userId: "" + user.id }
+          });          
 
         socket.on("connect", () => {
             console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
         });
+
+        socket.on("connect_error", (err : any) => {
+            console.error("❌ Erreur de connexion socket :", err.message);
+          });
+          
 
         
 
@@ -121,5 +134,4 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.hash = "#profileGuest";
         }
     }
-    
-});
+}

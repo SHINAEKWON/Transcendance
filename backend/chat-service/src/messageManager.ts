@@ -1,5 +1,5 @@
 import { Database } from 'sqlite';
-import { ChatMessage } from './types';
+import { ChatMessage } from './types.js';
 
 
 type BlockResponse = { blocked: boolean };
