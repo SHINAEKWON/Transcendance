@@ -4,6 +4,7 @@ import fastifySocketIO from 'fastify-socket.io';
 import { Server as SocketIOServer } from 'socket.io';
 import { initDB } from './db.js';
 import { chatRoutes } from './routes/chatRoutes.js';
+import { registerChatGateway } from './chatGateway.js';
 
 // 🪄 DÉCLARATION pour TypeScript
 declare module 'fastify' {

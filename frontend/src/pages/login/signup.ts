@@ -6,12 +6,12 @@ export class SignupPage implements Page{
     render() {
         // Shin Ae : Event Handler, attach this render to Submit Button Handler
         // SetTimeOut allows to wait the loading of render part.
-        <-- setTimeout(() => {
+        setTimeout(() => {
             this.submitButtonHandler();
             passwordChecker();
             firstnameChecker();
             lastnameChecker();
-        }, 0); -->
+        }, 0);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
