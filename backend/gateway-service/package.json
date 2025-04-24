@@ -4,8 +4,11 @@
     "type": "module",
     "main": "src/main.ts",
     "scripts": {
-        "start": "node --loader ts-node/esm src/main.ts"
+        "build": "tsc",
+        "start": "node --loader ts-node/esm src/main.ts",
+        "dev": "nodemon src/main.ts"
     },
+    "license": "ISC",
     "dependencies": {
         "@fastify/cors": "^11.0.1",
         "@fastify/http-proxy": "^11.1.2",

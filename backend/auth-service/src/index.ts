@@ -9,36 +9,27 @@ import cors from '@fastify/cors';
 
 const app = Fastify ({ logger: true });
 
-// Allowing CORS (from front)
-app.register(cors, {
-    origin: (origin, cb) => {
-        if (!origin) {
-            cb (null, true);
-            return;
-        }
+const PORT = 4000;
 
-        const allowedOrigins = ['http://0.0.0.0:3000', 'http://localhost:3000'];
-        if (allowedOrigins.includes(origin)) {
-            cb(null, true);
-        } else {
-            cb(new Error("Not allowed by CORS"), false);
-        }
-    },
-    credentials: true,
-});
-
+// Test
 app.get ("/", async (request, reply) => {
     return { message : "Fastify server received your request!" };
 });
 
-// Backend Router
+// Global error handler
+app.setErrorHandler((err, request, reply) => {
+    console.error('Global error has occured :', err);
+    reply.status(500).send({ error: 'Something went wrong !' });
+});
+
+// Add all routes in auth service
 app.register(formRoutes);
 
-
-app.listen ({ port: 3001, host: "0.0.0.0" }, (err, address) => {
+// Server launch
+app.listen ({ port: PORT, host: "0.0.0.0" }, (err, address) => {
     if (err) {
         app.log.error(err);
         process.exit(1);
     }
-    app.log.info('Server is now listening at 0.0.0.0:3001');
+    app.log.info(`Server is now listening at http://localhost:${PORT}`);
 });

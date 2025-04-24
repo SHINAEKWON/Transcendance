@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign-In</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Le bouton Google Sign-In -->
+    <div id="google-signin-button"></div>
+
+    <script>
+        // Charger Google Sign-In
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com", // Remplace par ton ID client
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("google-signin-button"),
+                { theme: "outline", size: "large" }
+            );
+        };
+
+        // Fonction pour gérer la réponse du login
+        function handleCredentialResponse(response) {
+            console.log("JWT reçu : " + response.credential);
+            fetch("/verify-token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ token: response.credential })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Réponse du serveur : ", data);
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'envoi du token : ", error);
+            });
+        }
+    </script>
+</body>
+</html>

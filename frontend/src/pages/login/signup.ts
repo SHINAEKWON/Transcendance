@@ -1,8 +1,17 @@
+import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js";
+import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
+import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
+
 export class SignupPage implements Page{
     render() {
         // Shin Ae : Event Handler, attach this render to Submit Button Handler
         // SetTimeOut allows to wait the loading of render part.
-        setTimeout(this.submitButtonHandler.bind(this), 0);
+        <-- setTimeout(() => {
+            this.submitButtonHandler();
+            passwordChecker();
+            firstnameChecker();
+            lastnameChecker();
+        }, 0); -->
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
@@ -33,10 +42,20 @@ export class SignupPage implements Page{
                             <input type="email" id="email" name="email" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-neon-purple mb-1" for="password">Password</label>
+                        <div class="md:col-span-2 password-container">
+                            <label class="flex text-neon-purple mb-1" for="password">Password&nbsp;
+                            <img src="/public/elements/Blue_question_mark_icon.png" width="30px" /></label>
                             <input type="password" id="password" name="password" required
-                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
+                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" 
+                                maxlength='30' />
+                            <ul id="password-requirements" class="text-sm mt-2 text-red-500">
+                            <li id="length">❌ Between 12 and 30 characters</li>
+                            <li id="uppercase">❌ Include a uppercase letter</li>
+                            <li id="lowercase">❌ Include a lowercase letter</li>
+                            <li id="number">❌ Include a number</li>
+                            <li id="special">❌ Include a special character</li>
+                            <li id="repeat">❌ Avoid 3 consecutive identical characters</li>
+                            </ul>
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-neon-green mb-1" for="postalAddress">Postal Address <span class="text-gray-400 text-sm">(optional)</span></label>
@@ -82,35 +101,29 @@ export class SignupPage implements Page{
             };
 
             try {
-                const result = await fetch('http://0.0.0.0:3001/api/auth/register', {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                console.log('formData : ', formData);
+                
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify(formData),
                 });
-
-                if (!result.ok)
-                    throw new Error((await result.json()).message);
+                
+                if (!response.ok) {
+                    const msg = await response.text();
+                    throw new Error(`(${response.status}) ${msg}`);
+                  }
+                  
+                const data = await response.json();
 
                 alert('Account successfully created!');
                 console.log("Account created for following user:");
                 console.log(formData.idNumber);
             } catch (err: any) {
                 alert('Failed to create account!');
-                console.log("Failed to create account!" + err.message);
+                console.log("Failed to create account! : " + err.message);
             }
         });
     }
 }
-
-async function testConnection() {
-    const response = await fetch("http://0.0.0.0:3001/api/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "KWON", email: "tradekwon@kwon.com"}),
-    });
-    const result = await response.json();
-    console.log("server reply, result");
-}
-
-testConnection();

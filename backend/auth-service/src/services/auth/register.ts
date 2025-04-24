@@ -3,12 +3,11 @@ import { User } from '../../models/user/Users.js';
 import { UserStatus } from '../../models/user/Users.js';
 import * as userModel from '../../db/userModel.js';
 import bcrypt from 'bcrypt';
+import { isPasswordValid } from './passwordcheck.js'
 
 
 export async function newUserRegister( request: FastifyRequest,
     reply: FastifyReply ) {
-
-    // console.log("from newuserRegister, DEBUG BODY :", request.body);
 
     const { 
       idNumber,
@@ -16,7 +15,7 @@ export async function newUserRegister( request: FastifyRequest,
       lastName,
       password,
       nickname,
-      status,
+      // status,
       email,
       address,
       telephone,
@@ -31,10 +30,9 @@ export async function newUserRegister( request: FastifyRequest,
       lastName: string,
       password: string,
       nickname: string,
-      status: UserStatus,
       email: string,
       address: string,
-      telephone: number,
+      telephone: string,
       // matchNb: number,
       // winNb: number,
       // loseNb: number,
@@ -47,18 +45,22 @@ export async function newUserRegister( request: FastifyRequest,
     return reply.status(400).send({ message: "Tous les champs ne sont pas requis." });
   }
 
+  if (!isPasswordValid(password)) {
+    return reply.status(400).send({ message: "Invalid password" });
+  }
+
   try {
     // Hasher le mot de passe\
     const hashedPassword = await bcrypt.hash(password, 10);
     
     // Création d'un nouvel utilisateur 
-    // const newUser = new User( idNumber, firstName, lastName, hashedPassword, nickname, status, email, address, telephone, matchNb, winNb, loseNb, friends, blockedUsers );
-    const newUser = new User( idNumber, firstName, lastName, hashedPassword, nickname, status, email, address, telephone );
+    const newUser = new User( idNumber, firstName, lastName, nickname, hashedPassword,  email, address, telephone );
 
     // Ajout de l'utilisateur à la base de données
     const createdUser = await userModel.createUser(newUser);
 
-    return { message: "Utilisateur créé avec succès", user: createdUser };
+    return createdUser;
+
   } catch (error: unknown) {
     // Typage explicite de l'erreur
     if (error instanceof Error) {

@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import proxy from '@fastify/http-proxy';
 import cors from '@fastify/cors';
 
-const app = Fastify();
+const app = Fastify({ logger: true });
 const PORT = 5000;
 
 await app.register(cors, {
@@ -10,12 +10,16 @@ await app.register(cors, {
   credentials: true
 });
 
-// ici on connecte (Auth routes) sur http://localhost:4000
 app.register(proxy, {
-  upstream: 'http://localhost:4000',
-  prefix: '/auth',
-  rewritePrefix: ''
+  upstream: 'http://auth:4000',
+  prefix: '/api/auth',
+  rewritePrefix: '',
+  preHandler: (req, reply, done) => {
+    console.log('Trying proxy -> Gateway...');
+    done();
+  }
 });
+
 
 app.register(proxy, {
   upstream: 'http://localhost:4001',
@@ -35,10 +39,10 @@ app.register(proxy, {
   rewritePrefix: ''
 });
 
-
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) {
     console.error(err);
+    throw err;
     process.exit(1);
   }
   console.log(`🚪 Gateway ready at http://localhost:${PORT}`);

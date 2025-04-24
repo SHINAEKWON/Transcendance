@@ -1,8 +1,8 @@
 {
-  "name": "authservice",
+  "name": "backend",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "Backend Fastify pour ft_transcendence",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -18,7 +18,6 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "fastify": "^4.29.0",
-    "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "sqlite3": "^5.1.7"
   },

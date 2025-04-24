@@ -36,7 +36,6 @@ const router = new Router({
     guest: new GuestPage(),
     profileGuest: new ProfileGuestPage(),
     editProfile: new EditProfilePage()
-
 });
 
 // ✅ Rendre `router` accessible dans `window` pour d'autres scripts
@@ -54,10 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(appElement){
         appElement.innerHTML = new Navbar().render();
     }
-   
-
-    
-
    
     function updateSidebar() {
         const appElement: HTMLElement | null = document.getElementById('sidebar');
@@ -79,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPage = window.location.hash.slice(1) || 'welcome';
     
         if (overlay) {
+
             if (currentPage === 'welcome') {
                 overlay.classList.remove('fade-in');
                 overlay.classList.add('fade-out'); // Disparaît en fondu

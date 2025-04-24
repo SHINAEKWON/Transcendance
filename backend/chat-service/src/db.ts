@@ -3,6 +3,7 @@ import { open } from 'sqlite';
 
 export async function initDB() {
   const db = await open({
+
     filename: './data/chat.db',
     driver: sqlite3.Database
   });

@@ -1,13 +1,14 @@
 export class SigninPage implements Page{
     render() {
+        <!-- setTimeout(this.loginButtonHandler.bind(this), 0); -->
         const html = `
             <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Sign In</h2>
                 
                 <form id="signin-form" class="space-y-6">
                     <div>
-                        <label class="block text-neon-purple mb-1" for="login">Login</label>
-                        <input type="text" id="login" name="login" required
+                        <label class="block text-neon-purple mb-1" for="email">Login</label>
+                        <input type="text" id="email" name="email" required
                             class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                     </div>
                     <div>
@@ -49,26 +50,29 @@ export class SigninPage implements Page{
             e.preventDefault();
 
             const formData = {
-                idNumber: (document.getElementById('login') as HTMLInputElement).value,
+                email: (document.getElementById('email') as HTMLInputElement).value,
                 password: (document.getElementById('password') as HTMLInputElement).value
             };
 
             try {
-                const result = await fetch('http://0.0.0.0:3001/api/auth/signin', {
+                const response = await fetch('http://localhost:5000/api/auth/signin', {
                     method: "POST",
                     headers: { "Content-Type": "application/json"},
                     credentials: 'include',
                     body: JSON.stringify(formData)
                 });
 
-                if (!result.ok)
-                    throw new Error((await result.json()).message);
+                if (!response.ok) {
+                    const msg = await response.text();
+                    throw new Error(`(${response.status}) ${msg}`);
+                  }
 
-                console.log("Login information of following user sent to BE for a check : ", formData.idNumber);
+                alert('Maybe logged!');
+                console.log("Login information of following user sent to BE for a check : ", formData.email);
 
             } catch (err: any) {
                 alert('Failed to connect to server!');
-                console.log(formData.idNumber, " failed to connect!" + err.message);
+                console.log(formData.email, " failed to connect!" + err.message);
             }
         });
     }
