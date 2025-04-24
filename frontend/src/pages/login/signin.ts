@@ -1,6 +1,6 @@
 export class SigninPage implements Page{
     render() {
-        setTimeout(this.loginButtonHandler.bind(this), 0);
+        setTimeout(this.loginButtonHandler.bind(this), 50);
         
         const html = `
             <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">

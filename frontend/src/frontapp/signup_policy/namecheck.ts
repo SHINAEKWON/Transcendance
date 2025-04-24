@@ -41,7 +41,7 @@ export function lastnameChecker() {
             const checks = {
                 length: name.length >= 2 && name.length <= 20,
                 regex: /^[A-Za-z0-9_.-]+$/.test(name),
-            };
+            };a
 
             const allValid = Object.values(checks).every(v => v);
             submitButton.disabled = !allValid;

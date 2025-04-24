@@ -297,3 +297,25 @@ button:hover {
 .notif-badge {
   transition: all 0.3s ease-in-out;
 }
+
+
+/* Signup.ts Password requirements Tooltip Syles */
+
+.password-container {
+  position: relative;
+  display: block;
+  font-family: 'Press Start 2P';
+}
+
+#password-requirements {
+  display: none;
+  position: absolute;
+  background: gray;
+  color: white;
+  padding: 15px;
+  width: 400px !important;
+}
+
+.password-container:hover #password-requirements {
+  display: block;
+}

@@ -1,6 +1,7 @@
 import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js";
 import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
 import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
+import { idNumberChecker } from "../../frontapp/signup_policy/idcheck.js";
 
 export class SignupPage implements Page{
     render() {
@@ -11,7 +12,8 @@ export class SignupPage implements Page{
             passwordChecker();
             firstnameChecker();
             lastnameChecker();
-        }, 0);
+            idNumberChecker();
+        }, 50);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
