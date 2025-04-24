@@ -1,28 +1,13 @@
 import Fastify from 'fastify';
 import proxy from '@fastify/http-proxy';
 import cors from '@fastify/cors';
-import dotenv from 'dotenv';
 
 const app = Fastify({ logger: true });
 const PORT = 5000;
 
-// Allowing CORS (from front)
-app.register(cors, {
-  origin: (origin, cb) => {
-      if (!origin) {
-          cb (null, true);
-          return;
-      }
-
-      const allowedOrigins = ['http://0.0.0.0:3000', 'http://localhost:3000', 'http://127.0.0.1:3000'];
-      if (allowedOrigins.includes(origin)) {
-          cb(null, true);
-          console.log('Cors OK');
-      } else {
-          cb(new Error("Not allowed by CORS"), false);
-      }
-  },
-  credentials: true,
+await app.register(cors, {
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'], // autorise le frontend
+  credentials: true
 });
 
 app.register(proxy, {
@@ -54,8 +39,7 @@ app.register(proxy, {
   rewritePrefix: ''
 });
 
-
-app.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
+app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) {
     console.error(err);
     throw err;

@@ -4,23 +4,21 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsc --watch\" \"npx @tailwindcss/cli -i ./src/style.css -o ./dist/output.css ./dist/frontapp/signup_policy/passwordpolicy.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
+    "build": "npx esbuild src/main.ts --bundle --outfile=dist/main.js --minify && npx tailwindcss -i ./src/style.css -o ./dist/output.css --minify",
+    "dev": "concurrently \"esbuild src/main.ts --bundle --outfile=dist/main.js --watch\" \"npx @tailwindcss/cli -i ./src/style.css -o ./dist/output.css --watch\" \"live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist\"",
     "prod": "live-server --port=3000 --host=0.0.0.0 --no-browser --mount=/dist:dist",
-    "build": "tsc && npx tailwindcss -i ./src/style.css -o ./dist/output.css ./dist/frontapp/signup_policy/passwordpolicy.css --minify --mount=/dist:dist",
     "start": "npm run dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  
   "dependencies": {
+    "@tailwindcss/cli": "^4.0.15",
+    "@tailwindcss/postcss": "^4.0.15",
     "@types/node": "^22.13.11",
     "concurrently": "^8.2.2",
     "live-server": "^1.2.2",
-    "typescript": "^5.8.2",
-    "@tailwindcss/cli": "^4.0.15",
-    "socket.io-client": "^4.8.1",
-    "@tailwindcss/postcss": "^4.0.15"
+    "socket.io-client": "^4.6.1",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.2"
   }
 }

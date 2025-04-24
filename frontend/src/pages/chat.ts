@@ -1,6 +1,6 @@
-export class ChatPage {
-    render(): string {
-        return `
+export class ChatPage implements Page{
+    render() {
+        let html = `
             <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Chat</h2>
                 <div class="bg-gray-900 p-4 rounded-lg h-96 overflow-y-auto mb-4">
@@ -27,5 +27,10 @@ export class ChatPage {
                 </div>
             </div>
         `;
+
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
     }
 }

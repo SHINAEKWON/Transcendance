@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyTranscendence</title>
-    <link href="/dist/output.css" rel="stylesheet">
+  <!--
     <link href="/dist/frontapp/password_policy/passwordpolicy.css" rel="stylesheet">
+-->
+    <link href="output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="background-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('/public/images/background.jpeg');"></div>
+    <div id="background-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('public/images/background.jpeg');"></div>
     <div id="background-overlay" class="absolute inset-0 bg-black opacity-0 transition-opacity duration-500 backdrop-blur-xs scale-100"></div>
     <nav class="bg-gray-800 p-4 relative opacity-80" id="navbar"></nav>
     
     <div class="flex z-10"> 
-        <aside id="sidebar" class="w-1/4 h-screen bg-gray-800 p-4 flex flex-col overflow-hidden">
-        </aside>   
-        
+        <aside id="sidebar" class="w-1/4 h-screen bg-gray-800 p-4 flex flex-col overflow-hidden"></aside>   
         <main id="app" class="w-3/4 p-4 relative z-10"></main>
     </div>
-    <script type="module" src="/dist/main.js"></script>
+
+   <script type="module" src="main.js"></script>
 </body>
 </html>

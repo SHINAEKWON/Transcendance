@@ -45,8 +45,16 @@ export class GameBoard {
 
   constructor() { }
 
-  render(player1?: string | null, player2?: string | null): string {
-    return `
+  render() {
+    const page = window.location.hash.slice(1);
+    let [pageName, queryString] = page.split("?");
+    queryString = queryString || "";
+    const params = new URLSearchParams(queryString);
+    const player1 = params.get("player1") || "Player 1";
+    const player2 = params.get("player2") || "Player 2";
+
+    console.log(`🎮 Lancement du jeu avec: ${player1} vs ${player2}`);
+    const html = `
         <div class="flex flex-col items-center space-y-4 font-poppins w-full">
           <!-- Canvas -->
           <canvas id="gameCanvas"></canvas>
@@ -78,6 +86,13 @@ export class GameBoard {
           </div>
         </div>
       `;
+
+    const app = document.getElementById('app');
+    if (app) {
+      app.innerHTML = html;
+    }
+
+    this.init();
   }
 
 

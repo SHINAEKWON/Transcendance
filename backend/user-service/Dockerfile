@@ -42,7 +42,8 @@ COPY --from=builder /app/package.json ./package.json
 
 # Monter un volume pour la base SQLite
 # Une fois la methode API installee, effacer les volumes
-VOLUME ["/app/data"]
+
+#VOLUME ["/app/data"]
 
 # Définir la variable d’environnement
 ENV PORT=4001

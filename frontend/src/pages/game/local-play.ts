@@ -1,11 +1,11 @@
 import { getTranslation } from "../../i18n/i18n.js";
 import { localPlayTranslations } from "../../translations/game.js";
 
-export class LocalPlayPage {
-    render(): string {
+export class LocalPlayPage implements Page {
+    render() {
         const t = (key: keyof typeof localPlayTranslations) => getTranslation("localPlay", key);
 
-        return `
+        let html = `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg text-center">
                 <h1 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">${t("title")}</h1>
                 <p class="text-gray-400 text-center mb-4">${t("description")}</p>
@@ -39,6 +39,13 @@ export class LocalPlayPage {
                 </div>
             </div>
         `;
+
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
+
+        this.attachEvents();
     }
 
     attachEvents(): void {

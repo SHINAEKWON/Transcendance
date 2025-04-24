@@ -2,17 +2,17 @@ import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js"
 import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
 import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
 
-export class SignupPage {
-    render(): string {
+export class SignupPage implements Page{
+    render() {
         // Shin Ae : Event Handler, attach this render to Submit Button Handler
         // SetTimeOut allows to wait the loading of render part.
-        setTimeout(() => {
+        <-- setTimeout(() => {
             this.submitButtonHandler();
             passwordChecker();
             firstnameChecker();
             lastnameChecker();
-        }, 0);
-        return `
+        }, 0); -->
+        const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
                 <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">Sign Up</h2>
                 <form id="signup-form" class="space-y-6">
@@ -75,6 +75,11 @@ export class SignupPage {
                 </form>
             </div>
         `;
+
+        const app = document.getElementById('app');
+        if(app){
+            app.innerHTML = html;
+        }
     }
 
     private submitButtonHandler() {

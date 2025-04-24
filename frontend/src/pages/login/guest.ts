@@ -1,6 +1,6 @@
-export class GuestPage {
-    render(): string {
-      return `
+export class GuestPage implements Page{
+    render() {
+      const html = `
         <div class="flex items-center justify-center bg-dark-blue">
           <div class="bg-gray-800 bg-opacity-90 p-8 rounded-2xl shadow-lg w-full max-w-3xl text-center space-y-8">
             <h2 class="text-4xl font-gaming text-neon-blue animate-glow">Play as Guest</h2>
@@ -19,18 +19,18 @@ export class GuestPage {
               <div class="flex justify-center gap-10 flex-wrap">
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar1" class="hidden" />
-                  <img src="./public/images/avatar1.png" alt="Avatar 1"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-purple transition" />
+                  <img src="./public/images/guestAvatar1.png" alt="Avatar 1"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-purple transition" />
                 </label>
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar2" class="hidden" />
-                  <img src="./public/images/avatar2.png" alt="Avatar 2"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-orange transition" />
+                  <img src="./public/images/guestAvatar2.png" alt="Avatar 2"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-orange transition" />
                 </label>
                 <label class="cursor-pointer transform hover:scale-110 transition">
                   <input type="radio" name="avatar" value="avatar3" class="hidden" />
-                  <img src="./public/images/avatar3.png" alt="Avatar 3"
-                    class="w-32 h-32 rounded-full border-4 border-transparent hover:border-neon-blue transition" />
+                  <img src="./public/images/guestAvatar3.png" alt="Avatar 3"
+                    class="w-35 h-35 rounded-full border-4 border-transparent hover:border-neon-green transition" />
                 </label>
               </div>
             </div>
@@ -54,6 +54,12 @@ export class GuestPage {
     </script>
 
       `;
+
+      const app = document.getElementById('app');
+      if(app){
+          app.innerHTML = html;
+      }
+      this.setup();
       
     }
     
@@ -98,7 +104,7 @@ export class GuestPage {
           const avatarUrl = this.getAvatarUrl(avatar);
         
         try {
-          const res = await fetch("http://localhost:5000/user/users", {
+          const res = await fetch("/user/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: nickname, avatar: avatarUrl })
@@ -132,11 +138,11 @@ export class GuestPage {
 
     getAvatarUrl(avatarValue: string): string {
         const avatars: Record<string, string> = {
-          avatar1: './public/images/avatar1.png',
-          avatar2: './public/images/avatar2.png',
-          avatar3: './public/images/avatar3.png'
+          avatar1: './public/images/guestAvatar1.png',
+          avatar2: './public/images/guestAvatar2.png',
+          avatar3: './public/images/guestAvatar3.png'
         };
-        return avatars[avatarValue] ?? './public/images/avatar1.png';
+        return avatars[avatarValue] ?? './public/images/guestAvatar1.png';
       }
       
   }
