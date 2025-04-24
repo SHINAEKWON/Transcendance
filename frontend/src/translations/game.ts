@@ -101,4 +101,69 @@ export const gameTranslations = {
       ko: "⬅ 뒤로"
     }
   } as const;
-  
+
+  export const aiPlayTranslations = {
+    chooseRobotTitle: {
+      en: "Choose Your Robo Opponent",
+      fr: "Choisissez votre adversaire robot",
+      de: "Wähle deinen Roboter-Gegner",
+      ar: "اختر خصمك الروبوتي",
+      ko: "로봇 상대를 선택하세요"
+    },
+    playBtn: {
+      en: "Play",
+      fr: "Jouer",
+      de: "Spielen",
+      ar: "العب",
+      ko: "플레이"
+    },
+    backToGame: {
+      en: "Back to Game Modes",
+      fr: "Retour aux modes de jeu",
+      de: "Zurück zu den Spielmodi",
+      ar: "العودة إلى أوضاع اللعب",
+      ko: "게임 모드로 돌아가기"
+    },
+    bot1Name: {
+      en: "RoboZ",
+      fr: "RoboZ",
+      de: "RoboZ",
+      ar: "روبو زد",
+      ko: "로보Z"
+    },
+    bot1Desc: {
+      en: "A balanced bot with medium speed and smart defense.",
+      fr: "Un robot équilibré, avec une vitesse moyenne et une défense intelligente.",
+      de: "Ein ausgewogener Bot mit mittlerer Geschwindigkeit und kluger Verteidigung.",
+      ar: "روبوت متوازن بسرعة متوسطة ودفاع ذكي.",
+      ko: "중간 속도와 스마트한 방어를 가진 균형 잡힌 로봇입니다."
+    },
+    bot2Name: {
+      en: "Mecha-X",
+      fr: "Mecha-X",
+      de: "Mecha-X",
+      ar: "ميكا إكس",
+      ko: "메카-X"
+    },
+    bot2Desc: {
+      en: "Fast and aggressive, perfect for quick matches.",
+      fr: "Rapide et agressif, parfait pour des parties rapides.",
+      de: "Schnell und aggressiv – perfekt für kurze Matches.",
+      ar: "سريع وعدواني، مثالي للمباريات السريعة.",
+      ko: "빠르고 공격적인 스타일로 빠른 게임에 적합합니다."
+    },
+    bot3Name: {
+      en: "CyberNova",
+      fr: "CyberNova",
+      de: "CyberNova",
+      ar: "سايبر نوفا",
+      ko: "사이버노바"
+    },
+    bot3Desc: {
+      en: "Strategic bot with high accuracy and tough AI.",
+      fr: "Robot stratégique avec une grande précision et une IA coriace.",
+      de: "Strategischer Bot mit hoher Genauigkeit und starker KI.",
+      ar: "روبوت استراتيجي بدقة عالية وذكاء اصطناعي قوي.",
+      ko: "높은 정확도와 강력한 인공지능을 가진 전략적 로봇입니다."
+    }
+  } as const;
