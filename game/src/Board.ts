@@ -156,12 +156,12 @@ export class Board extends A_GameElement
         return null;
     }
 
-    movePaddles(board: Board): void
+    movePaddles(): void
     {
         for (const direction in this.players) {
             const player = this.players[direction as keyof Players];
             if (player !== null)
-                player.movePaddles(board);
+                player.movePaddles(this);
         } 
     }
 

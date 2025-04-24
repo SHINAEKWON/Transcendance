@@ -83,14 +83,26 @@ export abstract class A_Element<T extends HTMLElement>
     getTopInitialRelative(): number { return (this.topInitialRelative); }
     isActive(): boolean { return this.isactive; }
     
-    getLeftCurrentAbsolute(): number { return (this.leftCurrentAbsolute); }
-    getRightCurrentAbsolute(): number { return (this.rightCurrentAbsolute); }
-    getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
-    getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
+    getLeftCurrentAbsolute(): number { this.getAndSetCurrentGeometry(); return (this.leftCurrentAbsolute); }
+    getRightCurrentAbsolute(): number { this.getAndSetCurrentGeometry(); return (this.rightCurrentAbsolute); }
+    getTopCurrentAbsolute(): number { this.getAndSetCurrentGeometry(); return (this.topCurrentAbsolute); }
+    getBottomCurrentAbsolute(): number { this.getAndSetCurrentGeometry(); return (this.bottomCurrentAbsolute); }
 
     getBackgroundColor(): string { return (this.element.style.backgroundColor); }
 
     getElementId(): string { return (this.element.id); }
+
+    getCurrentHeightCenter(): number
+    {
+        this.getAndSetCurrentGeometry();
+        return ((this.bottomCurrentAbsolute - this.topCurrentAbsolute) / 2);
+    }
+
+    getCurrentWidthCenter(): number
+    {
+        this.getAndSetCurrentGeometry();
+        return ((this.rightCurrentAbsolute - this.leftCurrentAbsolute) / 2);
+    }
 
     activate(): void
     {

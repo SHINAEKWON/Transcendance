@@ -130,7 +130,7 @@ export class Game
         if (this.state == GAME_STARTED)
         {
             this.board.moveBalls();
-            this.board.movePaddles(this.board);
+            this.board.movePaddles();
             
             if (this.board.checkBalls() == true)
                 this.ballout();

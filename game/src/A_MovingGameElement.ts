@@ -56,7 +56,75 @@ export abstract class A_MovingGameElement extends A_GameElement
     getSpeedY(): number { return this.speedY; }
     getLeftNewRelative(): number { return this.leftNewRelative; }
     getTopNewRelative(): number { return this.topNewRelative; }
+
+    /* ********************************************************************** */
+    /* Calculate interceptions of movement                                    */
+    /* Formula of movement (straight line) : y=dy/dx*x+t                      */
+    /* ********************************************************************** */
+    /* ********************************************************************** */
+    /* Calculate interception with y line : t=y-dy/dx*x                       */
+    /* ********************************************************************** */
+    private getYIntercept(): number
+    {
+        return (this.getCurrentHeightCenter() - (this.speedY / this.speedX * this.getCurrentWidthCenter()));
+    }
+
+    /* ********************************************************************** */
+    /* Calculate interception with top of other element (i.e. fix y as top)   */
+    /* x=(y-t)*dx/dy                                                          */
+    /* ********************************************************************** */
+    private getAbsoluteHitXTop(withElement: A_GameElement): number
+    {
+        return ((withElement.getTopCurrentAbsolute() - this.getYIntercept()) * this.speedX / this.speedY);
+    }
+
+    /* ********************************************************************** */
+    /* Calculate interception with botm of other element (i.e. fix y as botm) */
+    /* x=(y-t)*dx/dy                                                          */
+    /* ********************************************************************** */
+    private getAbsoluteHitXBottom(withElement: A_GameElement): number
+    {
+        return ((withElement.getBottomCurrentAbsolute() - this.getYIntercept()) * this.speedX / this.speedY);
+    }
     
+    /* ********************************************************************** */
+    /* Calculate interception with left of other element (i.e. fix x as left) */
+    /* y=dy/dx*x+t                                                            */
+    /* ********************************************************************** */
+    private getAbsoluteHitYLeft(withElement: A_GameElement): number
+    {
+        return (this.speedY / this.speedX * withElement.getLeftCurrentAbsolute() + this.getYIntercept());
+    }
+
+    /* ********************************************************************** */
+    /* Calculate interception with righ of other element (i.e. fix x as righ) */
+    /* y=dy/dx*x+t                                                            */
+    /* ********************************************************************** */
+    private getAbsoluteHitYRight(withElement: A_GameElement): number
+    {
+        return (this.speedY / this.speedX * withElement.getRightCurrentAbsolute() + this.getYIntercept());
+    }
+
+    getAbsoluteHitPoint(withElement: A_GameElement): [number, number]
+    {
+        let hitCoordinate: number = this.getAbsoluteHitXTop(withElement);
+        if (hitCoordinate < withElement.getRightCurrentAbsolute() && hitCoordinate > withElement.getLeftCurrentAbsolute())
+            return ([hitCoordinate, withElement.getTopCurrentAbsolute()]);
+        hitCoordinate = this.getAbsoluteHitXBottom(withElement);
+        if (hitCoordinate < withElement.getRightCurrentAbsolute() && hitCoordinate > withElement.getLeftCurrentAbsolute())
+            return ([hitCoordinate, withElement.getBottomCurrentAbsolute()]);
+
+        hitCoordinate = this.getAbsoluteHitYLeft(withElement);
+        if (hitCoordinate < withElement.getBottomCurrentAbsolute() && hitCoordinate > withElement.getTopCurrentAbsolute())
+            return ([withElement.getLeftCurrentAbsolute(), hitCoordinate]);
+        hitCoordinate = this.getAbsoluteHitYRight(withElement);
+        if (hitCoordinate < withElement.getBottomCurrentAbsolute() && hitCoordinate > withElement.getTopCurrentAbsolute())
+            return ([withElement.getRightCurrentAbsolute(), hitCoordinate]);
+        return [0, 0];
+    }
+
+
+
     private setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
     {
         if (leftNewRelative !== null)

@@ -2,6 +2,8 @@ import { A_MovingGameElement } from "./A_MovingGameElement.js";
 import { A_GameElement } from "./A_GameElement.js";
 import { Player } from "./Player.js";
 import { Position } from "./constants.js";
+import { Ball } from "./Ball.js";
+import { Board } from "./Board.js";
 
 export class Paddle extends A_MovingGameElement
 {
@@ -72,7 +74,27 @@ export class Paddle extends A_MovingGameElement
     {
         this.setSpeedComponents(0, 0);
     }
-    
+
+    moveAI(toHitBall: Ball, insideBoard: Board): void
+    {
+        let hitPoint: [number, number] = toHitBall.getAbsoluteHitPoint(insideBoard);
+        if (this.position == Position.Left || this.position == Position.Right)
+        {
+            while (this.getCurrentHeightCenter() < hitPoint[1])
+                this.setSpeedComponents(0, this.getInitialSpeed());
+            while (this.getCurrentHeightCenter() > hitPoint[1])
+                this.setSpeedComponents(0, -this.getInitialSpeed());
+        }
+        else
+        {
+            while (this.getCurrentWidthCenter() < hitPoint[0])
+                this.setSpeedComponents(this.getInitialSpeed(), 0);
+            while (this.getCurrentWidthCenter() > hitPoint[1])
+                this.setSpeedComponents(-this.getInitialSpeed(), 0);
+        }
+        this.setSpeedComponents(0, 0);
+    }
+  
     keyDownHandler(event: KeyboardEvent): void
     {
         if (this.position == Position.Left || this.position == Position.Right)

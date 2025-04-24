@@ -86,6 +86,7 @@ export class Player
     {
         for (let i = 0; i < this.paddles.length; ++i)
         {
+            this.paddles[i].moveAI(board.balls[0], board);
             this.paddles[i].move(board);
         }
     }
