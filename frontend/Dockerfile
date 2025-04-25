@@ -21,14 +21,6 @@ COPY package.json package-lock.json tsconfig.json ./
 #   listed in this package-lock.json file. If package-lock.json does not exist,
 #   it will install the most recent version in the version ranges listed in the 
 #   file package.json.
-# - From ChatGPT:
-#   The --legacy-peer-deps flag is used with the npm install command to 
-#   instruct npm to ignore peer dependency conflicts and install packages as if 
-#   it were an older version of npm.
-#   While --legacy-peer-deps can be useful to bypass errors, it should be used 
-#   with caution. Ignoring peer dependency conflicts might lead to Unresolved 
-#   Issues or Inconsistent Builds.
-# - TODO: SHOULD WE REMOVE THE --legacy-peer-deps FLAG ?
 RUN npm install
 
 # Copier le reste du projet
@@ -38,8 +30,6 @@ COPY src src/
 COPY styles styles/
 
 RUN npm run build
-
-
 
 
 FROM nginx:alpine

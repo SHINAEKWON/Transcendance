@@ -1,32 +1,25 @@
-# this is a Makefile to handle the docker container which compiles the frontend
-
-.PHONY: reset stop prune build run exec
-
-stop:
-	@if [ -n "$$(docker ps -q)" ]; then docker stop $$(docker ps -q); fi
+.PHONY: prune build up down run execfe ls ps clean reset
 
 prune:
 	docker system prune -af
 
-# Build a docker image:
-# - with the name/tag (-t) 'frontend'
-# - from the dockerfile in the path 'frontend'
-# - and rebuild everything from scratch, without using cached layers (--no-cache)
 build:
-	docker build --no-cache -t frontend frontend
+	docker-compose build --no-cache
 
-# Run a docker container:
-# - from the image named 'frontend'
-# - map the ports 3000 of localhost to 3000 of container (-p)
-run:
-	docker run --name frontend -p 127.0.0.1:3000:3000 frontend
+up:
+	docker-compose up 
+
+down:
+	docker-compose down 
+
+run: build up
 
 # Execute a command in a running container:
 # - opening an interactive terminal session inside the container (-it)
-# - running a shell (sh)
+# - running a shell (bash)
 # exec should be executed when the container is already running
-exec:
-	docker exec -it frontend sh
+execfe:
+	docker exec -it frontend bash
 
 ls:
 	docker image ls
@@ -34,6 +27,6 @@ ls:
 ps:
 	docker ps -a
 
-clean: stop prune
+clean: down prune
 
-reset: stop prune build run
+reset: clean run
