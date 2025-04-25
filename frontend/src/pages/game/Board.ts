@@ -9,7 +9,7 @@ export class Board extends A_GameElement
     balls: Ball[] = [];
     players: Players;
     
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, name_top, color_top, keys_top, name_right, color_right, keys_right, name_bottom, color_bottom, keys_bottom, socket, mode, idPlayerLeft, idPlayerRight}:
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, name_top, color_top, keys_top, isAI_top, name_right, color_right, keys_right, isAI_right, name_bottom, color_bottom, keys_bottom, isAI_bottom, socket, mode, idPlayerLeft, idPlayerRight}:
     {
         elementId: string, 
         leftInitialRelative: number, 
@@ -23,15 +23,19 @@ export class Board extends A_GameElement
         name_left: string | null,
         color_left: string | null,
         keys_left: [string, string][] | null,
+        isAI_left: boolean,
         name_top: string | null,
         color_top: string | null,
         keys_top: [string, string][] | null,
+        isAI_top: boolean,
         name_right: string | null,
         color_right: string | null,
         keys_right: [string, string][] | null,
+        isAI_right: boolean,
         name_bottom: string | null,
         color_bottom: string | null,
         keys_bottom: [string, string][] | null,
+        isAI_bottom: boolean,
         socket: any,
         mode: GameMode,
         idPlayerLeft: number,
@@ -67,6 +71,7 @@ export class Board extends A_GameElement
             parentElement: parentElement, 
             classList: classList
         });
+
         let playerLeft: Player | null = null;
         let playerTop: Player | null = null;
         let playerRight: Player | null = null;
@@ -74,13 +79,13 @@ export class Board extends A_GameElement
 
         if (name_left !== null && color_left !== null && keys_left !== null)
         {
-            playerLeft = new Player({name: name_left, color: color_left, paddleKeys: keys_left, parentElement: this, position: Position.Left, socket, mode, vs: idPlayerRight});
+            playerLeft = new Player({name: name_left, color: color_left, paddleKeys: keys_left, parentElement: this, position: Position.Left, isAI: isAI_left, socket, mode, vs: idPlayerRight});
             this.leftWall = false;
         }
        
         if (name_right !== null && color_right !== null && keys_right !== null)
         {
-            playerRight = new Player({name: name_right, color: color_right, paddleKeys: keys_right, parentElement: this, position: Position.Right, socket, mode, vs: idPlayerLeft});
+            playerRight = new Player({name: name_right, color: color_right, paddleKeys: keys_right, parentElement: this, position: Position.Right, isAI: isAI_right, socket, mode, vs: idPlayerLeft});
             this.rightWall = false;
         }
         
@@ -95,7 +100,7 @@ export class Board extends A_GameElement
 
         for (let i=0; i < count_balls; ++i)
         {
-            this.balls.push(new Ball({ballId: "ball" + i, parentElement: this, classList: ["aspect-square", "rounded-full"]}));
+            this.balls.push(new Ball({ballId: "ball" + i, onBoard: this, classList: ["aspect-square", "rounded-full"]}));
             //this.balls[i].changeText(String(i));
         }
     }
@@ -152,12 +157,12 @@ export class Board extends A_GameElement
         return null;
     }
 
-    movePaddles(board: Board): void
+    movePaddles(): void
     {
         for (const direction in this.players) {
             const player = this.players[direction as keyof Players];
             if (player !== null)
-                player.movePaddles(board);
+                player.movePaddles(this);
         } 
     }
 

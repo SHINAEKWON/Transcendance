@@ -56,7 +56,7 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
             this.getAndSetCurrentGeometry();
             ofElement.getAndSetCurrentGeometry();
         
-            if (this.topCurrentAbsolute > ofElement.topCurrentAbsolute)
+            if (this.getTopCurrentAbsolute() > ofElement.getTopCurrentAbsolute())
                 return true;
         }
         return false; 
@@ -69,7 +69,7 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
             this.getAndSetCurrentGeometry();
             ofElement.getAndSetCurrentGeometry();
         
-            if (this.bottomCurrentAbsolute < ofElement.bottomCurrentAbsolute)
+            if (this.getBottomCurrentAbsolute() < ofElement.getBottomCurrentAbsolute())
                 return true;
         }
         return false; 
@@ -82,7 +82,7 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
             this.getAndSetCurrentGeometry();
             ofElement.getAndSetCurrentGeometry();
         
-            if (this.leftCurrentAbsolute > ofElement.leftCurrentAbsolute)
+            if (this.getLeftCurrentAbsolute() > ofElement.getLeftCurrentAbsolute())
                 return true;
         }
         return false;
@@ -95,7 +95,7 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
             this.getAndSetCurrentGeometry();
             ofElement.getAndSetCurrentGeometry();
         
-            if (this.rightCurrentAbsolute < ofElement.rightCurrentAbsolute)
+            if (this.getRightCurrentAbsolute() < ofElement.getRightCurrentAbsolute())
                 return true;
         }
         return false;
@@ -108,10 +108,10 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
                 this.getAndSetCurrentGeometry();
                 element.getAndSetCurrentGeometry();
             
-                if (this.rightCurrentAbsolute < element.leftCurrentAbsolute
-                || this.leftCurrentAbsolute > element.rightCurrentAbsolute
-                || this.bottomCurrentAbsolute < element.topCurrentAbsolute
-                || this.topCurrentAbsolute > element.bottomCurrentAbsolute)
+                if (this.getRightCurrentAbsolute() < element.getLeftCurrentAbsolute()
+                || this.getLeftCurrentAbsolute() > element.getRightCurrentAbsolute()
+                || this.getBottomCurrentAbsolute() < element.getTopCurrentAbsolute()
+                || this.getTopCurrentAbsolute() > element.getBottomCurrentAbsolute())
                     return false;
                 return true;
             }

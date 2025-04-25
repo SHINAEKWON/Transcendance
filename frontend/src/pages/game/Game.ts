@@ -34,15 +34,19 @@ export class Game
             name_left: playerLeft, 
             color_left: "yellow", 
             keys_left: [[mode == "remote" ? "ArrowUp": "w", mode == "remote" ? "ArrowDown": "s"]], 
+            isAI_left: false,
             name_top: playerTop, 
             color_top: "red", 
             keys_top: [["ArrowLeft", "ArrowRight"]], 
+            isAI_top: true,
             name_right: playerRight, 
             color_right: "cyan", 
             keys_right: [["ArrowUp", "ArrowDown"]], 
+            isAI_right: true,
             name_bottom: playerBottom, 
             color_bottom: "blue", 
             keys_bottom: [["a", "d"]],
+            isAI_bottom: true,
             socket,
             mode,
             idPlayerLeft,
@@ -136,7 +140,7 @@ export class Game
         if (this.state == GAME_STARTED)
         {
             this.board.moveBalls();
-            this.board.movePaddles(this.board);
+            this.board.movePaddles();
             
             if (this.board.checkBalls() == true)
                 this.ballout();

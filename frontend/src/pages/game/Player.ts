@@ -23,15 +23,17 @@ export class Player
     private paddles: Paddle[] = [];
     private label: LabelScoreName;
     private score: number;
+    private isAi: boolean;
     private vs: number;
 
-    constructor({name, color, paddleKeys, parentElement, position, socket, mode, vs}:
+    constructor({name, color, paddleKeys, parentElement, position, isAI, socket, mode, vs}:
     {
         name: string, 
         color: string, 
         paddleKeys: [string, string][], 
         parentElement: A_GameElement, 
         position: Position,
+        isAI: boolean,
         socket: any,
         mode: GameMode,
         vs: number
@@ -42,6 +44,8 @@ export class Player
         this.position = position;
         
         this.color = color;
+
+        this.isAi = isAI;
         this.vs = vs;
 
         const storedUser = localStorage.getItem("transcendenceUser");
@@ -79,6 +83,7 @@ export class Player
     getName(): string { return this.name; }
     getPosition(): Position { return this.position; }
     getScore(): number { return this.score; }
+    isAI(): boolean { return this.isAi; }
     getVs(): number { return this.vs; }
 
     countPaddles(): number
@@ -104,6 +109,8 @@ export class Player
     {
         for (let i = 0; i < this.paddles.length; ++i)
         {
+            if (this.isAi == true)
+                this.paddles[i].moveAI(board.balls[0], board);
             this.paddles[i].move(board);
         }
     }

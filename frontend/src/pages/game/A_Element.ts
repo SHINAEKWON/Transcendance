@@ -12,10 +12,10 @@ export abstract class A_Element<T extends HTMLElement>
     protected readonly topInitialRelative: number;
 
     // This stores the current position in absolute pixels on the screen
-    protected leftCurrentAbsolute: number = 0;
-    protected rightCurrentAbsolute: number = 0;
-    protected topCurrentAbsolute: number = 0;
-    protected bottomCurrentAbsolute: number = 0;
+    private leftCurrentAbsolute: number = 0;
+    private rightCurrentAbsolute: number = 0;
+    private topCurrentAbsolute: number = 0;
+    private bottomCurrentAbsolute: number = 0;
     
     protected isactive: boolean = true;
     
@@ -91,6 +91,16 @@ export abstract class A_Element<T extends HTMLElement>
     getBackgroundColor(): string { return (this.element.style.backgroundColor); }
 
     getElementId(): string { return (this.element.id); }
+
+    getCurrentHeightCenter(): number
+    {
+        return ((this.bottomCurrentAbsolute + this.topCurrentAbsolute) / 2);
+    }
+
+    getCurrentWidthCenter(): number
+    {
+        return ((this.rightCurrentAbsolute + this.leftCurrentAbsolute) / 2);
+    }
 
     activate(): void
     {
