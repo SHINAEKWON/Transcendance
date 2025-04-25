@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22-alpine AS build
 
 # Définir le répertoire de travail
 # - https://www.geeksforgeeks.org/docker-workdir-instruction/
@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Copier package.json et package-lock.json pour optimiser le cache Docker
 # - with WORKDIR instruction, it will copy the files to /app in the container.
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json tsconfig.json ./
 
 # Installer uniquement les dépendances nécessaires
 # - with WORKDIR, it runs in side the /app folder of the container.
@@ -33,12 +33,21 @@ RUN npm install
 
 # Copier le reste du projet
 # - with WORKDIR instruction, it will copy the files to /app in the container.
-COPY public/index.html ./build/index.html
-COPY public/background.jpeg ./build/background.jpeg
-COPY . ./
+COPY public public/
+COPY src src/
+COPY styles styles/
 
 RUN npm run build
 
+
+
+
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/public /usr/share/nginx/html
+
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]
