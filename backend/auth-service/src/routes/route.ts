@@ -1,6 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify';
-import { newUserRegister } from '../services/auth/register.js';
-import { userSignin } from '../services/auth/signin.js';
+import { newUserRegister } from '../auth/register.js';
+import { userSignin } from '../auth/signin.js';
 
 export default async function formRoutes(app: FastifyInstance) {
 

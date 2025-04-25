@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { User } from '../../models/user/Users.js';
-import { UserStatus } from '../../models/user/Users.js';
-import * as userModel from '../../db/userModel.js';
+import { User } from '../models/user/Users.js';
+import { UserStatus } from '../models/user/Users.js';
+import * as userModel from '../db/userModel.js';
 import bcrypt from 'bcrypt';
 
 export async function userSignin( request: FastifyRequest, reply: FastifyReply ) {

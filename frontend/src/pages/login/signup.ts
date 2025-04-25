@@ -1,7 +1,4 @@
-import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js";
-import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
-import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
-import { idNumberChecker } from "../../frontapp/signup_policy/idcheck.js";
+import * as CustomValidityReport from "../../frontapp/signup_policy/CustomValidityReport.js";
 
 export class SignupPage implements Page{
     render() {
@@ -9,10 +6,11 @@ export class SignupPage implements Page{
         // SetTimeOut allows to wait the loading of render part.
         setTimeout(() => {
             this.submitButtonHandler();
-            firstnameChecker();
-            lastnameChecker();
-            idNumberChecker();
-            passwordChecker();
+            CustomValidityReport.firstnameChecker();
+            CustomValidityReport.lastnameChecker();
+            CustomValidityReport.idNumberChecker();
+            CustomValidityReport.nicknameChecker();
+            CustomValidityReport.passwordChecker();
         }, 50);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
@@ -105,7 +103,7 @@ export class SignupPage implements Page{
             try {
                 console.log('formData : ', formData);
                 
-                const response = await fetch('http://localhost:5000/api/auth/register', {
+                const response = await fetch('/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -118,7 +116,6 @@ export class SignupPage implements Page{
                   }
                   
                 const data = await response.json();
-
                 alert('Account successfully created!');
                 console.log("Account created for following user:");
                 console.log(formData.idNumber);
