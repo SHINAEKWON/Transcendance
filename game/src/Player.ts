@@ -22,14 +22,16 @@ export class Player
     private paddles: Paddle[] = [];
     private label: LabelScoreName;
     private score: number;
+    private isAi: boolean;
 
-    constructor({name, color, paddleKeys, parentElement, position}:
+    constructor({name, color, paddleKeys, parentElement, position, isAI}:
     {
         name: string, 
         color: string, 
         paddleKeys: [string, string][], 
         parentElement: A_GameElement, 
-        position: Position
+        position: Position,
+        isAI: boolean
     })
     {
         this.score = 0;
@@ -37,6 +39,8 @@ export class Player
         this.position = position;
         
         this.color = color;
+
+        this.isAi = isAI;
 
         for (let i = 0; i < paddleKeys.length; ++i)
         {
@@ -62,6 +66,7 @@ export class Player
     getName(): string { return this.name; }
     getPosition(): Position { return this.position; }
     getScore(): number { return this.score; }
+    isAI(): boolean { return this.isAi; }
 
     countPaddles(): number
     {
@@ -86,7 +91,8 @@ export class Player
     {
         for (let i = 0; i < this.paddles.length; ++i)
         {
-            this.paddles[i].moveAI(board.balls[0], board);
+            if (this.isAi == true)
+                this.paddles[i].moveAI(board.balls[0], board);
             this.paddles[i].move(board);
         }
     }

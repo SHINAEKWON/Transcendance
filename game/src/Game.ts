@@ -32,15 +32,19 @@ export class Game
             name_left: playerLeft, 
             color_left: "yellow", 
             keys_left: [["w", "s"]], 
+            isAI_left: false,
             name_top: playerTop, 
             color_top: "red", 
             keys_top: [["ArrowLeft", "ArrowRight"]], 
+            isAI_top: true,
             name_right: playerRight, 
             color_right: "cyan", 
             keys_right: [["ArrowUp", "ArrowDown"]], 
+            isAI_right: true,
             name_bottom: playerBottom, 
             color_bottom: "blue", 
-            keys_bottom: [["a", "d"]]
+            keys_bottom: [["a", "d"]],
+            isAI_bottom: true
         });
 
         this.state = GAME_NEW;

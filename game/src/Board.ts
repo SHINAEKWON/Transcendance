@@ -9,7 +9,7 @@ export class Board extends A_GameElement
     balls: Ball[] = [];
     players: Players;
     
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, name_top, color_top, keys_top, name_right, color_right, keys_right, name_bottom, color_bottom, keys_bottom}:
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, name_top, color_top, keys_top, isAI_top, name_right, color_right, keys_right, isAI_right, name_bottom, color_bottom, keys_bottom, isAI_bottom}:
     {
         elementId: string, 
         leftInitialRelative: number, 
@@ -23,15 +23,19 @@ export class Board extends A_GameElement
         name_left: string | null,
         color_left: string | null,
         keys_left: [string, string][] | null,
+        isAI_left: boolean,
         name_top: string | null,
         color_top: string | null,
         keys_top: [string, string][] | null,
+        isAI_top: boolean,
         name_right: string | null,
         color_right: string | null,
         keys_right: [string, string][] | null,
+        isAI_right: boolean,
         name_bottom: string | null,
         color_bottom: string | null,
-        keys_bottom: [string, string][] | null
+        keys_bottom: [string, string][] | null,
+        isAI_bottom: boolean
     })
     {
         if (name_left === null || color_left === null || keys_left === null)
@@ -70,22 +74,22 @@ export class Board extends A_GameElement
 
         if (name_left !== null && color_left !== null && keys_left !== null)
         {
-            playerLeft = new Player({name: name_left, color: color_left, paddleKeys: keys_left, parentElement: this, position: Position.Left});
+            playerLeft = new Player({name: name_left, color: color_left, paddleKeys: keys_left, parentElement: this, position: Position.Left, isAI: isAI_left});
             this.leftWall = false;
         }
         if (name_top !== null && color_top !== null && keys_top !== null)
         {
-            playerTop = new Player({name: name_top, color: color_top, paddleKeys: keys_top, parentElement: this, position: Position.Top});
+            playerTop = new Player({name: name_top, color: color_top, paddleKeys: keys_top, parentElement: this, position: Position.Top, isAI: isAI_top});
             this.topWall = false;
         }
         if (name_right !== null && color_right !== null && keys_right !== null)
         {
-            playerRight = new Player({name: name_right, color: color_right, paddleKeys: keys_right, parentElement: this, position: Position.Right});
+            playerRight = new Player({name: name_right, color: color_right, paddleKeys: keys_right, parentElement: this, position: Position.Right, isAI: isAI_right});
             this.rightWall = false;
         }
         if (name_bottom !== null && color_bottom !== null && keys_bottom !== null)
         {
-            playerBottom = new Player({name: name_bottom, color: color_bottom, paddleKeys: keys_bottom, parentElement: this, position: Position.Bottom});
+            playerBottom = new Player({name: name_bottom, color: color_bottom, paddleKeys: keys_bottom, parentElement: this, position: Position.Bottom, isAI: isAI_bottom});
             this.bottomWall = false;
         }
 
@@ -99,9 +103,12 @@ export class Board extends A_GameElement
 
         for (let i=0; i < count_balls; ++i)
         {
-            this.balls.push(new Ball({ballId: "ball" + i, parentElement: this, classList: ["aspect-square", "rounded-full"]}));
+            this.balls.push(new Ball({ballId: "ball" + i, onBoard: this, classList: ["aspect-square", "rounded-full"]}));
             //this.balls[i].changeText(String(i));
         }
+
+        // alert("BoardLeft: " + this.getLeftCurrentAbsolute() + "\nBoardRight: " + this.getRightCurrentAbsolute() + "\nBoard top: " + this.getTopCurrentAbsolute() + "\nBoard bottom: " + this.getBottomCurrentAbsolute());
+
     }
 
     countActiveBalls(): number
