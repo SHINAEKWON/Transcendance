@@ -3,7 +3,7 @@ import { User } from '../models/user/Users.js';
 import { UserStatus } from '../models/user/Users.js';
 import * as userModel from '../db/userModel.js';
 import bcrypt from 'bcrypt';
-import { userRegisterInforcheck } from './userRegisterInfoCheck.js';
+import { userRegisterInforcheck } from './signupQueryCheck/userRegisterInfoCheck.js';
 
 export async function newUserRegister( request: FastifyRequest,
     reply: FastifyReply ) {
