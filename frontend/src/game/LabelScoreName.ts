@@ -1,6 +1,7 @@
-import { A_Element } from "./A_Element.js";
-import { LabelElement } from "./LabelElement.js";
-import { HTMLElementTag, Position } from "./constants.js";
+import { A_Element } from "../graphicElements/A_Element.js";
+import { LabelElement } from "../graphicElements/LabelElement.js";
+import { Position } from "./constants_game.js";
+import { HTMLElementTag } from "../graphicElements/constants_graphic.js";
 
 export class LabelScoreName extends A_Element<HTMLDivElement>
 {

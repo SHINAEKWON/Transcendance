@@ -1,4 +1,4 @@
-import { HTMLElementTag } from "./constants.js";
+import { HTMLElementTag } from "./constants_graphic.js";
 
 export abstract class A_Element<T extends HTMLElement>
 {

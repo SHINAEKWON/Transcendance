@@ -1,8 +1,8 @@
-import { Router } from "./Router.js";
-import { PageGame } from "./PageGame.js";
-import { PageWelcome } from "./PageWelcome.js";
-import { PageGuest } from "./PageGuest.js";
-import { PageSignup } from "./PageSignup.js";
+import { Router } from "./routing/Router.js";
+import { PageGame } from "./pages/PageGame.js";
+import { PageWelcome } from "./pages/PageWelcome.js";
+import { PageGuest } from "./pages/PageGuest.js";
+import { PageSignup } from "./pages/PageSignup.js";
 
 
 // Define global router to be everywhere accessible

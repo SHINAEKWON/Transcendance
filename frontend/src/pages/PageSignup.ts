@@ -1,7 +1,7 @@
 import { A_Page } from "./A_Page.js";
-import { InputElement } from "./InputElement.js";
-import { LabelElement } from "./LabelElement.js";
-import { RedirectButton } from "./RedirectButton.js";
+import { InputElement } from "../graphicElements/InputElement.js";
+import { LabelElement } from "../graphicElements/LabelElement.js";
+import { RedirectButton } from "../graphicElements/RedirectButton.js";
 
 export class PageSignup extends A_Page
 {

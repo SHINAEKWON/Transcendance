@@ -7,16 +7,6 @@ enum Direction
     Down
 }
 
-// HTMLElement constants
-export enum HTMLElementTag
-{
-    Div = "div",
-    Label = "label",
-    Input = "input",
-    Element = ""
-
-}
-
 // position constants
 export enum Position
 {

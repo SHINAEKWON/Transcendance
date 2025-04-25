@@ -1,5 +1,5 @@
 import { A_Page } from "./A_Page.js";
-import { Game } from "./Game.js";
+import { Game } from "../game/Game.js";
 
 export class PageGame extends A_Page
 {

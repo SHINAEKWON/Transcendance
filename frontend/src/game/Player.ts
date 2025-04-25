@@ -2,8 +2,8 @@ import { Paddle } from "./Paddle.js";
 import { A_GameElement } from "./A_GameElement.js";
 import { Ball } from "./Ball.js";
 import { Board } from "./Board.js";
-import { Position } from "./constants.js";
-import { playerDictionary } from "./constants.js";
+import { Position } from "./constants_game.js";
+import { playerDictionary } from "./constants_game.js";
 import { LabelScoreName } from "./LabelScoreName.js";
 
 export type Players =

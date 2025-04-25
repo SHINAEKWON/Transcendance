@@ -1,7 +1,7 @@
 import { A_MovingGameElement } from "./A_MovingGameElement.js";
 import { A_GameElement } from "./A_GameElement.js";
 import { Player } from "./Player.js";
-import { Position } from "./constants.js";
+import { Position } from "./constants_game.js";
 import { Ball } from "./Ball.js";
 import { Board } from "./Board.js";
 

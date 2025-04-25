@@ -2,7 +2,7 @@ import { Ball } from "./Ball.js";
 import { A_GameElement } from "./A_GameElement.js";
 import { Players, Player } from "./Player.js";
 import { Paddle } from "./Paddle.js";
-import { Position } from "./constants.js";
+import { Position } from "./constants_game.js";
 
 export class Board extends A_GameElement
 {

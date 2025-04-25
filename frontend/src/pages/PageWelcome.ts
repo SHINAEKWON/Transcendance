@@ -1,5 +1,5 @@
 import { A_Page } from "./A_Page.js";
-import { RedirectButton } from "./RedirectButton.js";
+import { RedirectButton } from "../graphicElements/RedirectButton.js";
 
 export class PageWelcome extends A_Page
 {

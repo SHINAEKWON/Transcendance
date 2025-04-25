@@ -1,5 +1,5 @@
 import { A_Element } from "./A_Element.js"
-import { HTMLElementTag } from "./constants.js";
+import { HTMLElementTag } from "./constants_graphic.js";
 
 export class RedirectButton extends A_Element<HTMLDivElement>
 {

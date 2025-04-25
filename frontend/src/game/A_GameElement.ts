@@ -1,5 +1,5 @@
-import { A_Element } from "./A_Element.js";
-import { HTMLElementTag } from "./constants.js";
+import { A_Element } from "../graphicElements/A_Element.js";
+import { HTMLElementTag } from "../graphicElements/constants_graphic.js";
  
 
 export abstract class A_GameElement extends A_Element<HTMLDivElement>

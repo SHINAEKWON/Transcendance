@@ -1,4 +1,4 @@
-import { A_Page } from "./A_Page";
+import { A_Page } from "../pages/A_Page";
 
 export class Router
 {
