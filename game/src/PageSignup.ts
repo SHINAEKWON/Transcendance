@@ -24,11 +24,11 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 30,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             text: "Nickname",
             forInput: this.inputNickname,
             parentElement: null,
-            classList: ["text-red-800"]
+            classList: ["text-red-800", "bg-white"]
         });
 
         this.inputNickname = new InputElement(
@@ -37,7 +37,7 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 40,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             type: "text",
             required: true,
             parentElement: null,
@@ -50,11 +50,11 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 50,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             text: "Email Addres",
             forInput: this.inputEmail,
             parentElement: null,
-            classList: ["text-red-800"]
+            classList: ["text-red-800", "bg-white"]
         });
     
         this.inputEmail = new InputElement(
@@ -63,7 +63,7 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 60,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             type: "email",
             required: true,
             parentElement: null,
@@ -76,11 +76,11 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 70,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             text: "Password",
             forInput: this.inputPassword,
             parentElement: null,
-            classList: ["text-red-800"]
+            classList: ["text-red-800", "bg-white"]
         });
         
         this.inputPassword = new InputElement(
@@ -89,7 +89,7 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45,
             topInitialRelative: 80,
             widthFraction: 10,
-            heightFraction: 10,
+            heightFraction: 5,
             type: "password",
             required: true,
             parentElement: null,
@@ -102,7 +102,7 @@ export class PageSignup extends A_Page
             leftInitialRelative: 45, 
             topInitialRelative: 90, 
             widthFraction: 10, 
-            heightFraction: 10, 
+            heightFraction: 5, 
             fromColor: "from-purple-800", 
             viaColor: "via-pink-400", 
             toColor: "to-yellow-400", 

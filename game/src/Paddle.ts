@@ -12,8 +12,14 @@ export class Paddle extends A_MovingGameElement
     private position: Position;
     private isAI: boolean;
 
-    constructor({position, player, upKey, downKey, parentElement, classList}:
-    {
+    constructor({
+        position, 
+        player, 
+        upKey, 
+        downKey, 
+        parentElement, 
+        classList
+    }: {
         position: Position, 
         player: Player, 
         upKey: string, 

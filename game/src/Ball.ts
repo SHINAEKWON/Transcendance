@@ -25,7 +25,6 @@ export class Ball extends A_MovingGameElement
             parentElement: onBoard, 
             classList: classList
         });
-        // alert("BallX: " + this.getCurrentWidthCenter() + "\nBallY: " + this.getCurrentHeightCenter() + "\nBallSpeedX: " + this.getSpeedX() + "\nBallSpeedY: " + this.getSpeedY());
     }
 
     initializeSpeed(): void

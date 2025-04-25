@@ -106,9 +106,6 @@ export class Board extends A_GameElement
             this.balls.push(new Ball({ballId: "ball" + i, onBoard: this, classList: ["aspect-square", "rounded-full"]}));
             //this.balls[i].changeText(String(i));
         }
-
-        // alert("BoardLeft: " + this.getLeftCurrentAbsolute() + "\nBoardRight: " + this.getRightCurrentAbsolute() + "\nBoard top: " + this.getTopCurrentAbsolute() + "\nBoard bottom: " + this.getBottomCurrentAbsolute());
-
     }
 
     countActiveBalls(): number

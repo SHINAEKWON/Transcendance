@@ -1,5 +1,4 @@
 import { A_GameElement } from "./A_GameElement.js";
-import { Ball } from "./Ball.js";
 
 export abstract class A_MovingGameElement extends A_GameElement
 {
