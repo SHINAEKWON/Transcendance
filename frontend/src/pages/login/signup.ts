@@ -9,10 +9,10 @@ export class SignupPage implements Page{
         // SetTimeOut allows to wait the loading of render part.
         setTimeout(() => {
             this.submitButtonHandler();
-            passwordChecker();
             firstnameChecker();
             lastnameChecker();
             idNumberChecker();
+            passwordChecker();
         }, 50);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">

@@ -21,6 +21,8 @@ export function firstnameChecker() {
                 firstnameInput.setCustomValidity("Firstname length must be between 2~20");
             } else if (!checks.regex) {
                 firstnameInput.setCustomValidity("Can only contain alphabet, number and special characters ( _, - and .)");
+            } else if (checks.length && checks.regex) {
+                firstnameInput.setCustomValidity("");
             }
             firstnameInput.reportValidity();
         });
@@ -41,7 +43,7 @@ export function lastnameChecker() {
             const checks = {
                 length: name.length >= 2 && name.length <= 20,
                 regex: /^[A-Za-z0-9_.-]+$/.test(name),
-            };a
+            };
 
             const allValid = Object.values(checks).every(v => v);
             submitButton.disabled = !allValid;

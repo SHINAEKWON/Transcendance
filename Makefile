@@ -14,6 +14,9 @@ down:
 
 buildup: build up
 
+quickbu:
+	docker-compose up --build
+
 execfe:
 	docker exec -it front bash
 
