@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { User } from '../models/user/Users.js';
-import { UserStatus } from '../models/user/Users.js';
-import * as userModel from '../db/userModel.js';
 import bcrypt from 'bcrypt';
-import { userRegisterInforcheck } from './signupQueryCheck/userRegisterInfoCheck.js';
+import xss from 'xss';
+import { User } from '../models/user/Users.js';
+import * as userModel from '../db/userModel.js';
+import { userRegisterInfoCheck } from './signupQueryCheck/userRegisterInfoCheck.js';
 
 export async function newUserRegister( request: FastifyRequest,
     reply: FastifyReply ) {
@@ -48,14 +48,18 @@ export async function newUserRegister( request: FastifyRequest,
   // if (!isPasswordValid(password)) {
   //   return reply.status(400).send({ message: "Invalid password" });
   // }
-  userRegisterInforcheck(FastifyRequest, FastifyReply);
+  await userRegisterInfoCheck(request, reply);
+
 
   try {
-    // Hasher le mot de passe\
+    // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
+	
+	// Flat the nickname input
+	const flatNickname = xss(nickname);
     
     // Création d'un nouvel utilisateur 
-    const newUser = new User( idNumber, firstName, lastName, nickname, hashedPassword,  email, address, telephone );
+    const newUser = new User( idNumber, firstName, lastName, flatNickname, hashedPassword, email, address, telephone );
 
     // Ajout de l'utilisateur à la base de données
     const createdUser = await userModel.createUser(newUser);

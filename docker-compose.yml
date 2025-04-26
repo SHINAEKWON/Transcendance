@@ -12,41 +12,41 @@ services:
     volumes:
       - auth-data:/app/data
     
-  user-service:
-    build:
-      context: ./backend/user-service
-      dockerfile: Dockerfile
-    container_name: user
-    networks:
-      - transnet
-    expose:
-      - "4001"
-    volumes:
-      - user-data:/app/data
+  # user-service:
+  #   build:
+  #     context: ./backend/user-service
+  #     dockerfile: Dockerfile
+  #   container_name: user
+  #   networks:
+  #     - transnet
+  #   expose:
+  #     - "4001"
+  #   volumes:
+  #     - user-data:/app/data
 
-  game-service:
-    build:
-      context: ./backend/game-service
-      dockerfile: Dockerfile
-    container_name: game
-    networks:
-      - transnet
-    expose:
-      - "4002"
-    volumes:
-      - game-data:/app/data
+  # game-service:
+  #   build:
+  #     context: ./backend/game-service
+  #     dockerfile: Dockerfile
+  #   container_name: game
+  #   networks:
+  #     - transnet
+  #   expose:
+  #     - "4002"
+  #   volumes:
+  #     - game-data:/app/data
 
-  chat-service:
-    build:
-      context: ./backend/chat-service
-      dockerfile: Dockerfile
-    container_name: chat
-    networks:
-      - transnet
-    expose:
-      - "4003"
-    volumes:
-      - chat-data:/app/data
+  # chat-service:
+  #   build:
+  #     context: ./backend/chat-service
+  #     dockerfile: Dockerfile
+  #   container_name: chat
+  #   networks:
+  #     - transnet
+  #   expose:
+  #     - "4003"
+  #   volumes:
+  #     - chat-data:/app/data
 
   frontend:
     build:
@@ -64,6 +64,6 @@ networks:
 
 volumes:
   auth-data:
-  user-data:
-  game-data:
-  chat-data: 
+  # user-data:
+  # game-data:
+  # chat-data: 
