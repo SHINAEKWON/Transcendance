@@ -101,6 +101,7 @@ export class SignupPage implements Page{
             };
 
             try {
+                console.log('Signup.ts du frontend traite...');
                 console.log('formData : ', formData);
                 
                 const response = await fetch('/auth/signup', {
