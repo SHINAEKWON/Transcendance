@@ -1,6 +1,5 @@
 import { Board } from "./Board.js";
 import { A_MovingGameElement } from "./A_MovingGameElement.js";
-import { A_GameElement } from "./A_GameElement.js";
 import { Paddle } from "./Paddle.js";
 import { Position } from "./constants_game.js";
 
@@ -52,16 +51,6 @@ export class Ball extends A_MovingGameElement
         this.initializeSpeed();
     }
 
-    changeDirectionY(): void
-    {
-        this.setSpeedComponents(this.getSpeedX(), this.getSpeedY() * -1);
-    }
-
-    changeDirectionX(): void
-    {
-        this.setSpeedComponents(this.getSpeedX() * -1, this.getSpeedY());
-    }
-
     hitsWall(board: Board): boolean
     {
         if (board.hasLeftWall() == true && this.isInsideLeft(board) == false)
@@ -91,10 +80,28 @@ export class Ball extends A_MovingGameElement
     {
         if (this.touches(paddle) == true)
         {
+            const maxBounceAngle: number = (75 * Math.PI) / 180;
+
             if (paddle.getPosition() == Position.Left || paddle.getPosition() == Position.Right)
-                this.changeDirectionX();
+            {
+                const relIntersectY: number = this.getCurrentHeightCenter() - paddle.getCurrentHeightCenter();
+                const normIntersectY: number = Math.max(-1, Math.min(1, relIntersectY / ((paddle.getHeightCurrentAbsolute()) / 2)));
+                const bounceAngle: number = normIntersectY * maxBounceAngle;
+
+                this.setSpeedComponents(this.getTotalSpeed() * Math.cos(bounceAngle), this.getTotalSpeed() * Math.sin(bounceAngle));
+                if (paddle.getPosition() == Position.Right)
+                    this.changeDirectionX();
+            }
             else if (paddle.getPosition() == Position.Top || paddle.getPosition() == Position.Bottom)
-                this.changeDirectionY();
+            {
+                const relIntersectX: number = this.getCurrentWidthCenter() - paddle.getCurrentWidthCenter();
+                const normIntersectX: number = Math.max(-1, Math.min(1, relIntersectX / ((paddle.getWidthCurrentAbsolute()) / 2)));
+                const bounceAngle: number = normIntersectX * maxBounceAngle;
+
+                this.setSpeedComponents(this.getTotalSpeed() * Math.sin(bounceAngle), this.getTotalSpeed() * Math.cos(bounceAngle))
+                if (paddle.getPosition() == Position.Bottom)
+                    this.changeDirectionY();
+            }
             this.changeBackgroundColor(paddle.getBackgroundColor());
             return true;
         }

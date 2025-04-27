@@ -66,6 +66,23 @@ export abstract class A_MovingGameElement extends A_GameElement
     getTopNewRelative(): number { return this.topNewRelative; }
     getNextHitPoint(): [number, number] { return this.nextHitPoint; }
 
+    changeDirectionY(): void
+    {
+        this.setSpeedComponents(this.getSpeedX(), this.getSpeedY() * -1);
+    }
+    
+    changeDirectionX(): void
+    {
+        this.setSpeedComponents(this.getSpeedX() * -1, this.getSpeedY());
+    }
+
+    stop(): void
+    {
+        this.setSpeedComponents(0, 0);
+    }
+
+    getTotalSpeed(): number { return Math.pow(Math.pow(this.speedX, 2) + Math.pow(this.speedY, 2), 0.5)}
+
     /* ********************************************************************** */
     /* Calculate interceptions of movement                                    */
     /* Formula of movement (straight line) : y=dy/dx*x+t                      */
@@ -179,9 +196,13 @@ export abstract class A_MovingGameElement extends A_GameElement
         this.speedY = speedY;
     }
  
-    increaseSpeed(dSpeed: number): void
+    increaseSpeed(dSpeed: number, maxSpeed: number): void
     {
-        this.setSpeedComponents(this.speedX * (1 + dSpeed), this.speedY * (1 + dSpeed));
+        const newSpeedX: number = this.speedX * (1 + dSpeed);
+        const newSpeedY: number = this.speedY * (1 + dSpeed);
+
+        if (Math.pow(Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2), 0.5) <= maxSpeed)
+            this.setSpeedComponents(newSpeedX, newSpeedY);
     }
     
     move(): void

@@ -105,17 +105,16 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
     touches(element: A_GameElement): boolean
     {
         if (this.isactive == true && element.isactive == true)
-            {
-                this.getAndSetCurrentGeometry();
-                element.getAndSetCurrentGeometry();
+        {
+            this.getAndSetCurrentGeometry();
+            element.getAndSetCurrentGeometry();
             
-                if (this.getRightCurrentAbsolute() < element.getLeftCurrentAbsolute()
-                || this.getLeftCurrentAbsolute() > element.getRightCurrentAbsolute()
-                || this.getBottomCurrentAbsolute() < element.getTopCurrentAbsolute()
-                || this.getTopCurrentAbsolute() > element.getBottomCurrentAbsolute())
-                    return false;
-                return true;
-            }
-            return false;
+            if (this.getRightCurrentAbsolute() < element.getLeftCurrentAbsolute()
+            || this.getLeftCurrentAbsolute() > element.getRightCurrentAbsolute()
+            || this.getBottomCurrentAbsolute() < element.getTopCurrentAbsolute()
+            || this.getTopCurrentAbsolute() > element.getBottomCurrentAbsolute())
+                return false;
+        }
+        return true;
     }
 }

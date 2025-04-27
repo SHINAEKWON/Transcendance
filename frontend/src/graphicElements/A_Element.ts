@@ -86,6 +86,9 @@ export abstract class A_Element<Thtml extends HTMLElement>
     getTopCurrentAbsolute(): number { return (this.topCurrentAbsolute); }
     getBottomCurrentAbsolute(): number { return (this.bottomCurrentAbsolute); }
 
+    getHeightCurrentAbsolute(): number { return (this.bottomCurrentAbsolute - this.topCurrentAbsolute); }
+    getWidthCurrentAbsolute(): number { return (this.rightCurrentAbsolute - this.leftCurrentAbsolute); }
+
     getBackgroundColor(): string { return (this.element.style.backgroundColor); }
 
     getElementId(): string { return (this.element.id); }
