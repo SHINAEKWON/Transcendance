@@ -26,7 +26,7 @@ export default async function authRoutes(app: FastifyInstance) {
   // sauvegarder les donners de auth 
   // Generer un token pour rester connecté et le renvoyer au front
   // envoyer une reponse au client 
-  app.post('/auth/signup', async (request, reply) => {
+  app.post('/signup', async (request, reply) => {
         console.log('Request came to /auth/signup', request.body);
       
         const {
@@ -48,16 +48,19 @@ export default async function authRoutes(app: FastifyInstance) {
             address: string,
             telephone: string
         };
-      
+        console.log('\n\n\n');
+        console.log(username, firstname, lastname, password, nickname, email);
+        console.log('\n\n\n');
+
         if (!username || !firstname || !lastname || !password || !nickname || !email) {
             return reply.status(400).send({ message: "Tous les champs sont requis." });
         }
       
         try {
           // User information check in backened in case info are not coming from front
-          await userRegisterInfoCheck(request, reply);
+          // await userRegisterInfoCheck(request, reply);
 
-          const flatNickname = xss(nickname);
+          // const flatNickname = xss(nickname);
 
           console.log('before register (inside auth/signup)');
 
@@ -66,7 +69,7 @@ export default async function authRoutes(app: FastifyInstance) {
             firstname,
             lastname,
             password,
-            flatNickname,
+            nickname,
             email,
             address,
             telephone

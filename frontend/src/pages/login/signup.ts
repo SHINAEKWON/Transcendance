@@ -18,13 +18,13 @@ export class SignupPage implements Page{
                 <form id="signup-form" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-neon-purple mb-1" for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" required
+                            <label class="block text-neon-purple mb-1" for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
-                            <label class="block text-neon-purple mb-1" for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" required
+                            <label class="block text-neon-purple mb-1" for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
@@ -91,8 +91,8 @@ export class SignupPage implements Page{
 
             const formData = {
                 username: (document.getElementById('username') as HTMLInputElement).value,
-                firstName: (document.getElementById('firstName') as HTMLInputElement).value,
-                lastName: (document.getElementById('lastName') as HTMLInputElement).value,
+                firstname: (document.getElementById('firstname') as HTMLInputElement).value,
+                lastname: (document.getElementById('lastname') as HTMLInputElement).value,
                 nickname: (document.getElementById('nickname') as HTMLInputElement).value,
                 email: (document.getElementById('email') as HTMLInputElement).value,
                 password: (document.getElementById('password') as HTMLInputElement).value,

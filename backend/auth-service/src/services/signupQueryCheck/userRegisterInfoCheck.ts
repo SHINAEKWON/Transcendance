@@ -5,9 +5,9 @@ export async function userRegisterInfoCheck( request: FastifyRequest, reply: Fas
 
     const query = request.body as any;
 
-    if (!checkers.isNameValid(query.firstName))
+    if (!checkers.isNameValid(query.firstname))
         return reply.status(400).send({ message: "Invalid firstname" });
-    if (!checkers.isNameValid(query.lastName))
+    if (!checkers.isNameValid(query.lastname))
         return reply.status(400).send({ message: "Invalid lastname" });
     if (!checkers.isusernameValid(query.username))
         return reply.status(400).send({ message: "Invalid username(login)" });

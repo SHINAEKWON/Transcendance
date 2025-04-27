@@ -3,7 +3,7 @@ import { signupSubmitControl } from "./signupSubmitControl.js"
 import * as signupRules from "./signupRules.js"
 
 export function firstnameChecker() {
-    const firstnameInput = document.getElementById("firstName") as HTMLInputElement;
+    const firstnameInput = document.getElementById("firstname") as HTMLInputElement;
 
     if (!firstnameInput)
         return ;
@@ -15,7 +15,7 @@ export function firstnameChecker() {
             if (checks) {
                 firstnameInput.setCustomValidity("");
             } else {
-                firstnameInput.setCustomValidity("Firstname length must be between 2~20 and contain only alphabet, number and special characters ( _, - and .)");
+                firstnameInput.setCustomValidity("firstname length must be between 2~20 and contain only alphabet, number and special characters ( _, - and .)");
             }
             firstnameInput.reportValidity();
         });
@@ -23,7 +23,7 @@ export function firstnameChecker() {
 }
 
 export function lastnameChecker() {
-    const lastnameInput = document.getElementById("lastName") as HTMLInputElement;
+    const lastnameInput = document.getElementById("lastname") as HTMLInputElement;
 
     if (!lastnameInput)
         return ;
@@ -35,7 +35,7 @@ export function lastnameChecker() {
             if (checks) {
                 lastnameInput.setCustomValidity("");
             } else {
-                lastnameInput.setCustomValidity("Lastname length must be between 2~20 and contain only alphabet, number and special characters ( _, - and .)");
+                lastnameInput.setCustomValidity("lastname length must be between 2~20 and contain only alphabet, number and special characters ( _, - and .)");
             }
             lastnameInput.reportValidity();
         });
