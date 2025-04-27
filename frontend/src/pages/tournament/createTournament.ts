@@ -17,7 +17,7 @@ export class CreateTournamentPage implements Page {
 
     const html = `
       <div class="max-w-3xl mx-auto mt-12 p-5 bg-gray-900 rounded-xl text-white">
-        <h2 class="text-neon-blue text-3xl font-extrabold mb-10 text-center animate-pulse">
+        <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">
            ${t("title")}
         </h2>
 

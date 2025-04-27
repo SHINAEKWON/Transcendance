@@ -68,17 +68,17 @@ services:
     volumes:
       - chat-data:/app/data
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    container_name: front
-    networks:
-      - transnet
-#    depends_on:
-#      - gateway
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   container_name: front
+  #   networks:
+  #     - transnet
+  #   depends_on:
+  #    - gateway
 
 networks:
   transnet:

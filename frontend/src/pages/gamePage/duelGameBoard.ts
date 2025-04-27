@@ -25,7 +25,7 @@ export class DuelGameBoardPage implements Page {
 
     const html = `
       <div class="max-w-5xl mx-auto mt-8 p-4 bg-gray-900 rounded-xl text-white">
-        <h2 class="text-2xl font-bold text-center mb-7 text-neon-purple animate-glow">
+        <h2 class="text-4xl font-extrabold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-pulse">
           ⚔️ ${player1.username} vs ${player2.username} ⚔️
         </h2>
 
@@ -42,15 +42,6 @@ export class DuelGameBoardPage implements Page {
           <div id="appGame" class="relative w-full h-160 rounded-lg border-white shadow-2xl overflow-visible">
           </div>
         </div>
-        <div id="winnerAnnouncement" class="hidden flex flex-col items-center space-y-3 mt-8">
-        <h3 class="text-2xl font-bold text-yellow-300 animate-glow">WINNER</h3>
-        <div class="w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-            <img id="winnerAvatar" src="" class="w-20 h-20 rounded-full border-2 border-white" />
-        </div>
-        <h3 id="winnerName" class="text-2xl font-bold text-yellow-300 animate-glow"></h3>
-      </div>
-
-      
 
     `;
 
@@ -82,26 +73,33 @@ export class DuelGameBoardPage implements Page {
 
   private handleEndGame(playerLeft: Player, playerRight: Player) {
     console.log("🏁 Duel terminé");
-
+  
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
-
-    // Cacher la table de jeu
+  
     const appGame = document.getElementById("appGame");
     if (appGame) {
-      appGame.classList.add("hidden");
-    }
-
-    // Afficher l'annonce du vainqueur
-    const winnerAnnouncement = document.getElementById("winnerAnnouncement");
-    const winnerName = document.getElementById("winnerName");
-    const winnerAvatar = document.getElementById("winnerAvatar") as HTMLImageElement;
-
-    if (winnerAnnouncement && winnerName && winnerAvatar) {
-      winnerName.textContent = winner.getName();
-      winnerAvatar.src = winner.getAvatar();
-      winnerAnnouncement.classList.remove("hidden");
+      // 1. Nettoyer complètement l'intérieur
+      appGame.innerHTML = "";
+      appGame.className = "flex flex-col items-center justify-center p-10 rounded-xl shadow-2xl";
+  
+      // 2. Afficher la carte du gagnant
+      appGame.innerHTML = `
+        <div class="flex flex-col items-center space-y-6 animate-bounce-in">
+          <img src="${winner.getAvatar()}" class="w-40 h-40 rounded-full border-4 border-white shadow-lg animate-pulse" />
+          <div class="text-3xl font-extrabold text-white animate-glow">🏆 ${winner.getName()} 🏆</div>
+          <div class="text-lg text-white">Vainqueur du Duel !</div>
+        </div>
+      `;
+  
+      // 3. Explosion de confettis 🎉
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
     }
   }
+  
 
 
   renderPlayerBox(player: any) {

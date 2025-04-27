@@ -53,11 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     initSocket();
+    const navbar = new Navbar();
     const appElement: HTMLElement | null = document.getElementById('navbar');
-    if(appElement){
-        appElement.innerHTML = new Navbar().render();
+    if (appElement) {
+        appElement.innerHTML = navbar.render();
+        navbar.afterRender();
     }
-   
+
     function updateSidebar() {
         const appElement: HTMLElement | null = document.getElementById('sidebar');
         const currentPage = window.location.hash.slice(1) || 'welcome';
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateBackgroundEffect() {
         const overlay = document.getElementById('background-overlay');
         const currentPage = window.location.hash.slice(1) || 'welcome';
-    
+
         if (overlay) {
 
             if (currentPage === 'welcome') {
@@ -88,11 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    
+
     // Appliquer l'effet au chargement et lors des changements de page
     updateBackgroundEffect();
     window.addEventListener('hashchange', updateBackgroundEffect);
-    
+
     // Mettre à jour la sidebar au chargement
     updateSidebar();
     // window.addEventListener('hashchange', updateSidebar);
@@ -100,42 +102,42 @@ document.addEventListener('DOMContentLoaded', () => {
     router.init(); // ✅ Initialiser `router`
     console.log("after router init")
 
-    
-    
+
+
 });
 
-function initSocket(){
+function initSocket() {
     // ✅ Connexion automatique + WebSocket chat
     const savedUser = localStorage.getItem("transcendenceUser");
     if (savedUser) {
         console.log("savedUser ok")
         const user = JSON.parse(savedUser);
         let socket: any = null;
-        if(env.env = "docker"){
+        if (env.env = "docker") {
             socket = io({
                 path: env.backChatSocketPath,
                 transports: ["websocket"],
                 auth: { userId: "" + user.id }
-              });  
-        }else {
-            socket = io(env.backChat,{
+            });
+        } else {
+            socket = io(env.backChat, {
                 path: env.backChatSocketPath,
                 transports: ["websocket"],
                 auth: { userId: "" + user.id }
-              });  
+            });
         }
-                
+
 
         socket.on("connect", () => {
             console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
         });
 
-        socket.on("connect_error", (err : any) => {
+        socket.on("connect_error", (err: any) => {
             console.error("❌ Erreur de connexion socket :", err.message);
-          });
-          
+        });
 
-        
+
+
 
         (window as any).socket = socket;
 

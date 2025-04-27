@@ -10,24 +10,48 @@ export class TournamentGameBoardPage implements Page {
     this.endGameEvents = this.endGameEvents.bind(this); // Important de binder le contexte
   }
 
+  // les classes pour allumer et ettendre les box
+  private highlightMatch(matchIndex: number) {
+    const matchBox = document.getElementById(`match-${matchIndex}`);
+    if (matchBox) {
+      matchBox.classList.add('animate-glow');
+      matchBox.classList.add('border-blue-400'); // ➔ Contour lumineux bleu
+      matchBox.classList.remove('border-white/20'); // ➔ Enlève l'ancien contour gris
+    }
+  }
+
+  private unhighlightMatch(matchIndex: number) {
+    const matchBox = document.getElementById(`match-${matchIndex}`);
+    if (matchBox) {
+      matchBox.classList.remove('animate-glow');
+      matchBox.classList.remove('border-blue-400');
+      matchBox.classList.add('border-white/20'); // ➔ Remet le contour normal
+    }
+  }
+
+
   private currentMatchIndex = 0;
 
   private endGameEvents(playerLeft: Player, playerRight: Player) {
     console.log("Match terminé");
-  
+
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
     console.log(`Winner: ${winner.getName()}`);
-  
+
     this.winners.push({
       id: winner.getId(),
       username: winner.getName(),
       avatar: winner.getAvatar()
     });
-  
+
+    // Éteindre l'ancien match
+    this.unhighlightMatch(this.currentMatchIndex);
+
+
     // 🏆 Mise à jour immédiate dans l'arbre du tournoi
     const winnerBoxId = this.currentMatchIndex === 0 ? "winner1" : "winner2"; // winner1 pour premier match, winner2 pour deuxième
     const winnerBox = document.getElementById(winnerBoxId);
-  
+
     if (winnerBox) {
       winnerBox.innerHTML = `
         <div class="flex flex-col items-center space-y-1">
@@ -36,16 +60,16 @@ export class TournamentGameBoardPage implements Page {
         </div>
       `;
     }
-  
+
     const appGame = document.getElementById('appGame');
     if (!appGame) return;
-  
+
     this.currentMatchIndex++;
-  
+
     if (this.currentMatchIndex === 1) {
       // Après premier match ➔ Lancer 2ème match (P3 vs P4)
       appGame.innerHTML = "";
-  
+
       const [p1, p2, p3, p4] = this.tournamentData.players;
       let socket = null;
       if (this.tournamentData.mode === "remote") {
@@ -64,11 +88,14 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.endGameEvents
       ).render();
-  
+      // Allumer le nouveau match (match-1)
+      this.highlightMatch(this.currentMatchIndex)
+
+
     } else if (this.currentMatchIndex === 2) {
       // Après 2ème match ➔ Lancer la finale entre les 2 winners
       appGame.innerHTML = "";
-  
+
       const [winner1, winner2] = this.winners;
       let socket = null;
       if (this.tournamentData.mode === "remote") {
@@ -87,9 +114,11 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.finalMatchEndEvent.bind(this)
       ).render();
+      // Allumer le nouveau match (match-1)
+      this.highlightMatch(this.currentMatchIndex);
     }
   }
-  
+
 
 
   private finalMatchEndEvent(playerLeft: Player, playerRight: Player) {
@@ -103,17 +132,40 @@ export class TournamentGameBoardPage implements Page {
       avatar: winner.getAvatar()
     };
 
-    // Mettre à jour l'affichage du gagnant
-    const winnerBox = document.querySelector("#winnerBox");
-    if (winnerBox) {
-      winnerBox.innerHTML = `
-      <div class="flex flex-col items-center space-y-1 text-center">
-      <img src="${this.finalWinner .avatar}" class="w-16 h-16 rounded-full border-2 border-yellow-400" />
-        <div class="text-white text-sm font-semibold mt-1">${this.finalWinner.username}</div>
+    const appGame = document.getElementById('appGame');
+    if (appGame) {
+      // 1. Nettoyer complètement l'intérieur et changer les styles
+      appGame.innerHTML = "";
+      appGame.className = "flex flex-col items-center justify-center p-10 rounded-xl shadow-2xl";
+
+      // 2. Ajouter l'affichage du gagnant
+      appGame.innerHTML = `
+        <div class="flex flex-col items-center space-y-6 animate-bounce-in">
+          <img src="${this.finalWinner.avatar}" class="w-32 h-32 rounded-full border-4 border-white shadow-lg animate-pulse" />
+          <div class="text-3xl font-extrabold text-white animate-glow">🏆 ${this.finalWinner.username} 🏆</div>
+          <div class="text-lg text-white">Champion du tournoi !</div>
+          <div class="flex space-x-6 mt-6">
+            <button id="rematchBtn" class="px-6 py-3 bg-neon-green text-black font-bold rounded-lg hover:bg-green-400 transition">
+              🔥 Rematch
+            </button>
+            <button id="newTournamentBtn" class="px-6 py-3 bg-neon-purple text-white font-bold rounded-lg hover:bg-purple-400 transition">
+              🏆 New Tournament
+            </button>
+          </div>
         </div>
       `;
+
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+
     }
   }
+
+
 
   async render() {
     const hash = window.location.hash;
@@ -136,19 +188,19 @@ export class TournamentGameBoardPage implements Page {
 
     const html = `
       <div class="max-w-5xl mx-auto mt-10 p-4 bg-gray-900 rounded-xl text-white">
-        <h2 class="text-2xl font-bold text-center mb-7 text-neon-purple animate-glow">
+        <h2  class="text-4xl font-extrabold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-pulse">
           ⚔️ ${this.tournamentData.name} ⚔️
         </h2>
 
         <div class="flex flex-col items-center space-y-6 mb-5">
           <div class="flex justify-center space-x-15">
-            <div class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
+            <div id="match-0" class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
               ${this.renderPlayerBox(p1)}
               ${this.renderVersus()}
               ${this.renderPlayerBox(p2)}
             </div>
 
-            <div class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
+            <div id="match-1" class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
               ${this.renderPlayerBox(p3)}
               ${this.renderVersus()}
               ${this.renderPlayerBox(p4)}
@@ -157,7 +209,7 @@ export class TournamentGameBoardPage implements Page {
 
           <!-- Ligne 2 : carte des vainqueurs -->
           <div class="flex justify-center">
-            <div class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
+            <div id="match-2"class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
               ${this.renderEmptyMatchBox("winner1")}
               ${this.renderVersus()}
               ${this.renderEmptyMatchBox("winner2")}
@@ -165,13 +217,7 @@ export class TournamentGameBoardPage implements Page {
           </div>
 
 
-          <div class="text-center">
-            <div class="text-yellow-400 mb-1">🏆 Grand Gagnant 🏆</div>
-            <div id="winnerBox">
-              ${this.renderEmptyWinnerBox()}
-            </div>
-          </div>
-        </div>
+          
 
         
       </div>
@@ -201,12 +247,15 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.endGameEvents
       ).render();
+      // Allumer le nouveau match (match-1)
+      this.highlightMatch(this.currentMatchIndex)
+
     }
   }
 
   renderPlayerBox(player: any) {
     return `
-      <div class="flex flex-col items-center space-y-1">
+      <div id="player-${player.id}" class="flex flex-col items-center space-y-1">
         <img src="${player.avatar}" class="w-14 h-14 rounded-full border-2 border-gray-400" />
         <span class="text-white text-sm font-semibold">${player.username}</span>
       </div>
@@ -221,7 +270,7 @@ export class TournamentGameBoardPage implements Page {
       </div>
     `;
   }
-  
+
 
   renderEmptyWinnerBox() {
     return `
