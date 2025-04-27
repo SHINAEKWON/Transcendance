@@ -14,19 +14,34 @@ down:
 
 run: build up
 
+VOLUMES := $(shell docker volume ls -q)
+
+rmvol:
+	@if [ -n "$(VOLUMES)" ]; then \
+		docker volume rm $(VOLUMES); \
+	else \
+		echo "No Docker volumes to remove"; \
+	fi
+
 # Execute a command in a running container:
 # - opening an interactive terminal session inside the container (-it)
 # - running a shell (bash)
 # exec should be executed when the container is already running
-execfe:
+execfrontend:
 	docker exec -it frontend bash
+
+execsignup:
+	docker exec -it signup bash
 
 ls:
 	docker image ls
 
+lsvol:
+	docker volume ls
+
 ps:
 	docker ps -a
 
-clean: down prune
+clean: down prune rmvol
 
 reset: clean run

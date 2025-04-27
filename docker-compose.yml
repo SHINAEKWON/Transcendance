@@ -4,11 +4,34 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         container_name: frontend 
+        # ports: open connection between container and host (HOST:CONTAINER)
         ports: 
           - "3000:3000"
+        # connect to the network called transnet
         networks:
           - transnet 
 
+    signup:
+        build:
+            context: ./backend/service-signup
+            dockerfile: Dockerfile
+        container_name: signup
+        # connect to the network called transnet
+        networks:
+          - transnet
+        # expose: informational to show which port is intended to be used
+        expose:
+          - "4000"
+        # bind the volume signup-data to the folder /app/data inside container
+        # -> everything inside /app/data will persist container shutdown
+        volumes:
+          - signup-data:/app/data
+
 networks:
-  transnet:
-    driver: bridge
+    # create a network called transnet
+    transnet:
+        driver: bridge
+
+# define volumes (and creates them if not existing)
+volumes:
+    signup-data:

@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:20 AS build
 
 # Définir le répertoire de travail
 # - https://www.geeksforgeeks.org/docker-workdir-instruction/
@@ -8,6 +8,16 @@ FROM node:22-alpine AS build
 #   manually created, it gets created automatically -> we do not need to have
 #   the /app folder inside our project.
 WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y \
+        sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY init_db.sh .
+
+RUN chmod +x init_db.sh
+RUN ./init_db.sh
 
 # Copier package.json et package-lock.json pour optimiser le cache Docker
 # - with WORKDIR instruction, it will copy the files to /app in the container.
@@ -29,7 +39,9 @@ COPY src src/
 
 RUN npm run build
 
-# VOLUME ["/app/data"]
+# build: marks /app/data as volume
+# run: if /app/data does not exist, creates inside container
+VOLUME ["/app/data"]
 
 # "This container will listen for network connections on port 4000."
 # It’s a hint to the person or system running the container.
