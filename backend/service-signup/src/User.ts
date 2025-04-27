@@ -1,6 +1,8 @@
 import sqlite3 from 'sqlite3';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import bcrypt from 'bcrypt';
+import validator from 'validator';
+
 
 export class User
 {
@@ -9,9 +11,14 @@ export class User
     private email: string;
 
     constructor(nickname: string, password: string, email: string)
-    {
+    {            
+        if (this.isPasswordValid(password) == false || this.isEmailValid(email) == false || this.isNicknameValid(nickname) == false)
+        {
+            throw new Error("Invalid user input");
+        }
+
         this.nickname = nickname;
-        this.password = password;
+        this.password = bcrypt.hash(password, 10);
         this.email = email;
     }
 
@@ -30,6 +37,25 @@ export class User
     {
         return this.email;
     }
+
+    isPasswordValid(password: string): boolean
+    {
+        const length: boolean = password.length >= 12 && password.length <= 30;
+        const regex: boolean = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W])(?!.*(.)\1\1).*$/.test(password);
+        return length && regex;
+    };
+      
+    isEmailValid(email: string): boolean
+    {
+        return validator.isEmail(email);
+    };
+      
+    isNicknameValid(nickname: string): boolean
+    {
+        const length: boolean = nickname.length >= 2 && nickname.length <= 20;
+        const regex: boolean = /^[A-Za-z0-9_.-]+$/.test(nickname);
+        return length && regex;
+    };
 
     static addUserToDB(user: User): void
     {
@@ -92,10 +118,8 @@ export class User
             // computationally expensive the hashing process will be.
             // The higher the cost factor, the more time it will take to hash the 
             // password and check hashes during authentication. This makes it more 
-            // resistant to brute-force attacks, but at the cost of more CPU usage.
-            const hashedPassword: string = await bcrypt.hash(password, 10);
-        
-            const newUser: User = new User( nickname, hashedPassword, email);
+            // resistant to brute-force attacks, but at the cost of more CPU usage.        
+            const newUser: User = new User( nickname, password, email);
             User.addUserToDB(newUser);
 
         } catch (error: unknown) {
