@@ -2,7 +2,7 @@ import { connectDB } from './db.js';
 
 export async function getAllUsers() {
   const db = await connectDB();
-  return await db.all('SELECT * FROM users1');
+  return await db.all('SELECT * FROM users');
 }
 
 export async function getUser(id: number) {
@@ -52,65 +52,3 @@ export async function unblockUser(blockerId: string, targetId: string) {
     [blockerId, targetId]
   );
 }
-
-export async function getUserByEmail(email: string)
-{
-  const db = await connectDB();
-  const row = await db.get<{id: number}>( 'SELECT * FROM users1 WHERE email = ?', [email]);
-  if (!row){
-    return null;
-  }
-  return row.id;
-}
-
-
-export async function getUserByUsername(username: string)
-{
-  const db = await connectDB();
-  const row =  await  db.get<{id: number}>(
-    'SELECT * FROM users1 WHERE username = ?', [username]);
-  if (!row){
-    return null;
-  }
-  return row.id; 
-}
-
-
-/*****Modification apportee par AHlem nouvelle structure bdd */
-
-import { User } from './user.js';
-
-export const NewCreateUser = async (user: User): Promise<number> => {
-try{
-  
-  const db = await connectDB();
-  
-  const insertQuery = `INSERT INTO users1 (
-    firstname, lastname, username, nickname, avatar, status,
-    email, address, telephone, matches, wins, losses, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    
-    const result = await db.run(insertQuery,
-      [
-        user.firstname,
-        user.lastname,
-        user.username,
-        user.nickname,
-        user.avatar,
-        user.status,
-        user.email,
-        user.address,
-        user.telephone,
-        user.matches,
-        user.wins,
-        user.losses,
-        user.created_at
-      ])
-      console.log("sent query to database\n");
-      console.log('User created with ID: ', result.lastID);
-      return (result.lastID!);
-  }catch(err:any){
-    console.error("error while insertin user: ", err.message);
-    throw err;
-  }
-};

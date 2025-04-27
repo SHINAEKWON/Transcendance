@@ -8,7 +8,7 @@ export class SignupPage implements Page{
             this.submitButtonHandler();
             CustomValidityReport.firstnameChecker();
             CustomValidityReport.lastnameChecker();
-            CustomValidityReport.idNumberChecker();
+            CustomValidityReport.usernameChecker();
             CustomValidityReport.nicknameChecker();
             CustomValidityReport.passwordChecker();
         }, 50);
@@ -28,8 +28,8 @@ export class SignupPage implements Page{
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
-                            <label class="block text-neon-purple mb-1" for="idNumber">ID</label>
-                            <input type="text" id="idNumber" name="idNumber" required
+                            <label class="block text-neon-purple mb-1" for="username">ID</label>
+                            <input type="text" id="username" name="username" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
@@ -90,7 +90,7 @@ export class SignupPage implements Page{
             e.preventDefault();
 
             const formData = {
-                idNumber: (document.getElementById('idNumber') as HTMLInputElement).value,
+                username: (document.getElementById('username') as HTMLInputElement).value,
                 firstName: (document.getElementById('firstName') as HTMLInputElement).value,
                 lastName: (document.getElementById('lastName') as HTMLInputElement).value,
                 nickname: (document.getElementById('nickname') as HTMLInputElement).value,
@@ -103,7 +103,7 @@ export class SignupPage implements Page{
             try {
                 console.log('formData : ', formData);
                 
-                const response = await fetch('/auth/register', {
+                const response = await fetch('/auth/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -118,7 +118,7 @@ export class SignupPage implements Page{
                 const data = await response.json();
                 alert('Account successfully created!');
                 console.log("Account created for following user:");
-                console.log(formData.idNumber);
+                console.log(formData.username);
             } catch (err: any) {
                 alert('Failed to create account!');
                 console.log("Failed to create account! : " + err.message);

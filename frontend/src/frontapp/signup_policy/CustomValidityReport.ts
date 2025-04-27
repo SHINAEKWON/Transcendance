@@ -43,22 +43,22 @@ export function lastnameChecker() {
 }
 
 
-export function idNumberChecker() {
-    const idNumberInput = document.getElementById("idNumber") as HTMLInputElement;
+export function usernameChecker() {
+    const usernameInput = document.getElementById("username") as HTMLInputElement;
 
-    if (!idNumberInput)
+    if (!usernameInput)
         return ;
 
-    if (idNumberInput) {
-        idNumberInput.addEventListener("input", () => {
-            const checks = signupRules.nicknameCheck(idNumberInput.value);
+    if (usernameInput) {
+        usernameInput.addEventListener("input", () => {
+            const checks = signupRules.nicknameCheck(usernameInput.value);
 
             if (checks) {
-                idNumberInput.setCustomValidity("");
+                usernameInput.setCustomValidity("");
             } else {
-                idNumberInput.setCustomValidity("Login length must be between 3~20 and contain only alphabet, number and special characters ( _, - and .)");
+                usernameInput.setCustomValidity("Login length must be between 3~20 and contain only alphabet, number and special characters ( _, - and .)");
             }
-            idNumberInput.reportValidity();
+            usernameInput.reportValidity();
         });
     }
 }

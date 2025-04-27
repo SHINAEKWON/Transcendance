@@ -3,7 +3,7 @@
 export const signupValidityStatus: Record<string, boolean> = {
     firstName: false,
     lastName: false,
-    idNumber: false,
+    username: false,
     nickname: false,
     password: false,
 };

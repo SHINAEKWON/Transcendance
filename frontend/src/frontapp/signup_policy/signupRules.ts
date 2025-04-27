@@ -4,7 +4,7 @@ export const nameCheck = (name: string) => {
     return length && regex;
 };
 
-export const idNumberCheck = (idnum: string) => {
+export const usernameCheck = (idnum: string) => {
     const length = idnum.length >= 3 && idnum.length <= 20;
     const regex = /^[A-Za-z0-9_.-]+$/.test(idnum);
     return length && regex;

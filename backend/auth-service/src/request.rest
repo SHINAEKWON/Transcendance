@@ -1,0 +1,79 @@
+curl -X POST http://localhost:4000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": 221,
+    "password": "hashed",
+    "token": "test-token",
+    "expires_at": "2025-12-31T23:59:59Z",
+    "is_2fa_enabled": true,
+    "twofa_secret": "ABC123SECRET",
+    "google_id": "google-uid-xyz",
+    "google_email": "testuser@gmail.com"
+  }'
+
+###
+curl -X POST http://localhost:4000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": 231,
+    "password": "hashed",
+    "token": "test-token",
+    "expires_at": "2025-12-31T23:59:59Z",
+    "is_2fa_enabled": true,
+    "twofa_secret": "ABC123SECRET",
+    "google_id": "google-uid-xyz",
+    "google_email": "testuser@gmail.com"
+  }'
+
+
+###
+//nouvelle structure de bdd auth + user
+###
+
+curl -X POST http://auth-service:4000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "ahlouma",
+    "firstname": "ahlem",
+    "lastname": "nouri",
+    "password": "456",
+    "nickname": "7lélem",
+    "email": "ahlem@example.com",
+    "address": "42 rue du code",
+    "telephone": "0611223354"
+  }'
+###
+curl -X POST http://localhost:4000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "chimielover",
+    "firstname": "marie",
+    "lastname": "curie",
+    "password": "123",
+    "nickname": "maritta",
+    "email": "marie@example.com",
+    "address": "46 rue du code",
+    "telephone": "0711223354"
+  }'
+
+###
+
+curl -X POST http://localhost:4000/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "marie@example.com",
+    "password": "123"
+  }'
+
+
+
+###
+
+curl -X POST http://localhost:4000/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "chimielover",
+    "password": "notHashedYet"
+  }'
+
+

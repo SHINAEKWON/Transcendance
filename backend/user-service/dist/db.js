@@ -1,13 +1,11 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-
 export async function connectDB() {
-  const db = await open({
-    filename: './db/user.db',
-    driver: sqlite3.Database
-  });
-
-  await db.exec(`
+    const db = await open({
+        filename: './db/user.db',
+        driver: sqlite3.Database
+    });
+    await db.exec(`
     CREATE TABLE IF NOT EXISTS users1 (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       firstname TEXT,
@@ -25,16 +23,14 @@ export async function connectDB() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  await db.exec(`
+    await db.exec(`
     CREATE TABLE IF NOT EXISTS blocks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       blocker_id TEXT NOT NULL,
       blocked_id TEXT NOT NULL
     );
   `);
-
-await db.exec(`
+    await db.exec(`
   CREATE TABLE IF NOT EXISTS friends (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -46,6 +42,5 @@ await db.exec(`
     UNIQUE(user_id, friend_id)
   );
   `);
-
-  return db;
+    return db;
 }
