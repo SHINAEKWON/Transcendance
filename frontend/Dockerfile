@@ -12,12 +12,15 @@ RUN apt update && \
 WORKDIR /app
 
 
+
 COPY package.json package-lock.json ./
 COPY tsconfig.json ./
 COPY postcss.config.js ./
 COPY src/ ./src
 COPY public ./public
 COPY index.html ./index.html
+
+RUN cp src/env/envDocker.ts src/env/env.ts
 
 RUN npm install
 

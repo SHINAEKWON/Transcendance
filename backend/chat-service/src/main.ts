@@ -5,6 +5,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import { initDB } from './db.js';
 import { chatRoutes } from './routes/chatRoutes.js';
 import { registerChatGateway } from './chatGateway.js';
+import cors from '@fastify/cors';
 
 // 🪄 DÉCLARATION pour TypeScript
 declare module 'fastify' {
@@ -19,6 +20,11 @@ app.register(fastifySocketIO, {
     origin: true,
     credentials: true
   }
+});
+
+app.register(cors, {
+  origin: true, // autorise le frontend
+  credentials: true
 });
 
 app.register(chatRoutes);

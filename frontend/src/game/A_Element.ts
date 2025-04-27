@@ -44,7 +44,7 @@ export abstract class A_Element<T extends HTMLElement>
         }
         else
         {
-            const app: HTMLElement | null = document.getElementById("app");
+            const app: HTMLElement | null = document.getElementById("appGame");
             if (app) { app.appendChild(this.element); }
             else { throw new Error('No app div'); }
         }
@@ -91,6 +91,7 @@ export abstract class A_Element<T extends HTMLElement>
     getBackgroundColor(): string { return (this.element.style.backgroundColor); }
 
     getElementId(): string { return (this.element.id); }
+    getElement(): T { return (this.element); }
 
     getCurrentHeightCenter(): number
     {

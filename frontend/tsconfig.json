@@ -13,6 +13,6 @@
     "noImplicitAny": true,
     "sourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "public/socket"],
   "exclude": ["node_modules"]
 }

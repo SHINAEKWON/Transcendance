@@ -18,35 +18,29 @@ export class Game
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
 
-    constructor(playerLeft: string | null, playerTop: string | null, playerRight: string | null, playerBottom: string | null, cntBalls: string | null, socket: any, mode: GameMode, idPlayerLeft: number, idPlayerRight: number)
+    constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null, socket: any, mode: GameMode, idPlayerLeft: number, idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
     {
         this.board = new Board(
         {
             elementId: "board", 
             leftInitialRelative: 10, 
-            topInitialRelative: 10, 
+            topInitialRelative: 0, 
             widthFraction: 80, 
             heightFraction: 80, 
             backgroundColor: "black", 
             parentElement: null, 
             classList: ["border-white"], 
-            count_balls: cntBalls == null ? 1 : Number(cntBalls) || 1, 
+            count_balls: 1, 
             name_left: playerLeft, 
             color_left: "yellow", 
             keys_left: [[mode == "remote" ? "ArrowUp": "w", mode == "remote" ? "ArrowDown": "s"]], 
-            isAI_left: false,
-            name_top: playerTop, 
-            color_top: "red", 
-            keys_top: [["ArrowLeft", "ArrowRight"]], 
-            isAI_top: true,
+            isAI_left: isAI_left,
+            avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
             color_right: "cyan", 
             keys_right: [["ArrowUp", "ArrowDown"]], 
-            isAI_right: true,
-            name_bottom: playerBottom, 
-            color_bottom: "blue", 
-            keys_bottom: [["a", "d"]],
-            isAI_bottom: true,
+            isAI_right: isAI_right,
+            avatarPlayerRight: avatarPlayerRight,
             socket,
             mode,
             idPlayerLeft,
@@ -131,8 +125,8 @@ export class Game
     private end(): void
     {
         this.changeState(GAME_ENDED);
-
-        const loosingPlayer: Player | null = this.board.getLoosingPlayer();
+        if(this.board.players.left && this.board.players.right)
+            this.endGameEvents(this.board.players.left, this.board.players.right);
     }
 
     private update(): void
@@ -169,7 +163,7 @@ export class Game
             if (this.eventListeners.hasOwnProperty(event))
             {
                 document.removeEventListener(event, this.eventListeners[event]);
-                console.log(`Event listener for ${event} removed.`);
+
             }
         }
         this.eventListeners = {};

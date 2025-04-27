@@ -23,7 +23,7 @@ export class Navbar {
                 <a href="#" onclick="router.updatePage('welcome', true)" class="navbar-title text-2xl text-neon-blue animate-glow">${t("title")}</a>
                 <div class="flex space-x-4">
                     <a href="#profile" data-page="profile" class="nav-link">${t("profile")}</a>
-                    <a href="#game" data-page="game" class="nav-link">${t("duel")}</a>
+                    <a href="#duel" data-page="duel" class="nav-link">${t("duel")}</a>
                     <a href="#tournaments" data-page="tournaments" class="nav-link">${t("tournaments")}</a>
                     <a href="#chat" data-page="chat" class="nav-link">${t("chat")}</a>
                     <a href="#language" data-page="language" class="nav-link flex items-center space-x-2">

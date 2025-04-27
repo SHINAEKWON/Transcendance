@@ -10,14 +10,14 @@ import { LabelScoreName } from "./LabelScoreName.js";
 export type Players =
 {
     left: Player | null;
-    top: Player | null;
     right: Player | null;
-    bottom: Player | null;
 };
 
 export class Player
 {
+    private id: number;
     private name: string;
+    private avatar: string;
     private color: string;
     private position: Position;
     private paddles: Paddle[] = [];
@@ -25,10 +25,13 @@ export class Player
     private score: number;
     private isAi: boolean;
     private vs: number;
+    private mode: GameMode;
 
-    constructor({name, color, paddleKeys, parentElement, position, isAI, socket, mode, vs}:
+    constructor({id, name, avatar, color, paddleKeys, parentElement, position, isAI, socket, mode, vs}:
     {
+        id: number,
         name: string, 
+        avatar: string,
         color: string, 
         paddleKeys: [string, string][], 
         parentElement: A_GameElement, 
@@ -39,18 +42,21 @@ export class Player
         vs: number
     })
     {
+        this.id = id;
         this.score = 0;
         this.name = name;
+        this.avatar = avatar;
         this.position = position;
         
         this.color = color;
 
         this.isAi = isAI;
         this.vs = vs;
+        this.mode = mode;
 
         const storedUser = localStorage.getItem("transcendenceUser");
         let isLocal = true;
-        if(storedUser){
+        if(this.mode == "remote" && storedUser){
             isLocal = JSON.parse(storedUser).username == this.getName();
             console.log("connected user name = "+JSON.parse(storedUser).username);
         }
@@ -81,10 +87,12 @@ export class Player
     
     getColor(): string { return this.color; }
     getName(): string { return this.name; }
+    getAvatar(): string { return this.avatar; }
     getPosition(): Position { return this.position; }
     getScore(): number { return this.score; }
     isAI(): boolean { return this.isAi; }
     getVs(): number { return this.vs; }
+    getId(): number { return this.id; }
 
     countPaddles(): number
     {

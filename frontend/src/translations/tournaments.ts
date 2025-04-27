@@ -56,4 +56,49 @@ export const tournamentsTranslations = {
       ko: "참가하기"
     }
   } as const;
+
+  export const createTournamentTranslations = {
+    title: {
+      en: "Create a Tournament",
+      fr: "Créer un tournoi",
+      de: "Turnier erstellen",
+      ar: "إنشاء بطولة",
+      ko: "토너먼트 만들기"
+    },
+    tournamentNamePlaceholder: {
+      en: "Tournament Name",
+      fr: "Nom du tournoi",
+      de: "Turniername",
+      ar: "اسم البطولة",
+      ko: "토너먼트 이름"
+    },
+    addPlayers: {
+      en: "Add Players:",
+      fr: "Ajouter des joueurs :",
+      de: "Spieler hinzufügen:",
+      ar: "إضافة لاعبين:",
+      ko: "플레이어 추가:"
+    },
+    selectedPlayers: {
+      en: "Selected Players:",
+      fr: "Joueurs sélectionnés :",
+      de: "Ausgewählte Spieler:",
+      ar: "اللاعبون المختارون:",
+      ko: "선택된 플레이어:"
+    },
+    startTournament: {
+      en: "Start the Tournament",
+      fr: "Commencer le tournoi",
+      de: "Turnier starten",
+      ar: "بدء البطولة",
+      ko: "토너먼트 시작"
+    },
+    tournamentError: {
+      en: "Tournament name required and at least 2 players!",
+      fr: "Nom du tournoi requis et au moins 2 joueurs !",
+      de: "Turniername erforderlich und mindestens 2 Spieler!",
+      ar: "مطلوب اسم البطولة واثنان على الأقل من اللاعبين!",
+      ko: "토너먼트 이름과 최소 2명의 플레이어가 필요합니다!"
+    }
+  } as const;
   

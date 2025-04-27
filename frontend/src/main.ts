@@ -2,40 +2,44 @@ import { Router } from './router.js';
 import { WelcomePage } from './pages/welcome.js';
 import { ProfilePage } from './pages/profile/profile.js';
 import { ProfileGuestPage } from './pages/profile/profileGuest.js';
-import { GamePage } from './pages/game/GamePage.js';
-import { TournamentsPage } from './pages/tournaments.js';
+import { TournamentsPage } from './pages/tournament/tournaments.js';
 import { ChatPage } from './pages/chat.js';
 import { LanguagePage } from './pages/language.js';
 import { Sidebar } from './pages/sidebar.js';
-import { LocalPlayPage } from './pages/game/local-play.js';
-import { AIPlayPage } from './pages/game/ai-play.js';
-import { OnlinePlayPage } from './pages/game/online-play.js';
-import { GameBoard } from './pages/game/gameboard.js';
 import { SignupPage } from './pages/login/signup.js';
 import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
 import { Navbar } from './pages/navbar.js';
 import { EditProfilePage } from './pages/profile/editProfile.js';
-import { PageGame } from './pages/game/PageGame.js';
 import { io } from "socket.io-client";
+import { CreateTournamentPage } from './pages/tournament/createTournament.js';
+import { env } from './env/env.js';
+import { TournamentGameBoardPage } from './pages/tournament/tournamentGameBoard.js';
+import { DuelPage } from './pages/gamePage/Duel.js';
+import { LocalPlayPage } from './pages/gamePage/local-play.js';
+import { AIPlayPage } from './pages/gamePage/ai-play.js';
+import { OnlinePlayPage } from './pages/gamePage/online-play.js';
+import { DuelGameBoardPage } from './pages/gamePage/duelGameBoard.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
     welcome: new WelcomePage(),
     profile: new ProfilePage(),
-    game: new GamePage(),
+    duel: new DuelPage(),
     tournaments: new TournamentsPage(),
     chat: new ChatPage(),
     language: new LanguagePage(),
     localPlay: new LocalPlayPage(),  // 🎮 Mode Local
     aiPlay: new AIPlayPage(),        // 🤖 Mode IA
     onlinePlay: new OnlinePlayPage(), // 🌐 Mode Online
-    gameboard: new PageGame(), // à Ajouer 
     signup: new SignupPage(),
     signin: new SigninPage(),
     guest: new GuestPage(),
     profileGuest: new ProfileGuestPage(),
-    editProfile: new EditProfilePage()
+    createTournament: new CreateTournamentPage(),
+    tournamentGameBoard: new TournamentGameBoardPage(),
+    editProfile: new EditProfilePage(),
+    duelGameBoard: new DuelGameBoardPage()
 });
 
 // ✅ Rendre `router` accessible dans `window` pour d'autres scripts
@@ -106,12 +110,21 @@ function initSocket(){
     if (savedUser) {
         console.log("savedUser ok")
         const user = JSON.parse(savedUser);
-
-        const socket = io({
-            path: "/socket.io",
-            transports: ["websocket"],
-            auth: { userId: "" + user.id }
-          });          
+        let socket: any = null;
+        if(env.env = "docker"){
+            socket = io({
+                path: env.backChatSocketPath,
+                transports: ["websocket"],
+                auth: { userId: "" + user.id }
+              });  
+        }else {
+            socket = io(env.backChat,{
+                path: env.backChatSocketPath,
+                transports: ["websocket"],
+                auth: { userId: "" + user.id }
+              });  
+        }
+                
 
         socket.on("connect", () => {
             console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
