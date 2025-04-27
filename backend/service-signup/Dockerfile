@@ -25,22 +25,15 @@ RUN npm install
 
 # Copier le reste du projet
 # - with WORKDIR instruction, it will copy the files to /app in the container.
-COPY public public/
 COPY src src/
-COPY styles styles/
 
 RUN npm run build
 
+# VOLUME ["/app/data"]
 
-FROM nginx:alpine
-
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY --from=build /app/public /usr/share/nginx/html
-
-# "This container will listen for network connections on port 3000."
+# "This container will listen for network connections on port 4000."
 # It’s a hint to the person or system running the container.
 # However, the port is not opened!
-EXPOSE 3000
+EXPOSE 4000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "dist/index.js"]
