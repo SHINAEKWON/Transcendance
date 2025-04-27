@@ -9,25 +9,25 @@ prune:
 	docker system prune -af
 
 # Build a docker image:
-# - with the name/tag (-t) 'signup'
+# - with the name/tag (-t) 'frontend'
 # - from the dockerfile in the path '.'
 # - and rebuild everything from scratch, without using cached layers (--no-cache)
 build:
-	docker build --no-cache -t signup .
-	
+	docker build --no-cache -t frontend .
+
 # Run a docker container:
-# - from the image named 'signup'
-# - map the ports 4000 of localhost to 4000 of container (-p)
-# - name the container 'signup'
+# - from the image named 'frontend'
+# - map the ports 3000 of localhost to 3000 of container (-p)
+# - name the container 'frontend'
 run:
-	docker run --name signup -p 127.0.0.1:4000:4000 signup
+	docker run --name frontend -p 127.0.0.1:3000:3000 frontend
 
 # Execute a command in a running container:
 # - opening an interactive terminal session inside the container (-it)
 # - running a shell (sh)
 # exec should be executed when the container is already running
 exec:
-	docker exec -it signup sh
+	docker exec -it frontend sh
 
 ls:
 	docker image ls
