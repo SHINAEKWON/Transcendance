@@ -38,7 +38,6 @@ export class InputElement extends A_Element<HTMLInputElement>
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: null, 
             parentElement: parentElement, 
             classList: classList
         })

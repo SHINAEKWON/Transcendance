@@ -6,10 +6,12 @@ import { Position } from "./constants_game.js";
 
 export class Ball extends A_MovingGameElement
 {
+    protected readonly parentElement: Board;
+
     constructor({ballId, onBoard, classList}:
     {
         ballId: string, 
-        onBoard: A_GameElement, 
+        onBoard: Board, 
         classList: string[]
     })
     {
@@ -20,11 +22,11 @@ export class Ball extends A_MovingGameElement
             topNewRelative: 48.5, 
             widthFraction: 1.5, 
             heightFraction: null, 
-            backgroundColor: "white", 
             speed: 0.5, 
             parentElement: onBoard, 
             classList: classList
         });
+        this.parentElement = onBoard;
     }
 
     initializeSpeed(): void

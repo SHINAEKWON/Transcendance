@@ -6,6 +6,8 @@ export abstract class A_MovingGameElement extends A_GameElement
     /* ********************************************************************** */
     /* Attributes                                                             */
     /* ********************************************************************** */
+    protected readonly parentElement: A_GameElement;
+    
     private readonly initialSpeed: number;
     private speedX: number = 0;
     private speedY: number = 0;
@@ -20,19 +22,16 @@ export abstract class A_MovingGameElement extends A_GameElement
     private absoluteHitYRight: number = 0;
     private nextHitPoint: [number, number] = [0, 0];
 
-    protected insideElement: A_GameElement;
-
     /* ********************************************************************** */
     /* Constructor                                                            */
     /* ********************************************************************** */
-    constructor({elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, backgroundColor, speed, parentElement, classList}:
+    constructor({elementId, leftNewRelative, topNewRelative, widthFraction, heightFraction, speed, parentElement, classList}:
     {
         elementId: string, 
         leftNewRelative: number, 
         topNewRelative: number, 
         widthFraction: number,
         heightFraction: number | null,
-        backgroundColor: string, 
         speed: number, 
         parentElement: A_GameElement, 
         classList: string[]
@@ -45,7 +44,6 @@ export abstract class A_MovingGameElement extends A_GameElement
             topInitialRelative: topNewRelative, 
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: backgroundColor, 
             parentElement: parentElement, 
             classList: classList
         });
@@ -53,7 +51,7 @@ export abstract class A_MovingGameElement extends A_GameElement
         this.initialSpeed = speed;
         this.leftNewRelative = this.getLeftInitialRelative();
         this.topNewRelative = this.getTopInitialRelative();
-        this.insideElement = parentElement;
+        this.parentElement = parentElement;
         this.initializeSpeed();
     }
 
@@ -78,10 +76,6 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateYIntercept(): void
     {
         this.yIntercept = this.getCurrentHeightCenter() - (this.speedY / this.speedX * this.getCurrentWidthCenter());
-
-        // if (this instanceof Ball)
-            // alert("Ball Intercept: " + this.yIntercept);
-        //    alert("y: " + this.getCurrentHeightCenter() + "\ndy: " + this.speedY + "\ndx: " + this.speedX + "\nx: " + this.getCurrentWidthCenter() + "\nt: " + yIntercept);
     }
 
     /* ********************************************************************** */
@@ -91,9 +85,6 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateAbsoluteHitXTop(withElement: A_GameElement): void
     {
         this.absoluteHitXTop = (withElement.getTopCurrentAbsolute() - this.yIntercept) * this.speedX / this.speedY;
-
-        // if (this instanceof Ball)
-            // alert("Board top: " + withElement.getTopCurrentAbsolute() + "\nBall hit x top: " + this.absoluteHitXTop);
     }
 
     /* ********************************************************************** */
@@ -103,9 +94,6 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateAbsoluteHitXBottom(withElement: A_GameElement): void
     {
         this.absoluteHitXBottom = (withElement.getBottomCurrentAbsolute() - this.yIntercept) * this.speedX / this.speedY;
-
-        // if (this instanceof Ball)
-            // alert("Board bottom: " + withElement.getBottomCurrentAbsolute() + "\nBall hit x bottom: " + this.absoluteHitXBottom);
     }
     
     /* ********************************************************************** */
@@ -115,9 +103,6 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateAbsoluteHitYLeft(withElement: A_GameElement): void
     {
         this.absoluteHitYLeft = this.speedY / this.speedX * withElement.getLeftCurrentAbsolute() + this.yIntercept;
-
-        // if (this instanceof Ball)
-            // alert("Board left: " + withElement.getLeftCurrentAbsolute() + "\nBall hit y left: " + this.absoluteHitYLeft);
     }
 
     /* ********************************************************************** */
@@ -127,9 +112,6 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateAbsoluteHitYRight(withElement: A_GameElement): void
     {
         this.absoluteHitYRight = this.speedY / this.speedX * withElement.getRightCurrentAbsolute() + this.yIntercept;
-
-        // if (this instanceof Ball)
-            // alert("Board right: " + withElement.getRightCurrentAbsolute() + "\nBall hit y right: " + this.absoluteHitYRight);
     }
 
     private setAbsoluteHitPoint(withElement: A_GameElement)
@@ -148,8 +130,6 @@ export abstract class A_MovingGameElement extends A_GameElement
             if (this.absoluteHitXTop < withElement.getRightCurrentAbsolute() && this.absoluteHitXTop > withElement.getLeftCurrentAbsolute())
             {
                 this.nextHitPoint = [this.absoluteHitXTop, withElement.getTopCurrentAbsolute()];
-                // if (this instanceof Ball)
-                    // alert("New hitpoint: [" + this.nextHitPoint[0] + ", " + this.nextHitPoint[1] + "]");
                 return ;
             }
         }
@@ -158,8 +138,6 @@ export abstract class A_MovingGameElement extends A_GameElement
             if (this.absoluteHitXBottom < withElement.getRightCurrentAbsolute() && this.absoluteHitXBottom > withElement.getLeftCurrentAbsolute())
             {
                 this.nextHitPoint = [this.absoluteHitXBottom, withElement.getBottomCurrentAbsolute()];
-                // if (this instanceof Ball)
-                    // alert("New hitpoint: [" + this.nextHitPoint[0] + ", " + this.nextHitPoint[1] + "]");
                 return ;
             }
         }
@@ -168,8 +146,6 @@ export abstract class A_MovingGameElement extends A_GameElement
             if (this.absoluteHitYLeft < withElement.getBottomCurrentAbsolute() && this.absoluteHitYLeft > withElement.getTopCurrentAbsolute())
             {
                 this.nextHitPoint = [withElement.getLeftCurrentAbsolute(), this.absoluteHitYLeft];
-                // if (this instanceof Ball)
-                //     alert("New hitpoint: [" + this.nextHitPoint[0] + ", " + this.nextHitPoint[1] + "]");
                 return ;
             }
         }
@@ -178,13 +154,9 @@ export abstract class A_MovingGameElement extends A_GameElement
             if (this.absoluteHitYRight < withElement.getBottomCurrentAbsolute() && this.absoluteHitYRight > withElement.getTopCurrentAbsolute())
             {
                 this.nextHitPoint = [withElement.getRightCurrentAbsolute(), this.absoluteHitYRight];
-                // if (this instanceof Ball)
-                //     alert("New hitpoint: [" + this.nextHitPoint[0] + ", " + this.nextHitPoint[1] + "]");
                 return ;
             }
         }
-        // if (this instanceof Ball)
-        //     alert("No new hitpoint found");
     }
 
     private setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
@@ -212,24 +184,22 @@ export abstract class A_MovingGameElement extends A_GameElement
         this.setSpeedComponents(this.speedX * (1 + dSpeed), this.speedY * (1 + dSpeed));
     }
     
-    move(insideElement: A_GameElement | null = null): void
+    move(): void
     {
         if (this.isActive() == true)
         {
             this.setNewPosition(this.leftNewRelative + this.speedX, this.topNewRelative + this.speedY);
         
-            if (insideElement !== null
-            && (this.speedY < 0 && !this.isInsideTop(insideElement)
-            ||  this.speedY > 0 && !this.isInsideBottom(insideElement)
-            ||  this.speedX < 0 && !this.isInsideLeft(insideElement)
-            ||  this.speedX > 0 && !this.isInsideRight(insideElement)))
+            if (this.speedY < 0 && !this.isInsideTop(this.parentElement)
+            ||  this.speedY > 0 && !this.isInsideBottom(this.parentElement)
+            ||  this.speedX < 0 && !this.isInsideLeft(this.parentElement)
+            ||  this.speedX > 0 && !this.isInsideRight(this.parentElement))
             { 
                 this.setNewPosition(this.leftNewRelative - this.speedX, this.topNewRelative - this.speedY);
             }
             this.draw();
 
-            if (this.insideElement != null)
-                this.setAbsoluteHitPoint(this.insideElement);
+            this.setAbsoluteHitPoint(this.parentElement);
         }
     }
 

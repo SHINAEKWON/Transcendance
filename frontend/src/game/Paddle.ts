@@ -1,8 +1,6 @@
 import { A_MovingGameElement } from "./A_MovingGameElement.js";
-import { A_GameElement } from "./A_GameElement.js";
 import { Player } from "./Player.js";
 import { Position } from "./constants_game.js";
-import { Ball } from "./Ball.js";
 import { Board } from "./Board.js";
 
 export class Paddle extends A_MovingGameElement
@@ -12,19 +10,21 @@ export class Paddle extends A_MovingGameElement
     private position: Position;
     private isAI: boolean;
 
+    protected readonly parentElement: Board;
+
     constructor({
         position, 
         player, 
         upKey, 
         downKey, 
-        parentElement, 
+        onBoard, 
         classList
     }: {
         position: Position, 
         player: Player, 
         upKey: string, 
         downKey: string, 
-        parentElement: A_GameElement, 
+        onBoard: Board, 
         classList: string[]
     })
     {
@@ -62,11 +62,12 @@ export class Paddle extends A_MovingGameElement
             leftNewRelative: leftInitialRelative, topNewRelative: topInitialRelative,
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: player.getColor(), 
             speed: 1, 
-            parentElement: parentElement, 
+            parentElement: onBoard, 
             classList: classList
         });
+
+        this.parentElement = onBoard;
 
         this.upKey = upKey;
         this.downKey = downKey;
@@ -84,47 +85,36 @@ export class Paddle extends A_MovingGameElement
         this.setSpeedComponents(0, 0);
     }
 
-    moveAI(toHitBall: Ball, insideBoard: Board): void
+    moveAI(): void
     {
         if (this.isAI == true)
         {
-            let hitPoint: [number, number] = toHitBall.getNextHitPoint();
+            let hitPoint: [number, number] = this.parentElement.balls[0].getNextHitPoint();
             this.getAndSetCurrentGeometry();
             if (this.position == Position.Left || this.position == Position.Right)
             {
-                // alert("HitpointY: " + hitPoint[1] + "\nPaddleY: " + this.getCurrentHeightCenter())
                 if (this.getTopCurrentAbsolute() < hitPoint[1] && this.getBottomCurrentAbsolute() > hitPoint[1])
                 {
-                    // alert("HitpointX: " + hitPoint[0] + "\nHitpointY: " + hitPoint[1] + "\nPaddleTop: " + this.getTopCurrentAbsolute() + "\nPaddleBottom: " + this.getBottomCurrentAbsolute() + "\nPaddleLeft: " + this.getLeftCurrentAbsolute() + "\nPaddleRight: " + this.getRightCurrentAbsolute() + "\nBallTop: " + toHitBall.getTopCurrentAbsolute() + "\nBallBottom: " + toHitBall.getBottomCurrentAbsolute() + "\nBallLeft: " + toHitBall.getLeftCurrentAbsolute() + "\nBallRight: " + toHitBall.getRightCurrentAbsolute());
-
                     this.setSpeedComponents(0, 0);
                 }
                 else if (this.getCurrentHeightCenter() < hitPoint[1])
                 {
-                    // alert("Hitpoint bigger than center (should go downwards)");
                     this.setSpeedComponents(0, this.getInitialSpeed());
-                    // alert("positive y speed (downwards)");
                 }
                 else if (this.getCurrentHeightCenter() > hitPoint[1])
                 {
-                    // alert("Hitpoint smaller than center (should go upwards)");
                     this.setSpeedComponents(0, -this.getInitialSpeed());
-                    // alert("negative y speed (upwards)");
                 }
                 else
                 {
                     this.setSpeedComponents(0, 0);
-                    // alert("no y speed (stays)");
                 }
 
             }
             else
             {
-                // alert("HitpointY: " + hitPoint[1] + "\nPaddleY: " + this.getCurrentHeightCenter())
                 if (this.getLeftCurrentAbsolute() < hitPoint[0] && this.getRightCurrentAbsolute() > hitPoint[0])
                 {
-                    // alert("HitpointX: " + hitPoint[0] + "\nHitpointY: " + hitPoint[1] + "\nPaddleTop: " + this.getTopCurrentAbsolute() + "\nPaddleBottom: " + this.getBottomCurrentAbsolute() + "\nPaddleLeft: " + this.getLeftCurrentAbsolute() + "\nPaddleRight: " + this.getRightCurrentAbsolute() + "\nBallTop: " + toHitBall.getTopCurrentAbsolute() + "\nBallBottom: " + toHitBall.getBottomCurrentAbsolute() + "\nBallLeft: " + toHitBall.getLeftCurrentAbsolute() + "\nBallRight: " + toHitBall.getRightCurrentAbsolute());
-        
                     this.setSpeedComponents(0, 0);
                 }
                 else if (this.getCurrentWidthCenter() < hitPoint[0])
@@ -133,14 +123,11 @@ export class Paddle extends A_MovingGameElement
                 }
                 else if (this.getCurrentWidthCenter() > hitPoint[0])
                 {
-                    // alert("Hitpoint smaller than center (should go upwards)");
                     this.setSpeedComponents(-this.getInitialSpeed(), 0);
-                    // alert("negative y speed (upwards)");
                 }
                 else
                 {
                     this.setSpeedComponents(0, 0);
-                    // alert("no y speed (stays)");
                 }
             }
         }

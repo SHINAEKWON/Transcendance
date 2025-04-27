@@ -31,7 +31,6 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: null, 
             parentElement: parentElement, 
             classList: classList
         });

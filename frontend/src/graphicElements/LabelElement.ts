@@ -33,7 +33,6 @@ export class LabelElement extends A_Element<HTMLLabelElement>
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: null, 
             parentElement: parentElement, 
             classList: classList
         })

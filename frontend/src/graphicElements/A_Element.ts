@@ -1,15 +1,16 @@
 import { HTMLElementTag } from "./constants_graphic.js";
 
-export abstract class A_Element<T extends HTMLElement>
+export abstract class A_Element<Thtml extends HTMLElement>
 {
     /* ********************************************************************** */
     /* Attributes                                                             */
     /* ********************************************************************** */
-    protected element: T;
+    protected readonly element: Thtml;
+    protected readonly parentElement: A_Element<HTMLElement> | null;
 
     // This stores the initial position relative to the parent
-    protected readonly leftInitialRelative: number;
-    protected readonly topInitialRelative: number;
+    private readonly leftInitialRelative: number;
+    private readonly topInitialRelative: number;
 
     // This stores the current position in absolute pixels on the screen
     private leftCurrentAbsolute: number = 0;
@@ -22,7 +23,7 @@ export abstract class A_Element<T extends HTMLElement>
     // Event listeners can be added (to the document) by an A_Element
     eventListeners: { [key: string]: EventListener } = {};
 
-    constructor({elementId, tagName, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList}:
+    constructor({elementId, tagName, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, parentElement, classList}:
     {
         elementId: string, 
         tagName: HTMLElementTag,
@@ -30,12 +31,12 @@ export abstract class A_Element<T extends HTMLElement>
         topInitialRelative: number,
         widthFraction: number,
         heightFraction: number | null,
-        backgroundColor: string | null,
         parentElement: A_Element<HTMLElement> | null,
         classList: string[]
     })
     {
-        this.element = document.createElement(tagName) as T;
+        this.parentElement = parentElement;
+        this.element = document.createElement(tagName) as Thtml;
         this.element.id = elementId;
 
         if (parentElement)
@@ -59,9 +60,6 @@ export abstract class A_Element<T extends HTMLElement>
         See here: https://www.geeksforgeeks.org/difference-between-relative-and-absolute-position-in-css/
         */
         this.element.classList.add("absolute");
-
-        if (backgroundColor !== null)
-            this.changeBackgroundColor(backgroundColor);
 
         if (classList)
             this.element.classList.add(...classList);
@@ -144,7 +142,7 @@ export abstract class A_Element<T extends HTMLElement>
     {
         this.element.style.backgroundColor = newColor;
     }
-    
+
     removeEventListeners(): void
     {
         for (const event in this.eventListeners)

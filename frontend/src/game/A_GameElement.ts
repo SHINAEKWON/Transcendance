@@ -7,6 +7,8 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
     /* ********************************************************************** */
     /* Attributes                                                             */
     /* ********************************************************************** */    
+    protected readonly parentElement: A_GameElement | null;
+
     protected leftWall: boolean = true;
     protected topWall: boolean = true;
     protected rightWall: boolean = true;
@@ -15,14 +17,13 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
     /* ********************************************************************** */
     /* Constructor                                                            */
     /* ********************************************************************** */
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList}:
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, parentElement, classList}:
     {
         elementId: string, 
         leftInitialRelative: number, 
         topInitialRelative: number,
         widthFraction: number,
         heightFraction: number | null,
-        backgroundColor: string | null,
         parentElement: A_GameElement | null,
         classList: string[]
     })
@@ -35,10 +36,10 @@ export abstract class A_GameElement extends A_Element<HTMLDivElement>
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
             heightFraction: heightFraction, 
-            backgroundColor: backgroundColor, 
             parentElement: parentElement, 
             classList: classList
         });
+        this.parentElement = parentElement;
     }
 
     /* ********************************************************************** */

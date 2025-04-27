@@ -1,5 +1,4 @@
 import { Paddle } from "./Paddle.js";
-import { A_GameElement } from "./A_GameElement.js";
 import { Ball } from "./Ball.js";
 import { Board } from "./Board.js";
 import { Position } from "./constants_game.js";
@@ -17,19 +16,17 @@ export type Players =
 export class Player
 {
     private name: string;
-    private color: string;
     private position: Position;
     private paddles: Paddle[] = [];
     private label: LabelScoreName;
     private score: number;
     private isAi: boolean;
 
-    constructor({name, color, paddleKeys, parentElement, position, isAI}:
+    constructor({name, paddleKeys, onBoard, position, isAI}:
     {
         name: string, 
-        color: string, 
         paddleKeys: [string, string][], 
-        parentElement: A_GameElement, 
+        onBoard: Board, 
         position: Position,
         isAI: boolean
     })
@@ -38,13 +35,11 @@ export class Player
         this.name = name;
         this.position = position;
         
-        this.color = color;
-
         this.isAi = isAI;
 
         for (let i = 0; i < paddleKeys.length; ++i)
         {
-            this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], parentElement: parentElement, classList: []}));
+            this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], onBoard: onBoard, classList: [playerDictionary[this.position].bgColor]}));
         }
 
         this.label = new LabelScoreName(
@@ -62,7 +57,6 @@ export class Player
         });
     }
     
-    getColor(): string { return this.color; }
     getName(): string { return this.name; }
     getPosition(): Position { return this.position; }
     getScore(): number { return this.score; }
@@ -87,13 +81,13 @@ export class Player
         }
     }
 
-    movePaddles(board: Board): void
+    movePaddles(): void
     {
         for (let i = 0; i < this.paddles.length; ++i)
         {
             if (this.isAi == true)
-                this.paddles[i].moveAI(board.balls[0], board);
-            this.paddles[i].move(board);
+                this.paddles[i].moveAI();
+            this.paddles[i].move();
         }
     }
 

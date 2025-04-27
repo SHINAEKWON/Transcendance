@@ -49,7 +49,17 @@ export class RedirectButton extends A_Element<HTMLDivElement>
             hoverColor
         );
 
-        super({elementId: elementId, tagName: HTMLElementTag.Div, leftInitialRelative: leftInitialRelative, topInitialRelative: topInitialRelative, widthFraction: widthFraction, heightFraction: heightFraction, backgroundColor: null, parentElement: null, classList: classList});
+        super(
+        {
+            elementId: elementId, 
+            tagName: HTMLElementTag.Div, 
+            leftInitialRelative: leftInitialRelative, 
+            topInitialRelative: topInitialRelative, 
+            widthFraction: widthFraction, 
+            heightFraction: heightFraction, 
+            parentElement: null, 
+            classList: classList
+        });
 
         this.targetPage = targetPage;
         this.changeText(text);
