@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyMultipart from 'fastify-multipart';
 import { userRoutes } from './routes/userRoutes.js';
+import path from 'path';
 
 const app = Fastify({ logger: true });
 const PORT = 4001;
@@ -10,6 +12,9 @@ app.register(cors, {
   credentials: true
 });
 app.register(userRoutes);
+app.register(fastifyMultipart);
+
+const uploadDir = path.join(__dirname, '../uploads');
 
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) {

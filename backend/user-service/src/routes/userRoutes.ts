@@ -49,4 +49,13 @@ app.delete('/users/:id/block/:targetId', async (req, res) => {
   return { message: `User ${targetId} unblocked by ${id}` };
 });
 
+// app.post('/upload', async (req, res) => {
+// 	try {
+// 		// App to execute : photoUpload.ts
+// 	}
+// 	catch {
+
+// 	}
+// });
+
 }

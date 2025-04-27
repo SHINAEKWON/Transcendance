@@ -12,17 +12,17 @@ services:
     volumes:
       - auth-data:/app/data
     
-  # user-service:
-  #   build:
-  #     context: ./backend/user-service
-  #     dockerfile: Dockerfile
-  #   container_name: user
-  #   networks:
-  #     - transnet
-  #   expose:
-  #     - "4001"
-  #   volumes:
-  #     - user-data:/app/data
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile
+    container_name: user
+    networks:
+      - transnet
+    expose:
+      - "4001"
+    volumes:
+      - user-data:/app/data
 
   # game-service:
   #   build:
@@ -64,6 +64,6 @@ networks:
 
 volumes:
   auth-data:
-  # user-data:
+  user-data:
   # game-data:
   # chat-data: 
