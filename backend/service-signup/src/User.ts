@@ -1,0 +1,109 @@
+import sqlite3 from 'sqlite3';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import bcrypt from 'bcrypt';
+
+export class User
+{
+    private nickname: string;
+    private password: string;
+    private email: string;
+
+    constructor(nickname: string, password: string, email: string)
+    {
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+    }
+
+    // Getters 
+    getNickname(): string
+    {
+        return this.nickname;
+    }
+      
+    getPassword(): string
+    {
+        return this.password;
+    }
+    
+    getEmail(): string
+    {
+        return this.email;
+    }
+
+    static addUserToDB(user: User): void
+    {
+        const nickname: string = user.getNickname();
+        const password: string = user.getPassword(); 
+        const email: string = user.getEmail(); 
+        
+        const insertQuery: string = `
+        INSERT INTO users (nickname, password, email)
+        VALUES (?, ?, ?)
+        `;
+        
+        const db: sqlite3.Database = new sqlite3.Database('./data/user_db.sqlite', (err: Error | null) => {
+            if (err) {
+                console.error("Error opening user database:", err.message);
+            } else {
+                console.log("Opened user database");
+            }
+        });
+    
+        db.run(insertQuery, [nickname, password, email], function (err: Error)
+        {
+            if (err) {
+                console.error("Error adding user to database:", err.message);
+            } else {
+                console.log('User added, nickname: ', nickname);
+            }
+        });
+    };
+
+    // aysnc:
+    // Wraps a function's return value in a Promise:
+    //   An async function always returns a Promise. If you return a value directly 
+    //   from an async function, it automatically wraps it in a resolved Promise.
+    // Allows the use of await inside the function:
+    //   Inside an async function, you can use the await keyword to wait for other 
+    //   asynchronous operations (like database calls or HTTP requests) to complete 
+    //   before continuing execution.
+    // Handles errors with try...catch:
+    //   You can use try...catch in async functions to handle errors just like in 
+    //   synchronous code, but it works with Promises.
+    static async registerNewUser(request: FastifyRequest, reply: FastifyReply)
+    {
+        const {nickname, password, email }: { nickname: string, password: string, email: string } 
+        = request.body as 
+        {
+            nickname: string,
+            password: string,
+            email: string,
+        };
+
+        if (!password || !nickname || !email) {
+            throw new Error("All fields are required!" );
+        }
+
+        // await userRegisterInfoCheck(request, reply);
+
+        try {
+            // The cost factor (in this case, 10) is a value that determines how 
+            // computationally expensive the hashing process will be.
+            // The higher the cost factor, the more time it will take to hash the 
+            // password and check hashes during authentication. This makes it more 
+            // resistant to brute-force attacks, but at the cost of more CPU usage.
+            const hashedPassword: string = await bcrypt.hash(password, 10);
+        
+            const newUser: User = new User( nickname, hashedPassword, email);
+            User.addUserToDB(newUser);
+
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(`Error when registering user: ${error.message}`);
+            } else {
+                throw new Error("Unknown error when registering user" );
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import Fastify, {FastifyRequest, FastifyReply, FastifyInstance} from "fastify";
+import { User } from "./User.js";
 
 const app: FastifyInstance = Fastify ({ logger: true });
 
@@ -28,8 +29,7 @@ app.post('/signup', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
         const body: any = request.body;
 
-        //const user = await newUserRegister(request, reply);
-        console.log(body);
+        await User.registerNewUser(request, reply);
         reply.status(200).send({ success: true });
     } catch (err) { 
         console.error('/signup error occured', err);

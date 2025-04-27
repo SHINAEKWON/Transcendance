@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to database
-DB_PATH="/data/user_db.sqlite"
+DB_PATH="/app/data/user_db.sqlite"
 
 # SQL command to create the table
 SQL_COMMAND="
