@@ -158,6 +158,7 @@ export class PageSignup extends A_Page
                
                if (!response.ok) {
                    const msg = await response.text();
+                   alert("response not ok");
                    throw new Error(`(${response.status}) ${msg}`);
                  }
                  
