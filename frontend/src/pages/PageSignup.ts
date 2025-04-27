@@ -136,12 +136,48 @@ export class PageSignup extends A_Page
         return (true);
     }
 
+    private async sendRequest()
+    {
+        if (this.inputNickname != null
+        && this.inputEmail != null
+        && this.inputPassword != null)
+        {
+            const formData = {
+                nickname: this.inputNickname.getTrimmedValue(),
+                email: this.inputEmail.getTrimmedValue(),
+                password: this.inputPassword.getTrimmedValue()
+           }
+
+           try {
+               const response = await fetch('/signup', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   credentials: 'include',
+                   body: JSON.stringify(formData),
+               });
+               
+               if (!response.ok) {
+                   const msg = await response.text();
+                   throw new Error(`(${response.status}) ${msg}`);
+                 }
+                 
+               const data = await response.json();
+           } catch (err: any) {
+               alert('Failed to create account!');
+               console.log("Failed to create account! : " + err.message);
+           }
+        }
+    }
+
     private checkInput(): boolean
     {
         if (this.inputtedNickname() == true 
         && this.inputtedEmail() == true
         && this.inputtedPassword() == true)
+        {
+            this.sendRequest();
             return (true);
+        }
         alert("Input nickname, email and password");
         return (false);
     }
