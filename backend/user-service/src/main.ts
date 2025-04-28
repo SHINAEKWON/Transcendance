@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyMultipart from 'fastify-multipart';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -15,14 +16,17 @@ app.register(cors, {
 });
 
 app.register(userRoutes);
+
+// Uploads Directory Setting
 app.register(fastifyMultipart);
-
-
-// Uploads directory setting
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursoce: true });
+}
 
+// Launch Server
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) {
     app.log.error(err);
