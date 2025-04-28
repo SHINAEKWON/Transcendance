@@ -28,7 +28,7 @@ rmvol:
 # - running a shell (bash)
 # exec should be executed when the container is already running
 execfrontend:
-	docker exec -it frontend bash
+	docker exec -it frontend sh
 
 execsignup:
 	docker exec -it signup bash

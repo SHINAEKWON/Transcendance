@@ -14,7 +14,6 @@ export class User
     {            
         if (this.isPasswordValid(password) == false || this.isEmailValid(email) == false || this.isNicknameValid(nickname) == false)
         {
-            alert("Invalid user input");
             throw new Error("Invalid user input");
         }
 
@@ -115,7 +114,6 @@ export class User
         };
 
         if (!password || !nickname || !email) {
-            alert("all fields required");
             throw new Error("All fields are required!" );
         }
 
@@ -132,10 +130,8 @@ export class User
 
         } catch (error: unknown) {
             if (error instanceof Error) {
-                alert("error when registering");
                 throw new Error(`Error when registering user: ${error.message}`);
             } else {
-                alert("unknown error when registering");
                 throw new Error("Unknown error when registering user" );
             }
         }

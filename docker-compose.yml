@@ -4,6 +4,8 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         container_name: frontend 
+        env_file:
+          -  .env
         # ports: open connection between container and host (HOST:CONTAINER)
         ports: 
           - "3000:3000"
@@ -16,6 +18,8 @@ services:
             context: ./backend/service-signup
             dockerfile: Dockerfile
         container_name: signup
+        env_file:
+          -  .env
         # connect to the network called transnet
         networks:
           - transnet
