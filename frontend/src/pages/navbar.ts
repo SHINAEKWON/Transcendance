@@ -9,7 +9,7 @@ export class Navbar {
 
         return `
             <div class="container mx-auto flex justify-between items-center">
-                <a href="#" onclick="router.updatePage('welcome', true)" class="navbar-title text-2xl text-neon-blue animate-glow">
+                <a href="#" onclick="router.updatePage('welcome', true)" class="navbar-title text-3xl text-neon-blue animate-glow">
                     ${t("title")}
                 </a>
 

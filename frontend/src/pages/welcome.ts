@@ -4,12 +4,12 @@ import { RedirectEvents } from "../utils/redirectEvents.js";
 
 export class WelcomePage implements Page{
     render() {
-        const t = (key: keyof typeof welcomeTranslations) => getTranslation("welcome", key);// ici pour la translation
+        const t = (key: keyof typeof welcomeTranslations) => getTranslation("welcome", key);
 
         let html = `
             <div class="flex items-center justify-center min-h-screen bg-dark-blue">
                 <div class="bg-gray-800 bg-opacity-90 p-10 rounded-2xl shadow-lg text-center w-[90%] max-w-xl space-y-6 custom-position">
-                    <h2 class="text-4xl font-gaming text-neon-blue animate-glow">${t("welcome")}</h2>
+                    <h2 class="text-4xl font-gaming text-neon-blue glitch-text">${t("welcome")}</h2>
                     <p class="text-xl text-neon-orange font-semibold">${t("enjoy")}</p>
 
                     <div>

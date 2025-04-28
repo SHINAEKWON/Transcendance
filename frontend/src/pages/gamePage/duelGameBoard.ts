@@ -6,17 +6,17 @@ export class DuelGameBoardPage implements Page {
 
   async render() {
     const hash = window.location.hash;
-    
+
     const urlParams = new URLSearchParams(hash.split('?')[1]);
     const duelEncoded = urlParams.get('duel');
     const duelId = urlParams.get('id');
-   
+
     if (duelEncoded) {
       this.duelData = JSON.parse(decodeURIComponent(duelEncoded));
-      console.log("this.duelData"); 
+      console.log("this.duelData");
       console.log(this.duelData);
     }
-   
+
     const { player1, player2, mode } = this.duelData; // mode = local ou remote
 
     const html = `
@@ -26,10 +26,11 @@ export class DuelGameBoardPage implements Page {
         </h2>
 
         <div class="flex justify-center space-x-20 mb-10">
-          ${this.renderPlayerBox(player1)}
+          ${this.renderPlayerBox(player1, true)}
           ${this.renderVersus()}
-          ${this.renderPlayerBox(player2)}
+          ${this.renderPlayerBox(player2, false)}
         </div>
+
 
         
       </div>
@@ -70,15 +71,15 @@ export class DuelGameBoardPage implements Page {
 
   private handleEndGame(playerLeft: Player, playerRight: Player) {
     console.log("🏁 Duel terminé");
-  
+
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
-  
+
     const appGame = document.getElementById("appGame");
     if (appGame) {
       // 1. Nettoyer complètement l'intérieur
       appGame.innerHTML = "";
       appGame.className = "flex flex-col items-center justify-center p-10 rounded-xl shadow-2xl";
-  
+
       // 2. Afficher la carte du gagnant
       appGame.innerHTML = `
         <div class="flex flex-col items-center space-y-6 animate-bounce-in">
@@ -87,8 +88,8 @@ export class DuelGameBoardPage implements Page {
           <div class="text-lg text-white">Vainqueur du Duel !</div>
         </div>
       `;
-  
-      // 3. Explosion de confettis 🎉
+
+      // 3. Explosion de confettis
       confetti({
         particleCount: 150,
         spread: 70,
@@ -96,17 +97,21 @@ export class DuelGameBoardPage implements Page {
       });
     }
   }
-  
 
 
-  renderPlayerBox(player: any) {
+
+  renderPlayerBox(player: any, isLeft: boolean) {
+    const borderColor = isLeft ? "border-yellow-400" : "border-blue-400";
+    const textColor = isLeft ? "text-yellow-400" : "text-blue-400";
+
     return `
       <div class="flex flex-col items-center space-y-2">
-        <img src="${player.avatar}" class="w-20 h-20 rounded-full border-4 border-gray-400" />
-        <span class="text-white text-lg font-semibold">${player.username}</span>
+        <img src="${player.avatar}" class="w-24 h-24 rounded-full border-4 ${borderColor}" />
+        <span class="text-lg font-semibold ${textColor}">${player.username}</span>
       </div>
     `;
   }
+
 
   renderVersus() {
     return `

@@ -48,12 +48,77 @@ export const editProfileTranslations = {
       ar: "سجل المباريات",
       ko: "매치 기록"
     },
+    status: {
+      en: "Status",
+      fr: "Statut",
+      de: "Status",
+      ar: "الحالة",
+      ko: "상태"
+    },
     chooseAvatar: {
         en: "Choose an Avatar",
         fr: "Choisis un avatar",
         de: "Wähle einen Avatar",
         ar: "اختر صورة رمزية",
         ko: "아바타 선택"
+    },
+    avatars: {
+      default: {
+        en: "Default",
+        fr: "Défaut",
+        de: "Standard",
+        ar: "افتراضي",
+        ko: "기본"
+      },
+      phantom: {
+        en: "Phantom",
+        fr: "Fantôme",
+        de: "Phantom",
+        ar: "شبح",
+        ko: "팬텀"
+      },
+      chrome: {
+        en: "Chrome",
+        fr: "Chrome",
+        de: "Chrom",
+        ar: "كروم",
+        ko: "크롬"
+      },
+      shadow: {
+        en: "Shadow",
+        fr: "Ombre",
+        de: "Schatten",
+        ar: "ظل",
+        ko: "섀도우"
+      },
+      agent: {
+        en: "Agent",
+        fr: "Agent",
+        de: "Agent",
+        ar: "عميل",
+        ko: "요원"
+      },
+      pixie: {
+        en: "Pixie",
+        fr: "Fée",
+        de: "Pixie",
+        ar: "جنية",
+        ko: "픽시"
+      },
+      rebel: {
+        en: "Rebel",
+        fr: "Rebelle",
+        de: "Rebell",
+        ar: "متمرد",
+        ko: "반역자"
+      },
+      custom: {
+        en: "Custom",
+        fr: "Personnalisé",
+        de: "Benutzerdefiniert",
+        ar: "مخصص",
+        ko: "커스텀"
+      }
     }
   } as const;
   

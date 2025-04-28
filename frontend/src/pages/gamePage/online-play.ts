@@ -1,11 +1,11 @@
 import { getTranslation } from "../../i18n/i18n.js";
-import { localPlayTranslations } from "../../translations/game.js";
 import { getUsersList } from "../../services/userService.js";
+import { onlinePlayTranslations } from "../../translations/game.js";
 export class OnlinePlayPage implements Page {
     private selectedPlayer: any = null;
 
     async render() {
-        const t = (key: keyof typeof localPlayTranslations) => getTranslation("localPlay", key);
+        const t = (key: keyof typeof onlinePlayTranslations) => getTranslation("onLinePlay", key);
 
         const users = await getUsersList();
         const currentUserString = localStorage.getItem("transcendenceUser");

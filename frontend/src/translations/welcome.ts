@@ -1,45 +1,10 @@
 export const welcomeTranslations = {
-  profile: {
-    en: "Profile",
-    fr: "Profil",
-    de: "Profil",
-    ar: "الملف الشخصي",
-    ko: "프로필"
-  },
-  duel: {
-    en: "Duel",
-    fr: "Duel",
-    de: "Duell",
-    ar: "مبارزة",
-    ko: "듀얼"
-  },
-  tournaments: {
-    en: "Tournaments",
-    fr: "Tournois",
-    de: "Turniere",
-    ar: "دوريات",
-    ko: "토너먼트"
-  },
-  chat: {
-    en: "Chat",
-    fr: "Chat",
-    de: "Chat",
-    ar: "دردشة",
-    ko: "채팅"
-  },
-  language: {
-    en: "Language",
-    fr: "Langue",
-    de: "Sprache",
-    ar: "اللغة",
-    ko: "언어"
-  },
   welcome: {
-    en: "Welcome to Transcendence!",
-    fr: "Bienvenue sur Transcendence!",
-    de: "Willkommen bei Transcendence!",
-    ar: "!أهلا بك في ترونسوندونس",
-    ko: "트랜센던스에 오신 것을 환영합니다!"
+    en: "Welcome to PHΛN†ØM[404]",
+    fr: "Bienvenue sur PHΛN†ØME[404]",
+    de: "Willkommen bei PHΛN†ØM[404]",
+    ar: "!أهلا بك في فانتوم[404]",
+    ko: "팬텀[404]에 오신 것을 환영합니다!"
   },
   enjoy: {
     en: "Enjoy the game and have fun!",

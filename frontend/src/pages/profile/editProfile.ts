@@ -1,4 +1,5 @@
 import { getTranslation } from "../../i18n/i18n.js";
+import { getLang } from "../../i18n/language.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
 
@@ -13,16 +14,23 @@ export class EditProfilePage implements Page {
             status: "in-game",
         };
 
+        const tAvatar = (key: keyof typeof editProfileTranslations.avatars) => {
+            const lang = getLang() as "en" | "fr" | "de" | "ar" | "ko";
+            const avatarEntry = editProfileTranslations.avatars[key];
+            return avatarEntry[lang] || avatarEntry["en"];
+          };
+        
         const avatars = [
-            { src: "./public/images/profile.jpg", label: "default" , borderColor: "#39ff14", textColor: "#39ff14"},
-            { src: "./public/images/avatar3.png", label: "Phantom" , borderColor: "#00f3ff", textColor: "#00f3ff"},
-            { src: "./public/images/avatar2.png", label: "Chrome" , borderColor: "#FF6700", textColor: "#FF6700"},
-            { src: "./public/images/profile_robo.jpg", label: "Shadow", borderColor: "#00f3ff", textColor: "#00f3ff" },
-            { src: "./public/images/cyber_profile.png", label: "Agent" , borderColor: "#FF6700", textColor: "#FF6700"},
-            { src: "./public/images/avatar1.png", label: "Pixie" , borderColor: "#ff00ff", textColor: "#ff00ff"},
-            { src: "./public/images/avatar4.jpg", label: "Rebel" , borderColor: "#39ff14", textColor: "#39ff14"},
-            { src: "", label: "Custom", isUpload: true},
-          ];
+            { src: "./public/images/profile.jpg", label: tAvatar("default"), borderColor: "#39ff14", textColor: "#39ff14" },
+            { src: "./public/images/avatar3.png", label: tAvatar("phantom"), borderColor: "#00f3ff", textColor: "#00f3ff" },
+            { src: "./public/images/avatar2.png", label: tAvatar("chrome"), borderColor: "#FF6700", textColor: "#FF6700" },
+            { src: "./public/images/profile_robo.jpg", label: tAvatar("shadow"), borderColor: "#00f3ff", textColor: "#00f3ff" },
+            { src: "./public/images/cyber_profile.png", label: tAvatar("agent"), borderColor: "#FF6700", textColor: "#FF6700" },
+            { src: "./public/images/avatar1.png", label: tAvatar("pixie"), borderColor: "#ff00ff", textColor: "#ff00ff" },
+            { src: "./public/images/avatar4.jpg", label: tAvatar("rebel"), borderColor: "#39ff14", textColor: "#39ff14" },
+            { src: "", label: tAvatar("custom"), isUpload: true }
+        ];
+        
             
 
         const avatarOptions = avatars.map((avatar, i) => {
@@ -72,7 +80,7 @@ export class EditProfilePage implements Page {
                     <input type="text" value="${user.username}" class="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green" />
                 </div>
                 <div class="flex-1">
-                    <label class="block text-sm font-medium text-neon-blue mb-2">Status</label>
+                    <label class="block text-sm font-medium text-neon-blue mb-2">${t("status")}</label>
                     <select class="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green">
                         <option value="online" ${user.status === "online" ? "selected" : ""}>🟢 Online</option>
                         <option value="in-game" ${user.status === "in-game" ? "selected" : ""}>🟠 In Game</option>

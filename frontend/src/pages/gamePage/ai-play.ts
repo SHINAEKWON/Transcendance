@@ -98,12 +98,16 @@ export class AIPlayPage implements Page {
                         avatar: currentUser.avatar,
                         isIa: false
                     },
-                    mode: "local" // mode contre IA
+                    mode: "IA" // mode contre IA
                 };
+                const params = new URLSearchParams();
+                params.set('id', duelId);
+                params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
+                window.location.href = `/#duelGameBoard?${params.toString()}`;
 
                 // Sauvegarder dans localStorage
-                localStorage.setItem(`duel_${duelId}`, JSON.stringify(duelData));
-                window.location.href = `/#duelGameBoard?id=${duelId}`;
+                // localStorage.setItem(`duel_${duelId}`, JSON.stringify(duelData));
+                // window.location.href = `/#duelGameBoard?id=${duelId}`;
 
 
 

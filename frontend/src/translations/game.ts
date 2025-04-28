@@ -51,69 +51,6 @@ export const gameTranslations = {
   } as const;
   
   export const localPlayTranslations = {
-    title: {
-      en: "Local Duel Mode",
-      fr: "Mode Duel Local",
-      de: "Lokaler Duellmodus",
-      ar: "وضع المبارزة المحلي",
-      ko: "로컬 듀얼 모드"
-    },
-    description: {
-      en: "Enter player names and get ready to play!",
-      fr: "Entre les noms des joueurs et prépare-toi à jouer !",
-      de: "Gib die Spielernamen ein und mach dich bereit zum Spielen!",
-      ar: "!أدخل أسماء اللاعبين واستعد للعب",
-      ko: "플레이어 이름을 입력하고 게임을 준비하세요!"
-    },
-    connectedPlayer: {
-      en: "You (Connected Player)",
-      fr: "Vous (Joueur connecté)",
-      de: "Du (verbundener Spieler)",
-      ar: "أنت (اللاعب المتصل)",
-      ko: "당신 (연결된 플레이어)"
-    },
-    playerNamePlaceholder: {
-      en: "Enter player name",
-      fr: "Entrez le nom du joueur",
-      de: "Spielernamen eingeben",
-      ar: "أدخل اسم اللاعب",
-      ko: "플레이어 이름 입력"
-    },
-    player1: {
-      en: "Player 1",
-      fr: "Joueur 1",
-      de: "Spieler 1",
-      ar: "اللاعب 1",
-      ko: "플레이어 1"
-    },
-    player2: {
-      en: "Player 2",
-      fr: "Joueur 2",
-      de: "Spieler 2",
-      ar: "اللاعب 2",
-      ko: "플레이어 2"
-    },
-    placeholder: {
-      en: "Enter name...",
-      fr: "Entrez un nom...",
-      de: "Name eingeben...",
-      ar: "أدخل الاسم...",
-      ko: "이름 입력..."
-    },
-    play: {
-      en: "🎮 Play",
-      fr: "🎮 Jouer",
-      de: "🎮 Spielen",
-      ar: "🎮 إلعب",
-      ko: "🎮 플레이"
-    },
-    back: {
-      en: "⬅ Back",
-      fr: "⬅ Retour",
-      de: "⬅ Zurück",
-      ar: "⬅ رجوع",
-      ko: "⬅ 뒤로"
-    },
     titleLocalPlay: {
       en: "Local Play",
       fr: "Jeu Local",
@@ -129,14 +66,80 @@ export const gameTranslations = {
       ko: "게임 시작"
     },
     playersMissingError: {
-      en: "Please fill in both player names.",
-      fr: "Veuillez remplir les deux noms de joueurs.",
-      de: "Bitte beide Spielernamen eingeben.",
-      ar: "يرجى ملء اسمي اللاعبين.",
-      ko: "두 플레이어 이름을 모두 입력하세요."
+      en: "Please fill in both player names and select an avatar.",
+      fr: "Veuillez remplir les deux noms de joueurs et sélectionner un avatar.",
+      de: "Bitte gib beide Spielernamen ein und wähle einen Avatar.",
+      ar: "يرجى إدخال اسمي اللاعبين واختيار صورة رمزية.",
+      ko: "두 플레이어 이름을 입력하고 아바타를 선택하세요."
+    },
+    connectedPlayer: {
+      en: "You (Connected Player)",
+      fr: "Vous (Joueur connecté)",
+      de: "Du (verbundener Spieler)",
+      ar: "أنت (اللاعب المتصل)",
+      ko: "당신 (연결된 플레이어)"
+    },
+    playerNamePlaceholder: {
+      en: "Enter player name",
+      fr: "Entrez le nom du joueur",
+      de: "Spielernamen eingeben",
+      ar: "أدخل اسم اللاعب",
+      ko: "플레이어 이름 입력"
+    },
+    readyChampion: {
+      en: "Ready to Rule?",
+      fr: "Prêt à régner ?",
+      de: "Bereit zu herrschen?",
+      ar: "مستعد للسيطرة؟",
+      ko: "통치할 준비가 되었나요?"
+    },
+    chooseYourHero: {
+      en: "Choose Your Hero!",
+      fr: "Choisis ton héros !",
+      de: "Wähle deinen Helden!",
+      ar: "اختر بطلك!",
+      ko: "당신의 영웅을 선택하세요!"
+    },
+    guestConnectedInfo: { 
+      en: "Yellow player connected... Guest, get ready to see stars?! ✨✨",
+      fr: "Joueur jaune connecté... Invité, prépare-toi à voir des étoiles ! ✨✨",
+      de: "Gelber Spieler verbunden... Gast, mach dich bereit, Sterne zu sehen! ✨✨",
+      ar: "تم توصيل اللاعب الأصفر... استعد لرؤية النجوم أيها الزائر! ✨✨",
+      ko: "노란 플레이어가 연결되었습니다... 게스트, 별을 볼 준비를 하세요! ✨✨"
     }
-    
   } as const;
+
+  export const onlinePlayTranslations = {
+    title: {
+      en: "Online Duel Mode",
+      fr: "Mode Duel En Ligne",
+      de: "Online-Duellmodus",
+      ar: "وضع المبارزة عبر الإنترنت",
+      ko: "온라인 듀얼 모드"
+    },
+    description: {
+      en: "Select an opponent from the list to start a remote duel!",
+      fr: "Sélectionnez un adversaire dans la liste pour commencer un duel à distance !",
+      de: "Wähle einen Gegner aus der Liste, um ein Fern-Duell zu starten!",
+      ar: "اختر خصمًا من القائمة لبدء مبارزة عن بُعد!",
+      ko: "목록에서 상대를 선택하여 원격 대결을 시작하세요!"
+    },
+    play: {
+      en: "Start Duel",
+      fr: "Commencer le duel",
+      de: "Duell starten",
+      ar: "ابدأ المبارزة",
+      ko: "대결 시작"
+    },
+    back: {
+      en: "⬅ Back",
+      fr: "⬅ Retour",
+      de: "⬅ Zurück",
+      ar: "⬅ رجوع",
+      ko: "⬅ 뒤로"
+    }
+  } as const;
+  
 
   export const aiPlayTranslations = {
     chooseRobotTitle: {

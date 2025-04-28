@@ -1,10 +1,10 @@
 export const navbarTranslations = {
     title: {
-      en: "My Transcendence",
-      fr: "Mon Transcendence",
-      de: "Mein Transcendence",
-      ar: "ترونسوندونسي",
-      ko: "마이트랜센던스"
+        "en": "PHΛN†ØM[404]",
+        "fr": "PHΛN†ØME[404]",
+        "de": "PHΛN†ØM[404]",
+        "ar": "فانتوم[404]",
+        "ko": "팬텀[404]"
     },
     profile: {
       en: "Profile",

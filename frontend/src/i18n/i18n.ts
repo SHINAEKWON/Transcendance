@@ -2,7 +2,7 @@ import { getLang } from './language.js'
 import { welcomeTranslations } from '../translations/welcome.js'
 import { navbarTranslations } from '../translations/navbar.js'
 import { languageTranslations } from '../translations/language.js'
-import { aiPlayTranslations, gameTranslations, localPlayTranslations } from '../translations/game.js';
+import { aiPlayTranslations, gameTranslations, localPlayTranslations, onlinePlayTranslations } from '../translations/game.js';
 import { createLocalTournamentTranslations, createTournamentTranslations, tournamentsTranslations } from '../translations/tournaments.js';
 import { profileTranslations } from '../translations/profile.js';
 import { editProfileTranslations } from '../translations/editProfile.js';
@@ -14,6 +14,7 @@ const translationsMap = {
   language: languageTranslations,
   game: gameTranslations,
   localPlay: localPlayTranslations,
+  onLinePlay: onlinePlayTranslations,
   aiPlay: aiPlayTranslations,
   tournaments: tournamentsTranslations,
   createTournament: createTournamentTranslations,
