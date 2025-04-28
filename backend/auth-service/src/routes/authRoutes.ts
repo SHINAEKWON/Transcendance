@@ -102,7 +102,7 @@ export default async function authRoutes(app: FastifyInstance) {
                     si le mot de passe est bon => il envoie ok
                     sinon = > wrong password
       */
-      app.post('/auth/signin', async (request, reply) => {
+      app.post('/signin', async (request, reply) => {
         console.log('Request arrived to /signin : ', request.body);
         try {
 
@@ -119,7 +119,7 @@ export default async function authRoutes(app: FastifyInstance) {
             reply.status(400).send({error: 'Missing identifier or password'});
           }
           //demander a user-service si l'utilisateur existe
-          const userResponse = await axios.post('http://user:4001/user/checkUser', {
+          const userResponse = await axios.post('http://user-service:4001/user/checkUser', {
             username,
             email
           }

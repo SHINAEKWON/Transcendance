@@ -98,13 +98,17 @@ app.post('/user/register', async (req, res) => {
       username: string | null;
       email: string | null;
     };
+    console.log('email = ', email);
     try {
       let user_id = undefined;
       if (username){
         user_id = await getUserByUsername(username);
       }
       else if (email){
+        console.log('je suis dans else id email ', email);
         user_id = await getUserByEmail(email);
+        console.log('user_id = ', user_id);
+
       }
       if (user_id) {
         console.log('found user :D user_id = ', user_id);

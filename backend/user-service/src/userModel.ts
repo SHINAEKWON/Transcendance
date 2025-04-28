@@ -57,9 +57,11 @@ export async function getUserByEmail(email: string)
 {
   const db = await connectDB();
   const row = await db.get<{id: number}>( 'SELECT * FROM users1 WHERE email = ?', [email]);
+  console.log('dans getUserByEmal user_id = ', row);
   if (!row){
     return null;
   }
+  console.log('dans getUserByEmal user_id = ', row.id);
   return row.id;
 }
 
