@@ -40,32 +40,31 @@ services:
   #   volumes:
   #     - game-data:/app/data
 
-  # chat-service:
-  #   build:
-  #     context: ./backend/chat-service
-  #     dockerfile: Dockerfile
-  #   container_name: chat
-  #   networks:
-  #     - transnet
-  #   expose:
-  #     - "4003"
-  #   volumes:
-  #     - chat-data:/app/data
-
-  frontend:
+  chat-service:
     build:
-      context: ./frontend
+      context: ./backend/chat-service
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    container_name: front
+    container_name: chat
     networks:
       - transnet
-    depends_on:
-      - user-service
-      - auth-service
-      # - chat-service
-      # - game-service
+    expose:
+      - "4003"
+    ports:
+      - "4003:4003"
+    volumes:
+      - chat-data:/app/data
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   container_name: front
+  #   networks:
+  #     - transnet
+  #   depends_on:
+  #    - gateway
 
 networks:
   transnet:

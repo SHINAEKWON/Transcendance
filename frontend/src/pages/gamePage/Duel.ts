@@ -2,7 +2,7 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { gameTranslations } from "../../translations/game.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
 
-export class GamePage implements Page{
+export class DuelPage implements Page{
     render() {
         const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
 

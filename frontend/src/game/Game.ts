@@ -18,31 +18,29 @@ export class Game
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
 
-    constructor(playerLeft: string | null, playerTop: string | null, playerRight: string | null, playerBottom: string | null, cntBalls: string | null, socket: any, mode: GameMode, idPlayerLeft: number, idPlayerRight: number)
+    constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null,private socket: any,private mode: GameMode,private idPlayerLeft: number,private idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
     {
         this.board = new Board(
         {
             elementId: "board", 
             leftInitialRelative: 10, 
-            topInitialRelative: 10, 
+            topInitialRelative: 0, 
             widthFraction: 80, 
             heightFraction: 80, 
             backgroundColor: "black", 
             parentElement: null, 
             classList: ["border-white"], 
-            count_balls: cntBalls == null ? 1 : Number(cntBalls) || 1, 
+            count_balls: 1, 
             name_left: playerLeft, 
             color_left: "yellow", 
-            keys_left: [[mode == "remote" ? "ArrowUp": "w", mode == "remote" ? "ArrowDown": "s"]], 
-            name_top: playerTop, 
-            color_top: "red", 
-            keys_top: [["ArrowLeft", "ArrowRight"]], 
+            keys_left: [[mode == "remote" ? "ArrowUp": "s", mode == "remote" ? "ArrowDown": "w"]], 
+            isAI_left: isAI_left,
+            avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
             color_right: "cyan", 
             keys_right: [["ArrowUp", "ArrowDown"]], 
-            name_bottom: playerBottom, 
-            color_bottom: "blue", 
-            keys_bottom: [["a", "d"]],
+            isAI_right: isAI_right,
+            avatarPlayerRight: avatarPlayerRight,
             socket,
             mode,
             idPlayerLeft,
@@ -51,6 +49,11 @@ export class Game
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
+        if(socket && mode == "remote"){
+            this.socket.on("pressSpace", (data: any) => {
+                this.pressSpace();
+            });
+        }
     }
 
     private initializeEventListeners(): void
@@ -83,6 +86,17 @@ export class Game
         {
             case " ":
                 this.pressSpace();
+                if (this.mode == "remote" && this.socket) {
+                    console.log("emit message")
+                    const storedUser: any = localStorage.getItem("transcendenceUser");
+                    if(storedUser){
+                        let currentUser = JSON.parse(storedUser);
+                        this.socket.emit("pressSpace", {
+                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerRight)
+                        });
+                    }
+                   
+                }
                 break ;
             default:
         }
@@ -127,8 +141,8 @@ export class Game
     private end(): void
     {
         this.changeState(GAME_ENDED);
-
-        const loosingPlayer: Player | null = this.board.getLoosingPlayer();
+        if(this.board.players.left && this.board.players.right)
+            this.endGameEvents(this.board.players.left, this.board.players.right);
     }
 
     private update(): void
@@ -136,7 +150,7 @@ export class Game
         if (this.state == GAME_STARTED)
         {
             this.board.moveBalls();
-            this.board.movePaddles(this.board);
+            this.board.movePaddles();
             
             if (this.board.checkBalls() == true)
                 this.ballout();
@@ -165,7 +179,7 @@ export class Game
             if (this.eventListeners.hasOwnProperty(event))
             {
                 document.removeEventListener(event, this.eventListeners[event]);
-                console.log(`Event listener for ${event} removed.`);
+
             }
         }
         this.eventListeners = {};

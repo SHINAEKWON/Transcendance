@@ -25,7 +25,7 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
         super(
         {
             elementId: elementId, 
-            tagName: HTMLElementTag.Label, 
+            tagName: HTMLElementTag.Div, 
             leftInitialRelative: leftInitialRelative, 
             topInitialRelative: topInitialRelative, 
             widthFraction: widthFraction, 
@@ -34,6 +34,8 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
             parentElement: parentElement, 
             classList: classList
         });
+        this.element.classList.remove("absolute");
+        this.element.classList.add("labelScoreDiv");
 
         this.score = score;
 
@@ -49,6 +51,7 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
             parentElement: this,
             classList: []
         });
+        this.scoreLabel.getElement().classList.add("labelScore_"+position);
 
         this.nameLabel = new LabelElement(
         {
@@ -62,6 +65,9 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
             parentElement: this,
             classList: []
         });
+
+        this.nameLabel.getElement().classList.add("nameLabel_"+position);
+
     }
 
     increaseScore(): void

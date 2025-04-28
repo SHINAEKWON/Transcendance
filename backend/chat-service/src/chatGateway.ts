@@ -32,6 +32,21 @@ export function registerChatGateway(io: Server, db: any) {
       
       console.log(msg)
      });
+
+     // 📩 Réception message
+     socket.on("pressSpace", async (msg) => {
+      console.log("receive pressSpace")
+      console.log(msg)
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        console.log("to "+targetSocketId)
+        io.to(targetSocketId).emit("pressSpace", msg);
+      }
+      
+      console.log(msg)
+     });
+
     // 📩 Réception message
     socket.on("chatMessage", async (msg) => {
       console.log('receive message ', msg);

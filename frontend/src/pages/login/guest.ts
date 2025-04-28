@@ -1,3 +1,5 @@
+import { env } from "../../env/env";
+
 export class GuestPage implements Page{
     render() {
       const html = `
@@ -104,7 +106,7 @@ export class GuestPage implements Page{
           const avatarUrl = this.getAvatarUrl(avatar);
         
         try {
-          const res = await fetch("/user/users", {
+          const res = await fetch(`${env.backUser}/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: nickname, avatar: avatarUrl })

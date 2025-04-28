@@ -1,8 +1,6 @@
 export abstract class A_Page
 {
-    app: HTMLElement | null = document.getElementById("app");
-    sidebar: HTMLElement | null = document.getElementById("sidebar");
-
+    app: HTMLElement | null = document.getElementById("appGame");
     constructor()
     {
         

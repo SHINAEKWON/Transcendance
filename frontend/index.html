@@ -7,10 +7,13 @@
   <!--
     <link href="/dist/frontapp/password_policy/passwordpolicy.css" rel="stylesheet">
 -->
-    <link href="output.css" rel="stylesheet">
+    <link href="dist/output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Safelist for Tailwind to preserve hover ring colors -->
+    <div class="hidden hover:ring-neon-green hover:ring-neon-orange hover:ring-neon-purple"></div>
+
     <div id="background-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('public/images/background.jpeg');"></div>
     <div id="background-overlay" class="absolute inset-0 bg-black opacity-0 transition-opacity duration-500 backdrop-blur-xs scale-100"></div>
     <nav class="bg-gray-800 p-4 relative opacity-80" id="navbar"></nav>
@@ -20,6 +23,8 @@
         <main id="app" class="w-3/4 p-4 relative z-10"></main>
     </div>
 
-   <script type="module" src="main.js"></script>
+   <script type="module" src="dist/main.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
 </body>
 </html>
