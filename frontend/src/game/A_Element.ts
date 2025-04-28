@@ -93,6 +93,9 @@ export abstract class A_Element<T extends HTMLElement>
     getElementId(): string { return (this.element.id); }
     getElement(): T { return (this.element); }
 
+    getHeightCurrentAbsolute(): number { return (this.bottomCurrentAbsolute - this.topCurrentAbsolute); }
+    getWidthCurrentAbsolute(): number { return (this.rightCurrentAbsolute - this.leftCurrentAbsolute); }
+
     getCurrentHeightCenter(): number
     {
         return ((this.bottomCurrentAbsolute + this.topCurrentAbsolute) / 2);
