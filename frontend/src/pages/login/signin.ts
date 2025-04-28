@@ -56,7 +56,7 @@ export class SigninPage implements Page{
             };
 
             try {
-                const response = await fetch('http://localhost:5000/api/auth/signin', {
+                const response = await fetch('/auth/signin', {
                     method: "POST",
                     headers: { "Content-Type": "application/json"},
                     credentials: 'include',

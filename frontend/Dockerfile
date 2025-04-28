@@ -13,7 +13,7 @@ WORKDIR /app
 
 
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 COPY tsconfig.json ./
 COPY postcss.config.js ./
 COPY src/ ./src
@@ -22,7 +22,7 @@ COPY index.html ./index.html
 
 RUN cp src/env/envDocker.ts src/env/env.ts
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 RUN npm run build
 

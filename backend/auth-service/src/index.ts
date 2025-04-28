@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
-import formRoutes from './routes/route.js';
+import authRoutes from './routes/authRoutes.js';
 import cors from '@fastify/cors';
 
 const app = Fastify ({ logger: true });
@@ -23,7 +23,7 @@ app.setErrorHandler((err, request, reply) => {
 });
 
 // Add all routes in auth service
-app.register(formRoutes);
+app.register(authRoutes);
 
 // Server launch
 app.listen ({ port: PORT, host: "0.0.0.0" }, (err, address) => {

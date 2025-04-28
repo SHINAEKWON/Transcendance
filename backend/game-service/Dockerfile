@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copier les fichiers essentiels
-COPY package.json package-lock.json tsconfig.json ./
+COPY package.json tsconfig.json ./
 
 # Installer les dépendances
 RUN npm install --legacy-peer-deps

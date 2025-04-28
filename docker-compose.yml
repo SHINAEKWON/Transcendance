@@ -1,32 +1,18 @@
-
 services:
 
-# gateway:
-#   build:
-#     context: ./backend/gateway-service
-#     dockerfile: Dockerfile
-#   container_name: gateway
-#   ports:
-#     - "5000:5000"
-#   networks:
-#     - transnet
-#   depends_on:
-#     - auth-service
-#     - user-service
-#     - game-service
-#     - chat-service
-
-# auth-service:
-#   build:
-#     context: ./backend/auth-service
-#     dockerfile: Dockerfile
-#   container_name: auth
-#   networks:
-#     - transnet
-#   expose:
-#     - "4000"
-#   volumes:
-#     - auth-data:/app/data
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: auth
+    networks:
+      - transnet
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    volumes:
+      - auth-data:/app/data
     
   user-service:
     build:
@@ -42,17 +28,17 @@ services:
     volumes:
       - user-data:/app/data
 
-# game-service:
-#   build:
-#     context: ./backend/game-service
-#     dockerfile: Dockerfile
-#   container_name: game
-#   networks:
-#     - transnet
-#   expose:
-#     - "4002"
-#   volumes:
-#     - game-data:/app/data
+  game-service:
+    build:
+      context: ./backend/game-service
+      dockerfile: Dockerfile
+    container_name: game
+    networks:
+      - transnet
+    expose:
+      - "4002"
+    volumes:
+      - game-data:/app/data
 
   chat-service:
     build:
@@ -68,24 +54,22 @@ services:
     volumes:
       - chat-data:/app/data
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   container_name: front
-  #   networks:
-  #     - transnet
-  #   depends_on:
-  #    - gateway
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: front
+    networks:
+      - transnet
 
 networks:
   transnet:
     driver: bridge
 
 volumes:
-  #auth-data:
+  auth-data:
   user-data:
-  #game-data:
+  game-data:
   chat-data: 
