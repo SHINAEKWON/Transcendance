@@ -106,13 +106,25 @@ export class GuestPage implements Page{
           const avatarUrl = this.getAvatarUrl(avatar);
         
         try {
-          const res = await fetch(`${env.backUser}/users`, {
+          const res = await fetch(`${env.backUser}/user/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: nickname, avatar: avatarUrl })
+            body: JSON.stringify({ firstname: nickname, lastname: nickname, username: nickname,nickname: nickname, avatar: avatarUrl, email: `${nickname}@guest.42.fr`, address: "", telephone: `${nickname}_telephone`})
           });
+
+          if (!res.ok) {
+            // Gestion des erreurs HTTP (ex: 400, 404, 500...)
+            const errorText = await res.text();
+            throw new Error(`Erreur serveur: ${res.status} ${res.statusText} - ${errorText}`);
+          }
   
-          const user = await res.json();
+          const userResponse = await res.json();
+          const user = {
+            id : userResponse.user_id,
+            avatar: avatarUrl,
+            username: nickname,
+            type: "guest"
+          }
           console.log("✅ User created:", user);
           alert(`Welcome ${user.username} 🕹️`);
 

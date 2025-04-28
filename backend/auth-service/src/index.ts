@@ -11,6 +11,12 @@ const app = Fastify ({ logger: true });
 
 const PORT = 4000;
 
+app.register(cors, {
+    origin: true,
+    credentials: true
+  });
+  
+
 // Test
 app.get ("/", async (request, reply) => {
     return { message : "Fastify server received your request!" };

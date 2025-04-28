@@ -1,3 +1,5 @@
+import { env } from "../../env/env";
+
 export class SigninPage implements Page{
     render() {
         setTimeout(this.loginButtonHandler.bind(this), 50);
@@ -56,7 +58,7 @@ export class SigninPage implements Page{
             };
 
             try {
-                const response = await fetch('/auth/signin', {
+                const response = await fetch(`${env.backAuth}/signin`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json"},
                     credentials: 'include',

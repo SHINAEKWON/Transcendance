@@ -1,12 +1,13 @@
 import { Database } from 'sqlite';
 import { ChatMessage } from './types.js';
+import { env } from 'process';
 
 
 type BlockResponse = { blocked: boolean };
 
 export async function isBlocked(senderId: string, receiverId: string): Promise<boolean> {
   try {
-    const res = await fetch(`http://localhost:4001/users/${receiverId}/blocked/${senderId}`);
+    const res = await fetch(`${env.backUser}/${receiverId}/blocked/${senderId}`);
     const result = await res.json() as BlockResponse;
     return result.blocked === true;
   } catch {

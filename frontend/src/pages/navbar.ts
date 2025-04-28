@@ -34,10 +34,10 @@ export class Navbar {
 
                         <!-- 🔥 Menu caché -->
                         <div id="menu-dropdown" class="hidden fixed right-9 top-16 w-32 bg-gray-700 rounded-md shadow-lg z-[9999]">
-                            <button id="logout-btn" class="block w-full text-left px-4 py-2 text-white hover:bg-red-600 rounded-md">
+                        <button id="logout-btn" class="block w-full text-left px-4 py-2 text-white hover:bg-red-600 rounded-md">
                                 Logout
                             </button>
-                        </div>
+                    </div>
 
                     </div>
                 </div>
@@ -78,7 +78,7 @@ export class Navbar {
         if (logoutBtn) {
             logoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("transcendenceUser");
-                window.location.href = "#login";
+                window.location.href = "#";
             });
         }
     }

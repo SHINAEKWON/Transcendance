@@ -1,3 +1,4 @@
+import { env } from "../../env/env.js";
 import * as CustomValidityReport from "../../frontapp/signup_policy/CustomValidityReport.js";
 
 export class SignupPage implements Page{
@@ -104,7 +105,7 @@ export class SignupPage implements Page{
                 console.log('Signup.ts du frontend traite...');
                 console.log('formData : ', formData);
                 
-                const response = await fetch('/auth/signup', {
+                const response = await fetch(`${env.backAuth}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
