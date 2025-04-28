@@ -107,7 +107,7 @@ export default async function authRoutes(app: FastifyInstance) {
         try {
 
           const {
-            username,
+            // username,
             email,
             password
           } = request.body as {
@@ -115,15 +115,18 @@ export default async function authRoutes(app: FastifyInstance) {
             email: string | null;
             password: string;
           };
-          if (!password || (!username && !email)){
+          // if (!password || (!username && !email)){
+          if (!password || (!email)){
             reply.status(400).send({error: 'Missing identifier or password'});
           }
+          // console.log('in authRoutes, email = ', email, 'username = ', username);
           //demander a user-service si l'utilisateur existe
           const userResponse = await axios.post('http://user-service:4001/user/checkUser', {
-            username,
+            // username,
             email
           }
           );
+
           const user_id = userResponse.data.user_id;
           if (!user_id){
             reply.code(404).send({ message: "user does not exist in user.db", user_id: null });
@@ -136,7 +139,8 @@ export default async function authRoutes(app: FastifyInstance) {
           }
           console.log('user authenticated = ', authRecord);
           //generation du web token
-          const token = jwt.sign({user_id, username: username || email}, JWT_SECRET, {expiresIn: '1h'});
+          // const token = jwt.sign({user_id, username: username || email}, JWT_SECRET, {expiresIn: '1h'});
+          const token = jwt.sign({user_id, email}, JWT_SECRET, {expiresIn: '1h'});
           reply.status(200).send({message: "authentication success", token});
         } catch (err) {
           console.error('/signin error occured', err);
