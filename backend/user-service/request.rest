@@ -1,0 +1,96 @@
+ curl -X PUT http://localhost:4001/users/3 \
+  -H "Content-Type: application/json" \
+  -d '{"username": "Zed", "avatar": "https://url.to/avatar2.png"}'
+
+
+###
+
+curl -X POST http://localhost:4001/users/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "Emma",
+    "lastname": "Martin",
+    "username": "emma123",
+    "nickname": "ema125",
+    "avatar": "https://example.com/avatar.png",
+    "email": "emma@example.com",
+    "address": "42 rue du code",
+    "telephone": "0611223344"
+  }'
+
+###
+
+
+curl -X POST http://localhost:4001/users/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "ahlem",
+    "lastname": "nouri",
+    "username": "ahlouma",
+    "nickname": "hallouma",
+    "avatar": "https://example.com/avatar1.png",
+    "email": "ahlem@example.com",
+    "address": "43 rue du code",
+    "telephone": "0711223344"
+  }'
+
+###
+curl -X POST http://localhost:4001/users/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "haroun",
+    "lastname": "gallali",
+    "username": "halouna",
+    "nickname": "honoloulou",
+    "avatar": "https://example.com/avatar2.png",
+    "email": "haorun@example.com",
+    "address": "44 rue du code",
+    "telephone": "0111223344"
+  }'
+
+###
+curl -X POST http://localhost:4001/users/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "khalabiza",
+    "lastname": "balabiza",
+    "username": "khlabizabalabiza",
+    "nickname": "khoukhou",
+    "avatar": "https://example.com/avatar3.png",
+    "email": "khalabiza@example.com",
+    "address": "45 rue du code",
+    "telephone": "0111223354"
+  }'
+
+###
+curl -X POST http://localhost:4001/users/checkUser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "marie@example.com",
+    "password": "notHashedYet"
+  }'
+
+
+###
+curl -X POST http://localhost:4001/users/checkUser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "1@example.com",
+    "password": "notHashedYet"
+  }'
+###
+
+curl -X POST http://localhost:4001/users/checkUser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "chimielover",
+    "password": "notHashedYet"
+  }'
+
+
+curl -X POST http://localhost:4001/users/checkUser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "c22himielover",
+    "password": "notHashedYet"
+  }'

@@ -1,7 +1,4 @@
-import { passwordChecker } from "../../frontapp/signup_policy/passwordpolicy.js";
-import { firstnameChecker } from "../../frontapp/signup_policy/namecheck.js";
-import { lastnameChecker } from "../../frontapp/signup_policy/namecheck.js";
-import { idNumberChecker } from "../../frontapp/signup_policy/idcheck.js";
+import * as CustomValidityReport from "../../frontapp/signup_policy/CustomValidityReport.js";
 
 export class SignupPage implements Page{
     render() {
@@ -9,10 +6,11 @@ export class SignupPage implements Page{
         // SetTimeOut allows to wait the loading of render part.
         setTimeout(() => {
             this.submitButtonHandler();
-            passwordChecker();
-            firstnameChecker();
-            lastnameChecker();
-            idNumberChecker();
+            CustomValidityReport.firstnameChecker();
+            CustomValidityReport.lastnameChecker();
+            CustomValidityReport.usernameChecker();
+            CustomValidityReport.nicknameChecker();
+            CustomValidityReport.passwordChecker();
         }, 50);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
@@ -20,18 +18,18 @@ export class SignupPage implements Page{
                 <form id="signup-form" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-neon-purple mb-1" for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" required
+                            <label class="block text-neon-purple mb-1" for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
-                            <label class="block text-neon-purple mb-1" for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" required
+                            <label class="block text-neon-purple mb-1" for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
-                            <label class="block text-neon-purple mb-1" for="idNumber">ID</label>
-                            <input type="text" id="idNumber" name="idNumber" required
+                            <label class="block text-neon-purple mb-1" for="username">ID</label>
+                            <input type="text" id="username" name="username" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
@@ -92,9 +90,9 @@ export class SignupPage implements Page{
             e.preventDefault();
 
             const formData = {
-                idNumber: (document.getElementById('idNumber') as HTMLInputElement).value,
-                firstName: (document.getElementById('firstName') as HTMLInputElement).value,
-                lastName: (document.getElementById('lastName') as HTMLInputElement).value,
+                username: (document.getElementById('username') as HTMLInputElement).value,
+                firstname: (document.getElementById('firstname') as HTMLInputElement).value,
+                lastname: (document.getElementById('lastname') as HTMLInputElement).value,
                 nickname: (document.getElementById('nickname') as HTMLInputElement).value,
                 email: (document.getElementById('email') as HTMLInputElement).value,
                 password: (document.getElementById('password') as HTMLInputElement).value,
@@ -103,9 +101,10 @@ export class SignupPage implements Page{
             };
 
             try {
+                console.log('Signup.ts du frontend traite...');
                 console.log('formData : ', formData);
                 
-                const response = await fetch('http://localhost:5000/api/auth/register', {
+                const response = await fetch('/auth/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -118,10 +117,9 @@ export class SignupPage implements Page{
                   }
                   
                 const data = await response.json();
-
                 alert('Account successfully created!');
                 console.log("Account created for following user:");
-                console.log(formData.idNumber);
+                console.log(formData.username);
             } catch (err: any) {
                 alert('Failed to create account!');
                 console.log("Failed to create account! : " + err.message);

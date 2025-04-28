@@ -39,6 +39,9 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/uploads ./uploads
+# <-- AJOUTER cette ligne
+COPY --from=builder /app/db ./db   
 
 # Monter un volume pour la base SQLite
 # Une fois la methode API installee, effacer les volumes
