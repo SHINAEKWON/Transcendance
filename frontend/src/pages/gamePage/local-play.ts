@@ -1,98 +1,103 @@
 import { getTranslation } from "../../i18n/i18n.js";
 import { localPlayTranslations } from "../../translations/game.js";
-import { getUsersList } from "../../services/userService.js";
+import { RedirectEvents } from "../../utils/redirectEvents.js";
 
 export class LocalPlayPage implements Page {
-    private selectedPlayer: any = null;
+  private selectedPlayers: any[] = [];
+  private avatars = [
+    { src: "./public/images/profile.jpg", label: "default", borderColor: "#39ff14", textColor: "#39ff14" },
+    { src: "./public/images/avatar3.png", label: "Phantom", borderColor: "#00f3ff", textColor: "#00f3ff" },
+  ];
 
-    async render() {
-        const t = (key: keyof typeof localPlayTranslations) => getTranslation("localPlay", key);
-
-        const users = await getUsersList();
-        const currentUserString = localStorage.getItem("transcendenceUser");
-        if (!currentUserString) {
-            console.error("Utilisateur non connecté !");
-            return;
-        }
-        const currentUser = JSON.parse(currentUserString);
-
-        let html = `
-            <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg text-center">
-                <h1 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow">${t("title")}</h1>
-                <p class="text-gray-400 mb-8">${t("description")}</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    ${users
-                        .filter(user => user.id !== currentUser.id) // exclure l'utilisateur connecté
-                        .map(user => `
-                        <div class="flex items-center bg-gray-900 p-4 rounded-lg hover:ring-2 hover:ring-neon-green transition cursor-pointer user-card" 
-                             data-user-id="${user.id}" data-username="${user.username}" data-avatar="${user.avatar}">
-                            <img src="${user.avatar}" class="w-12 h-12 rounded-full mr-4 border border-gray-500">
-                            <span class="text-white font-semibold">${user.username}</span>
-                        </div>
-                    `).join("")}
-                </div>
-
-                <div class="flex justify-center gap-6">
-                    <button id="start-local-game" disabled class="bg-neon-green text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-green-400 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        ${t("play")}
-                    </button>
-                    <a href="#duel" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition">
-                        ${t("back")}
-                    </a>
-                </div>
-            </div>
-        `;
-
-        const app = document.getElementById('app');
-        if (app) {
-            app.innerHTML = html;
-            this.attachEvents(currentUser);
-        }
+  async render() {
+    const currentUserString = localStorage.getItem("transcendenceUser");
+    if (!currentUserString) {
+      console.error("Utilisateur non connecté !");
+      return;
     }
+    const connectedUser = JSON.parse(currentUserString);
+    const t = (key: keyof typeof localPlayTranslations) => getTranslation("localPlay", key);
 
-    attachEvents(currentUser: any) {
-        const userCards = document.querySelectorAll(".user-card");
-        const playButton = document.getElementById("start-local-game") as HTMLButtonElement;
+    this.selectedPlayers = [
+      { id: connectedUser.id, username: connectedUser.username, avatar: connectedUser.avatar, isConnected: true },
+      { id: Date.now() + 1, username: "", avatar: this.avatars[1].src },
+    ];
 
-        userCards.forEach(card => {
-            card.addEventListener("click", () => {
-                // Retirer la sélection précédente
-                userCards.forEach(c => c.classList.remove("ring-4", "ring-neon-green"));
+    const playerCards = this.selectedPlayers.map((player, index) => `
+      <div class="flex flex-col items-center space-y-4">
+        <img src="${player.avatar}" style="border-color: ${this.avatars[index]?.borderColor || "#39ff14"}" 
+          class="w-28 h-28 rounded-full border-4 hover:scale-105 transition" />
 
-                // Ajouter un style au joueur sélectionné
-                card.classList.add("ring-4", "ring-neon-green");
+        <input 
+          id="playerName_${index}" 
+          type="text" 
+          value="${player.username}" 
+          placeholder="${player.isConnected ? t("connectedPlayer") : t("playerNamePlaceholder")}" 
+          ${player.isConnected ? "readonly" : ""}
+          class="w-full text-center bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green ${player.isConnected ? 'opacity-70 cursor-not-allowed' : ''}"
+        />
+      </div>
+    `).join("");
 
-                // Récupérer les données du joueur sélectionné
-                this.selectedPlayer = {
-                    id: card.getAttribute("data-user-id"),
-                    username: card.getAttribute("data-username"),
-                    avatar: card.getAttribute("data-avatar"),
-                    isIa: false
-                };
+    const html = `
+    <div class="max-w-2xl mx-auto bg-gray-800 p-10 rounded-2xl shadow-xl">
+      <div class="mb-10 text-center">
+        <h2 class="text-3xl font-bold text-neon-green">${t("titleLocalPlay") || "Local Play"}</h2>
+      </div>
 
-                playButton.disabled = false;
-            });
-        });
+      <div class="grid grid-cols-2 gap-8 mb-10">
+        ${playerCards}
+      </div>
 
-        playButton.addEventListener("click", () => {
-            if (this.selectedPlayer) {
-                const duelId = crypto.randomUUID();
+      <div class="text-center">
+        <button id="startPlay" class="bg-neon-orange text-black px-8 py-4 rounded-lg font-bold hover:scale-105 transition animate-float">
+          🚀 ${t("startPlay") || "Start Playing"}
+        </button>
+      </div>
+    </div>
+    `;
 
-                const duelData = {
-                    player1: {
-                        id: currentUser.id,
-                        username: currentUser.username,
-                        avatar: currentUser.avatar,
-                        isIa: false
-                    },
-                    player2: this.selectedPlayer,
-                    mode: "local"
-                };
-
-                localStorage.setItem(`duel_${duelId}`, JSON.stringify(duelData));
-                window.location.href = `/#duelGameBoard?id=${duelId}`;
-            }
-        });
+    const app = document.getElementById("app");
+    if (app) {
+      app.innerHTML = html;
+      this.setupEvents(connectedUser);
+      RedirectEvents.attachRedirectEvents();
     }
+  }
+
+  setupEvents(currentUser: any) {
+    const t = (key: keyof typeof localPlayTranslations) => getTranslation("createLocalTournament", key);
+
+    const startBtn = document.getElementById("startPlay");
+    if (startBtn) {
+      startBtn.addEventListener("click", () => {
+        // Update pseudo du 2ème joueur
+        const input = document.getElementById(`playerName_1`) as HTMLInputElement;
+        this.selectedPlayers[1].username = input.value.trim();
+
+        if (!this.selectedPlayers[1].username) {
+          alert(t("playersMissingError") || "Please fill in both player names.");
+          return;
+        }
+
+        const duelId = Date.now().toString();
+
+        const duelData = {
+            player1: {
+                id: currentUser.id,
+                username: currentUser.username,
+                avatar: currentUser.avatar,
+                isIa: false
+            },
+            player2: this.selectedPlayers[1],
+            mode: "local"
+        };
+
+        const params = new URLSearchParams();
+        params.set('id', duelId);
+        params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
+        window.location.href = `/#duelGameBoard?${params.toString()}`;
+      });
+    }
+  }
 }

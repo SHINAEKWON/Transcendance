@@ -12,7 +12,6 @@ import { GuestPage } from './pages/login/guest.js';
 import { Navbar } from './pages/navbar.js';
 import { EditProfilePage } from './pages/profile/editProfile.js';
 import { io } from "socket.io-client";
-import { CreateTournamentPage } from './pages/tournament/createTournament.js';
 import { env } from './env/env.js';
 import { TournamentGameBoardPage } from './pages/tournament/tournamentGameBoard.js';
 import { DuelPage } from './pages/gamePage/Duel.js';
@@ -20,6 +19,8 @@ import { LocalPlayPage } from './pages/gamePage/local-play.js';
 import { AIPlayPage } from './pages/gamePage/ai-play.js';
 import { OnlinePlayPage } from './pages/gamePage/online-play.js';
 import { DuelGameBoardPage } from './pages/gamePage/duelGameBoard.js';
+import { CreateLocalTournamentPage } from './pages/tournament/createLocalTournament.js';
+import { CreateRemoteTournamentPage } from './pages/tournament/createRemoteTournament.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -36,7 +37,8 @@ const router = new Router({
     signin: new SigninPage(),
     guest: new GuestPage(),
     profileGuest: new ProfileGuestPage(),
-    createTournament: new CreateTournamentPage(),
+    createLocalTournament: new CreateLocalTournamentPage(),
+    createRemoteTournament: new CreateRemoteTournamentPage(),
     tournamentGameBoard: new TournamentGameBoardPage(),
     editProfile: new EditProfilePage(),
     duelGameBoard: new DuelGameBoardPage()
@@ -113,7 +115,7 @@ function initSocket() {
         console.log("savedUser ok")
         const user = JSON.parse(savedUser);
         let socket: any = null;
-        if (env.env = "docker") {
+        if (env.env == "docker") {
             socket = io({
                 path: env.backChatSocketPath,
                 transports: ["websocket"],

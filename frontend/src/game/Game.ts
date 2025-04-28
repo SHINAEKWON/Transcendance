@@ -18,7 +18,7 @@ export class Game
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
 
-    constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null, socket: any, mode: GameMode, idPlayerLeft: number, idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
+    constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null,private socket: any,private mode: GameMode,private idPlayerLeft: number,private idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
     {
         this.board = new Board(
         {
@@ -33,7 +33,7 @@ export class Game
             count_balls: 1, 
             name_left: playerLeft, 
             color_left: "yellow", 
-            keys_left: [[mode == "remote" ? "ArrowUp": "w", mode == "remote" ? "ArrowDown": "s"]], 
+            keys_left: [[mode == "remote" ? "ArrowUp": "s", mode == "remote" ? "ArrowDown": "w"]], 
             isAI_left: isAI_left,
             avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
@@ -49,6 +49,11 @@ export class Game
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
+        if(socket && mode == "remote"){
+            this.socket.on("pressSpace", (data: any) => {
+                this.pressSpace();
+            });
+        }
     }
 
     private initializeEventListeners(): void
@@ -81,6 +86,17 @@ export class Game
         {
             case " ":
                 this.pressSpace();
+                if (this.mode == "remote" && this.socket) {
+                    console.log("emit message")
+                    const storedUser: any = localStorage.getItem("transcendenceUser");
+                    if(storedUser){
+                        let currentUser = JSON.parse(storedUser);
+                        this.socket.emit("pressSpace", {
+                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerRight)
+                        });
+                    }
+                   
+                }
                 break ;
             default:
         }

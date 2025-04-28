@@ -65,6 +65,20 @@ export const gameTranslations = {
       ar: "!أدخل أسماء اللاعبين واستعد للعب",
       ko: "플레이어 이름을 입력하고 게임을 준비하세요!"
     },
+    connectedPlayer: {
+      en: "You (Connected Player)",
+      fr: "Vous (Joueur connecté)",
+      de: "Du (verbundener Spieler)",
+      ar: "أنت (اللاعب المتصل)",
+      ko: "당신 (연결된 플레이어)"
+    },
+    playerNamePlaceholder: {
+      en: "Enter player name",
+      fr: "Entrez le nom du joueur",
+      de: "Spielernamen eingeben",
+      ar: "أدخل اسم اللاعب",
+      ko: "플레이어 이름 입력"
+    },
     player1: {
       en: "Player 1",
       fr: "Joueur 1",
@@ -99,7 +113,29 @@ export const gameTranslations = {
       de: "⬅ Zurück",
       ar: "⬅ رجوع",
       ko: "⬅ 뒤로"
+    },
+    titleLocalPlay: {
+      en: "Local Play",
+      fr: "Jeu Local",
+      de: "Lokales Spiel",
+      ar: "اللعب المحلي",
+      ko: "로컬 플레이"
+    },
+    startPlay: {
+      en: "Start Playing",
+      fr: "Commencer à jouer",
+      de: "Spiel starten",
+      ar: "ابدأ اللعب",
+      ko: "게임 시작"
+    },
+    playersMissingError: {
+      en: "Please fill in both player names.",
+      fr: "Veuillez remplir les deux noms de joueurs.",
+      de: "Bitte beide Spielernamen eingeben.",
+      ar: "يرجى ملء اسمي اللاعبين.",
+      ko: "두 플레이어 이름을 모두 입력하세요."
     }
+    
   } as const;
 
   export const aiPlayTranslations = {

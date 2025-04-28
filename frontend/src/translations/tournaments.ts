@@ -99,6 +99,75 @@ export const tournamentsTranslations = {
       de: "Turniername erforderlich und mindestens 2 Spieler!",
       ar: "مطلوب اسم البطولة واثنان على الأقل من اللاعبين!",
       ko: "토너먼트 이름과 최소 2명의 플레이어가 필요합니다!"
+    },
+    noUsersAvailable: {
+      en: "No other players available.",
+      fr: "Aucun autre joueur disponible.",
+      de: "Keine anderen Spieler verfügbar.",
+      ar: "لا يوجد لاعبون آخرون متاحون.",
+      ko: "다른 플레이어가 없습니다."
+    },
+    exactlyFourPlayersError: {
+      en: "You must have exactly 4 players to start the tournament.",
+      fr: "Vous devez avoir exactement 4 joueurs pour démarrer le tournoi.",
+      de: "Du musst genau 4 Spieler haben, um das Turnier zu starten.",
+      ar: "يجب أن يكون لديك 4 لاعبين بالضبط لبدء البطولة.",
+      ko: "토너먼트를 시작하려면 정확히 4명의 플레이어가 있어야 합니다."
     }
+    
   } as const;
+
+  export const createLocalTournamentTranslations = {
+    titleLocal: {
+      en: "Create a Local Tournament",
+      fr: "Créer un tournoi local",
+      de: "Erstelle ein lokales Turnier",
+      ar: "إنشاء بطولة محلية",
+      ko: "로컬 토너먼트 만들기"
+    },
+    tournamentNamePlaceholder: {
+      en: "Enter tournament name",
+      fr: "Entrez le nom du tournoi",
+      de: "Turniername eingeben",
+      ar: "أدخل اسم البطولة",
+      ko: "토너먼트 이름 입력"
+    },
+    connectedPlayer: {
+      en: "You (Connected Player)",
+      fr: "Vous (Joueur connecté)",
+      de: "Du (verbundener Spieler)",
+      ar: "أنت (اللاعب المتصل)",
+      ko: "당신 (연결된 플레이어)"
+    },
+    playerNamePlaceholder: {
+      en: "Enter player name",
+      fr: "Entrez le nom du joueur",
+      de: "Spielernamen eingeben",
+      ar: "أدخل اسم اللاعب",
+      ko: "플레이어 이름 입력"
+    },
+    startTournament: {
+      en: "Start Tournament",
+      fr: "Démarrer le tournoi",
+      de: "Turnier starten",
+      ar: "بدء البطولة",
+      ko: "토너먼트 시작"
+    },
+    tournamentError: {
+      en: "Please provide a tournament name.",
+      fr: "Veuillez indiquer un nom pour le tournoi.",
+      de: "Bitte gib einen Turniernamen an.",
+      ar: "يرجى إدخال اسم للبطولة.",
+      ko: "토너먼트 이름을 입력하세요."
+    },
+    playersMissingError: {
+      en: "Please fill in all player names.",
+      fr: "Veuillez remplir tous les noms de joueurs.",
+      de: "Bitte alle Spielernamen ausfüllen.",
+      ar: "يرجى ملء جميع أسماء اللاعبين.",
+      ko: "모든 플레이어 이름을 입력하세요."
+    }
+    
+  } as const;
+  
   

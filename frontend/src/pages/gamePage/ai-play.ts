@@ -82,7 +82,7 @@ export class AIPlayPage implements Page {
                 const currentUser = JSON.parse(currentUserString);
 
                 // Créer un nouvel ID unique
-                const duelId = crypto.randomUUID();
+                const duelId = Date.now().toString();
 
                 // Créer les données du duel
                 const duelData = {

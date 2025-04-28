@@ -6,21 +6,17 @@ export class DuelGameBoardPage implements Page {
 
   async render() {
     const hash = window.location.hash;
+    
     const urlParams = new URLSearchParams(hash.split('?')[1]);
+    const duelEncoded = urlParams.get('duel');
     const duelId = urlParams.get('id');
-
-    if (!duelId) {
-      console.error("Pas d'ID de duel !");
-      return;
+   
+    if (duelEncoded) {
+      this.duelData = JSON.parse(decodeURIComponent(duelEncoded));
+      console.log("this.duelData"); 
+      console.log(this.duelData);
     }
-
-    const storedDuel = localStorage.getItem(`duel_${duelId}`);
-    if (!storedDuel) {
-      console.error("Duel introuvable !");
-      return;
-    }
-
-    this.duelData = JSON.parse(storedDuel);
+   
     const { player1, player2, mode } = this.duelData; // mode = local ou remote
 
     const html = `
@@ -50,7 +46,8 @@ export class DuelGameBoardPage implements Page {
       app.innerHTML = html;
 
       let socket = null;
-      if (mode === "remote") {
+      if (mode == "remote") {
+        console.log("set socket ...")
         socket = getSocket();
       }
 

@@ -17,7 +17,7 @@ export class TournamentsPage implements Page {
                             <p class="text-gray-400">${t("localDesc")}</p>
                             <p class="text-sm text-neon-green mt-2">${t("startLocal")}</p>
                         </div>
-                        <button data-page="createTournament?mode=local" class="redirect-btn bg-neon-orange text-white px-6 py-2 rounded-lg hover:bg-opacity-80 ml-auto">
+                        <button data-page="createLocalTournament" class="redirect-btn bg-neon-orange text-white px-6 py-2 rounded-lg hover:bg-opacity-80 ml-auto">
                             ${t("join")}
                         </button>
                     </div>
@@ -28,7 +28,7 @@ export class TournamentsPage implements Page {
                             <p class="text-gray-400">${t("onlineDesc")}</p>
                             <p class="text-sm text-neon-green mt-2">${t("startOnline")}</p>
                         </div>
-                        <button data-page="createTournament?mode=remote" class="redirect-btn bg-neon-purple text-white px-6 py-2 rounded-lg hover:bg-opacity-80 ml-auto">
+                        <button data-page="createRemoteTournament" class="redirect-btn bg-neon-purple text-white px-6 py-2 rounded-lg hover:bg-opacity-80 ml-auto">
                             ${t("join")}
                         </button>
                     </div>
