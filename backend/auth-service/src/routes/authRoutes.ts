@@ -20,12 +20,15 @@ export default async function authRoutes(app: FastifyInstance) {
   app.get('/auth', async (req, res) => {
     return await getAllAuthRecords();
   });
+
+
   // si /auth/signup/ est sollicite, notre service va:
   // solliciter user-service pour creer un user
   // attendre la reponse avec le user_id
   // sauvegarder les donners de auth 
   // Generer un token pour rester connecté et le renvoyer au front
   // envoyer une reponse au client 
+
   app.post('/signup', async (request, reply) => {
         console.log('Request came to /auth/signup', request.body);
       
@@ -58,9 +61,9 @@ export default async function authRoutes(app: FastifyInstance) {
       
         try {
           // User information check in backened in case info are not coming from front
-          // await userRegisterInfoCheck(request, reply);
+          await userRegisterInfoCheck(request, reply);
 
-          // const flatNickname = xss(nickname);
+          const flatNickname = xss(nickname);
 
           console.log('before register (inside auth/signup)');
 
@@ -94,6 +97,7 @@ export default async function authRoutes(app: FastifyInstance) {
         }
       });
       
+
       /* signIN ==> auth reçoit :{ email ou username + password}
                     il demande a user-service si l'uitilisateur existe
                     ce dernier envoie user_id ou Null
@@ -102,6 +106,7 @@ export default async function authRoutes(app: FastifyInstance) {
                     si le mot de passe est bon => il envoie ok
                     sinon = > wrong password
       */
+
       app.post('/signin', async (request, reply) => {
         console.log('Request arrived to /signin : ', request.body);
         try {
