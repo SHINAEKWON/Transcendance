@@ -1,7 +1,7 @@
 import { connectDB } from './db.js';
 export async function getAllUsers() {
     const db = await connectDB();
-    return await db.all('SELECT * FROM users1');
+    return await db.all('SELECT * FROM users');
 }
 export async function getUser(id) {
     const db = await connectDB();
@@ -37,7 +37,7 @@ export async function unblockUser(blockerId, targetId) {
 }
 export async function getUserByEmail(email) {
     const db = await connectDB();
-    const row = await db.get('SELECT * FROM users1 WHERE email = ?', [email]);
+    const row = await db.get('SELECT * FROM users WHERE email = ?', [email]);
     if (!row) {
         return null;
     }
@@ -45,7 +45,7 @@ export async function getUserByEmail(email) {
 }
 export async function getUserByUsername(username) {
     const db = await connectDB();
-    const row = await db.get('SELECT * FROM users1 WHERE username = ?', [username]);
+    const row = await db.get('SELECT * FROM users WHERE username = ?', [username]);
     if (!row) {
         return null;
     }
@@ -54,7 +54,7 @@ export async function getUserByUsername(username) {
 export const NewCreateUser = async (user) => {
     try {
         const db = await connectDB();
-        const insertQuery = `INSERT INTO users1 (
+        const insertQuery = `INSERT INTO users (
     firstname, lastname, username, nickname, avatar, status,
     email, address, telephone, matches, wins, losses, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;

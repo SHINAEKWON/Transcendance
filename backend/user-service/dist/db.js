@@ -6,7 +6,7 @@ export async function connectDB() {
         driver: sqlite3.Database
     });
     await db.exec(`
-    CREATE TABLE IF NOT EXISTS users1 (
+    CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       firstname TEXT,
       lastname TEXT,

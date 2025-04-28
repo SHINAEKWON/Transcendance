@@ -2,7 +2,7 @@ import { connectDB } from './db.js';
 
 export async function getAllUsers() {
   const db = await connectDB();
-  return await db.all('SELECT * FROM users1');
+  return await db.all('SELECT * FROM users');
 }
 
 export async function getUser(id: number) {
@@ -56,7 +56,7 @@ export async function unblockUser(blockerId: string, targetId: string) {
 export async function getUserByEmail(email: string)
 {
   const db = await connectDB();
-  const row = await db.get<{id: number}>( 'SELECT * FROM users1 WHERE email = ?', [email]);
+  const row = await db.get<{id: number}>( 'SELECT * FROM users WHERE email = ?', [email]);
   console.log('dans getUserByEmal user_id = ', row);
   if (!row){
     return null;
@@ -70,7 +70,7 @@ export async function getUserByUsername(username: string)
 {
   const db = await connectDB();
   const row =  await  db.get<{id: number}>(
-    'SELECT * FROM users1 WHERE username = ?', [username]);
+    'SELECT * FROM users WHERE username = ?', [username]);
   if (!row){
     return null;
   }
@@ -87,7 +87,7 @@ try{
   
   const db = await connectDB();
   
-  const insertQuery = `INSERT INTO users1 (
+  const insertQuery = `INSERT INTO users (
     firstname, lastname, username, nickname, avatar, status,
     email, address, telephone, matches, wins, losses, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
