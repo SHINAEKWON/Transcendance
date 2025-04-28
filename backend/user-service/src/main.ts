@@ -16,15 +16,8 @@ app.register(cors, {
 });
 
 app.register(userRoutes);
+app.register(fastifyMultipart); // Upload Plugin
 
-// Uploads Directory Setting
-app.register(fastifyMultipart);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const uploadDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursoce: true });
-}
 
 // Launch Server
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {

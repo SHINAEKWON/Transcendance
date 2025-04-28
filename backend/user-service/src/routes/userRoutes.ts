@@ -1,8 +1,9 @@
+import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
 import { NewCreateUser } from '../userModel.js';
-import { FastifyInstance } from 'fastify';
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, isUserBlocked, blockUser, unblockUser, getUserByEmail, getUserByUsername } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
+import { fileErrorCode } from '../fileErrorCode.js';
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -129,9 +130,13 @@ export async function userRoutes(app: FastifyInstance) {
   app.post('/upload', async (req, res) => {
     try {
 
-      const avatarUploaded: Promise<boolean> = avatarUpload(res, req);
+      const avatarUploaded: Promise<number> = avatarUpload(res, req);
 
-      // if (av)
+      // if (avatarUploaded) {
+
+      // } else {
+      //   return RemotePlayback.status(400).send({});
+      // }
 
     } catch {
 

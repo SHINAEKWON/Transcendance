@@ -1,6 +1,7 @@
 import { getTranslation } from "../../i18n/i18n.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
+// import { } from "../../frontapp/profile/profilePhotoUpload.js";
 
 export class EditProfilePage implements Page {
     render() {
@@ -21,9 +22,10 @@ export class EditProfilePage implements Page {
             { src: "./public/images/cyber_profile.png", label: "Agent" , borderColor: "#FF6700", textColor: "#FF6700"},
             { src: "./public/images/avatar1.png", label: "Pixie" , borderColor: "#ff00ff", textColor: "#ff00ff"},
             { src: "./public/images/avatar4.jpg", label: "Rebel" , borderColor: "#39ff14", textColor: "#39ff14"},
-            { src: "", label: "Custom", isUpload: true},
+            { src: "", label: "Custom", isUpload: true, },
           ];
             
+        // Shin Ae : Upload handler here ??
 
         const avatarOptions = avatars.map((avatar, i) => {
             if (avatar.isUpload) {
