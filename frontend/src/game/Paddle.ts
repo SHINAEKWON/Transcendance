@@ -66,7 +66,6 @@ export class Paddle extends A_MovingGameElement {
         this.isAI = player.isAI();
 
         if (this.mode === "local" || this.isLocal) {
-            console.log("initializeEventListeners")
             this.initializeEventListeners();
         }
 
@@ -144,33 +143,21 @@ export class Paddle extends A_MovingGameElement {
     }
 
     keyDownHandler(event: KeyboardEvent): void {
-        if(this.socket){
-            console.log("socket ok");
-        }else {
-            console.log("socket KO");
-        }
         let dx = 0;
         let dy = 0;
 
         if (event.key === this.upKey) {
-            console.log("event.key === this.upKey");
             dy = -this.getInitialSpeed();
         } else if (event.key === this.downKey) {
-            console.log("event.key === this.downKey");
             dy = this.getInitialSpeed();
         } else {
-            console.log("else");
             return;
         }
 
         this.setSpeedComponents(dx, dy);
-        console.log("this.mode"+this.mode);
-        console.log("tthis.isLocal"+this.isLocal);
-        if(this.socket){
-            console.log("this.socket");
-        }
+        
+      
         if (this.mode == "remote" && this.isLocal && this.socket) {
-            console.log("emit message")
             this.socket.emit("paddleMove", {
                 paddleId: this.getElementId(),
                 to: ""+this.player?.getVs(),
@@ -201,14 +188,7 @@ export class Paddle extends A_MovingGameElement {
         if (!this.socket) return;
 
         this.socket.on("paddleMove", (data: any) => {
-            console.log("receive message")
-            console.log(data)
-            console.log("this.getElementId()")
-            console.log(this.getElementId());
-            console.log("this.isLocal")
-            console.log(this.isLocal)
             if (this.mode === "remote" && !this.isLocal && data.paddleId == this.getElementId()) {
-                console.log(" this.setSpeedComponents(data.dx, data.dy);")
                 this.setSpeedComponents(data.dx, data.dy);
             }
         });

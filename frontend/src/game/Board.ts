@@ -8,8 +8,12 @@ export class Board extends A_GameElement
 {
     balls: Ball[] = [];
     players: Players;
-    
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, avatarPlayerLeft, name_right, color_right, keys_right, isAI_right,avatarPlayerRight,  socket, mode, idPlayerLeft, idPlayerRight}:
+    isLeft: boolean;
+    socket: any;
+    idPlayerLeft: number;
+    idPlayerRight: number;
+    isMaster: boolean;
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, avatarPlayerLeft, name_right, color_right, keys_right, isAI_right,avatarPlayerRight,  socket, mode, idPlayerLeft, idPlayerRight, isLeft, isMaster}:
     {
         elementId: string, 
         leftInitialRelative: number, 
@@ -33,10 +37,13 @@ export class Board extends A_GameElement
         socket: any,
         mode: GameMode,
         idPlayerLeft: number,
-        idPlayerRight: number
+        idPlayerRight: number,
+        isLeft: boolean,
+        isMaster: boolean
         
     })
     {
+       
         if (name_left === null || color_left === null || keys_left === null)
         {
             classList.push("border-l");
@@ -56,7 +63,11 @@ export class Board extends A_GameElement
             parentElement: parentElement, 
             classList: classList
         });
-
+        this.isLeft = isLeft;
+        this.socket = socket;
+        this.isMaster = isMaster;
+        this.idPlayerLeft = idPlayerLeft;
+        this.idPlayerRight = idPlayerRight;
         let playerLeft: Player | null = null;
         let playerRight: Player | null = null;
 
@@ -106,6 +117,14 @@ export class Board extends A_GameElement
         }
     }
 
+    moveBallsRemote(isRemote : boolean, isMasterBall: boolean, socket : any, idPlayer: number): void
+    {
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            this.balls[i].moveBall(null, isRemote, isMasterBall,socket, idPlayer);
+        }
+    }
+
     moveBalls(): void
     {
         for (let i=0; i < this.balls.length; ++i)
@@ -114,6 +133,14 @@ export class Board extends A_GameElement
         }
     }
 
+
+    setPositionBallAndDraw(pX: number, pY: number): void
+    {
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            this.balls[i].setPositionBallAndDraw(pX, pY);
+        }
+    }
 
     reinitializePlayers(): void
     {
@@ -213,6 +240,79 @@ export class Board extends A_GameElement
         return false;
     }
 
+    checkBallsRemte(): boolean
+    {
+        let outPosition: Position;
+
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            if (this.balls[i].isActive() == true && this.balls[i].hitsWall(this) == true)
+            {
+                
+            }
+        
+            else if (this.balls[i].isActive() == true)
+            {
+                let hitPaddle = this.ballHitsPaddle(this.balls[i]);
+                if(hitPaddle != null && (hitPaddle.getPosition() == Position.Right && this.isLeft || hitPaddle.getPosition() == Position.Left && !this.isLeft) ){
+                    return false;
+                }else {
+                    let dSpeed = 0.1;
+                    let maxSpeed =  this.balls[i].getInitialSpeed() * 3;
+                    this.balls[i].increaseSpeed(dSpeed, maxSpeed);
+                    this.socket.emit("increaseSpeed", {
+                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                        action: "increaseSpeed",
+                        dSpeed,
+                        maxSpeed
+
+
+                    });
+
+                }
+               
+            }
+
+            else if (this.balls[i].isActive() == true)
+            {
+               let outPosition = this.balls[i].isOut(this);
+               if(outPosition !== Position.None && this.isMaster){
+
+                this.balls[i].desactivate();
+                this.socket.emit("desactivateBall", {
+                    to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                    action: "desactivateBall"
+                });
+                
+                if (outPosition == Position.Left && this.players.right !== null)
+                {
+                    this.players.right.increaseScore();
+                    this.socket.emit("increaseRightScore", {
+                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                        action: "increaseRightScore"
+                    });
+
+                }
+                    
+                if (outPosition == Position.Right && this.players.left !== null) {
+                    this.players.left.increaseScore();
+                    this.socket.emit("increaseLeftScore", {
+                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                        action: "increaseLeftScore"
+                    });
+                }
+                this.socket.emit("ballOut", {
+                    to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                    action: "ballOut"
+                });
+                return true;
+               }
+
+            }
+        }
+        return false;
+    }
+
     removeEventListeners(): void
     {
         for (let i = 0; i < this.balls.length; ++i)
@@ -223,6 +323,14 @@ export class Board extends A_GameElement
         this.players.right?.removeEventListeners();
 
         super.removeEventListeners();
+    }
+
+    setIsMaster(isMaster: boolean){
+        this.isMaster = isMaster;
+    }
+
+    getPlayers(): Players{
+        return this.players;
     }
 
 }

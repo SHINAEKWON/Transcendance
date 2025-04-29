@@ -217,7 +217,52 @@ export abstract class A_MovingGameElement extends A_GameElement
         if (Math.pow(Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2), 0.5) <= maxSpeed)
             this.setSpeedComponents(newSpeedX, newSpeedY);
     }
-    
+    moveBall(insideElement: A_GameElement | null = null, isRemote: boolean, isMasterBall: boolean, socket: any, idPlayer: number): void
+    {
+        if (this.isActive() == true)
+        {
+            if(!isRemote || (isRemote && isMasterBall && socket) ){
+                let dx = this.leftNewRelative + this.speedX;
+                let dy = this.topNewRelative + this.speedY;
+                this.setNewPosition(dx, dy);
+        
+                if (insideElement !== null
+                && (this.speedY < 0 && !this.isInsideTop(insideElement)
+                ||  this.speedY > 0 && !this.isInsideBottom(insideElement)
+                ||  this.speedX < 0 && !this.isInsideLeft(insideElement)
+                ||  this.speedX > 0 && !this.isInsideRight(insideElement)))
+                { 
+                 dx = this.leftNewRelative - this.speedX;
+                 dy = this.topNewRelative - this.speedY;
+                    this.setNewPosition(dx, dy);
+                }
+
+                socket.emit("ballMove", {
+                    to: ""+idPlayer,
+                    dx,
+                    dy
+                });
+            }
+            
+            
+            this.draw();
+
+            if (this.insideElement != null)
+                this.setAbsoluteHitPoint(this.insideElement);
+        }
+    }
+
+    setPositionBallAndDraw(pX: number, pY: number): void
+    {
+        if (this.isActive() == true)
+        {
+            this.setNewPosition(pX, pY);
+            this.draw();
+            if (this.insideElement != null)
+                this.setAbsoluteHitPoint(this.insideElement);
+        }
+    }
+
     move(insideElement: A_GameElement | null = null): void
     {
         if (this.isActive() == true)

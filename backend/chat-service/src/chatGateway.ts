@@ -21,8 +21,6 @@ export function registerChatGateway(io: Server, db: any) {
 
      // 📩 Réception message
      socket.on("paddleMove", async (msg) => {
-      console.log("receive paddleMove")
-      console.log(msg)
       let id = msg.to;
       const targetSocketId = userSocketMap.get(id);
       if(targetSocketId){
@@ -34,6 +32,60 @@ export function registerChatGateway(io: Server, db: any) {
      });
 
      // 📩 Réception message
+     socket.on("ballMove", async (msg) => {
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("ballMove", msg);
+      }
+     });
+
+      // 📩 Réception message
+      socket.on("increaseSpeed", async (msg) => {
+        let id = msg.to;
+        const targetSocketId = userSocketMap.get(id);
+        if(targetSocketId){
+          io.to(targetSocketId).emit("increaseSpeed", msg);
+        }
+       });
+
+        // 📩 Réception message
+      socket.on("desactivateBall", async (msg) => {
+        let id = msg.to;
+        const targetSocketId = userSocketMap.get(id);
+        if(targetSocketId){
+          io.to(targetSocketId).emit("desactivateBall", msg);
+        }
+       });
+
+        // 📩 Réception message
+      socket.on("increaseRightScore", async (msg) => {
+        let id = msg.to;
+        const targetSocketId = userSocketMap.get(id);
+        if(targetSocketId){
+          io.to(targetSocketId).emit("increaseRightScore", msg);
+        }
+       });
+
+       // 📩 Réception message
+      socket.on("increaseLeftScore", async (msg) => {
+        let id = msg.to;
+        const targetSocketId = userSocketMap.get(id);
+        if(targetSocketId){
+          io.to(targetSocketId).emit("increaseLeftScore", msg);
+        }
+       });
+
+        // 📩 Réception message
+      socket.on("ballOut", async (msg) => {
+        let id = msg.to;
+        const targetSocketId = userSocketMap.get(id);
+        if(targetSocketId){
+          io.to(targetSocketId).emit("ballOut", msg);
+        }
+       });
+
+     // 📩 Réception message
      socket.on("pressSpace", async (msg) => {
       console.log("receive pressSpace")
       console.log(msg)
@@ -43,7 +95,6 @@ export function registerChatGateway(io: Server, db: any) {
         console.log("to "+targetSocketId)
         io.to(targetSocketId).emit("pressSpace", msg);
       }
-      
       console.log(msg)
      });
 
