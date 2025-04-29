@@ -16,7 +16,11 @@ app.register(cors, {
 });
 
 app.register(userRoutes);
-app.register(fastifyMultipart); // Upload Plugin
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 2097152,
+  }
+}); // Upload Plugin
 
 
 // Launch Server

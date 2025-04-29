@@ -2,10 +2,16 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { getLang } from "../../i18n/language.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
-// import { } from "../../frontapp/profile/profilePhotoUpload.js";
+import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
 
 export class EditProfilePage implements Page {
     render() {
+        setTimeout(() => {
+            console.log("⚙️ calling avatarChangeHandler...1");
+            this.avatarChangeHandler();
+            console.log("⚙️ calling avatarChangeHandler...2");
+        }, 50);
+
         const t = (key: keyof typeof editProfileTranslations) => getTranslation("editProfile", key);
 
         const user = {
@@ -32,8 +38,6 @@ export class EditProfilePage implements Page {
             { src: "", label: tAvatar("custom"), isUpload: true }
         ];
             
-        // Shin Ae : Upload handler here ??
-
         const avatarOptions = avatars.map((avatar, i) => {
             if (avatar.isUpload) {
                 return `
@@ -108,7 +112,17 @@ export class EditProfilePage implements Page {
         const app = document.getElementById("app");
         if (app) {
             app.innerHTML = html;
+            console.log("After render() From edit profle.ts");
             RedirectEvents.attachRedirectEvents();
         }
+    }
+    
+    private avatarChangeHandler() {
+        const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
+        if (fileInput) {
+            fileInput.addEventListener("change", avatarUploadHandler);
+            console.log("From edit profle.ts");
+        } else {
+            console.log("From edit profle.ts - else -_-"); }
     }
 }

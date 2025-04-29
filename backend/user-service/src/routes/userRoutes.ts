@@ -129,20 +129,20 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.post('/upload', async (req, res) => {
     try {
+      console.log("from Upload");
+      const avatarUploaded: number = await avatarUpload(res, req);
 
-      const avatarUploaded: Promise<number> = avatarUpload(res, req);
-
-      // if (avatarUploaded) {
-
-      // } else {
-      //   return RemotePlayback.status(400).send({});
-      // }
-
-    } catch {
-
+      if (avatarUploaded == fileErrorCode.SUCCESS) {
+        return res.status(200).send({message: 'Successfully uploaded'});
+      } else {
+        return res.status(400).send({message: 'Upload failed'});
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Internal Server Error'});
     }
-
   });
+
 
 }
 

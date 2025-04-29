@@ -6,6 +6,7 @@ import { fileErrorCode } from './fileErrorCode.js';
 import { FastifyRequest, FastifyReply } from 'fastify';
 
 export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Promise<number> {
+    console.log("from avatarUpload");
 
     const parts = req.parts();
 
