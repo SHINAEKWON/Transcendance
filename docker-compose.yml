@@ -27,6 +27,7 @@ services:
       - "4001:4001"
     volumes:
       - user-data:/app/data
+      - user-uploads:/app/uploads
 
   game-service:
     build:
@@ -71,5 +72,6 @@ networks:
 volumes:
   auth-data:
   user-data:
+  user-uploads:
   game-data:
   chat-data: 

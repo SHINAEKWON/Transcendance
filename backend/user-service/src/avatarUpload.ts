@@ -23,15 +23,29 @@ export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Prom
 
         const validFileTypes = ['image/jpeg', 'image/gif', 'image/png'];
 
+        let extension: string = '';
+        if (part.mimetype == 'image/jpeg') {
+            extension = 'jpg';
+        } else if (part.mimetype == 'image/gif') {
+            extension = 'gif';
+        } else if (part.mimetype == 'image/png') {
+            extension = 'png';
+        } else {
+            return fileErrorCode.MIMETYPE_ERROR; }
+        
+        console.log ('Found extension: ', extension);
+
         if (!validFileTypes.includes(part.mimetype)) {
             return fileErrorCode.MIMETYPE_ERROR;
         }
 
         // Creating File in Our Server
 
-        const filename = `testUploadedAvatar.${part.mimetype}`;
-        const filepath = path.join(uploadDir, filename);
-
+        // !! filename Must be replaced by user's login later !! //
+        const filename = 'testUploadAvatar'; 
+        // Suppression logic here for the files containing same login name //
+        const fullFilename = filename + "." + extension;
+        const filepath = path.join(uploadDir, fullFilename);
         const writeStream = fs.createWriteStream(filepath);
         await part.file.pipe(writeStream);
 
