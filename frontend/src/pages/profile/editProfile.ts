@@ -3,13 +3,12 @@ import { getLang } from "../../i18n/language.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
 import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
+import { env } from "../../env/env.js";
 
 export class EditProfilePage implements Page {
     render() {
         setTimeout(() => {
-            console.log("⚙️ calling avatarChangeHandler...1");
             this.avatarChangeHandler();
-            console.log("⚙️ calling avatarChangeHandler...2");
         }, 50);
 
         const t = (key: keyof typeof editProfileTranslations) => getTranslation("editProfile", key);
@@ -112,7 +111,6 @@ export class EditProfilePage implements Page {
         const app = document.getElementById("app");
         if (app) {
             app.innerHTML = html;
-            console.log("After render() From edit profle.ts");
             RedirectEvents.attachRedirectEvents();
         }
     }
@@ -120,9 +118,15 @@ export class EditProfilePage implements Page {
     private avatarChangeHandler() {
         const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
         if (fileInput) {
-            fileInput.addEventListener("change", avatarUploadHandler);
-            console.log("From edit profle.ts");
-        } else {
-            console.log("From edit profle.ts - else -_-"); }
+            fileInput.addEventListener("change", (event) => {
+                avatarUploadHandler(event);
+                console.log("editProfile -> before Fetch name");
+                const response = fetch(`${env.backAuth}/verifyUsername`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                console.log("editProfile -> after Fetch name");
+            });
+        }
     }
 }
