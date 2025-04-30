@@ -256,10 +256,11 @@ export class Board extends A_GameElement
                 let hitPaddle = this.ballHitsPaddle(this.balls[i]);
                 if(hitPaddle != null && (hitPaddle.getPosition() == Position.Right && this.isLeft || hitPaddle.getPosition() == Position.Left && !this.isLeft) ){
                     return false;
-                }else {
+                }else if (hitPaddle !== null ) {
                     let dSpeed = 0.1;
                     let maxSpeed =  this.balls[i].getInitialSpeed() * 3;
-                    this.balls[i].increaseSpeed(dSpeed, maxSpeed);
+                   // this.balls[i].increaseSpeed(dSpeed, maxSpeed);
+                    /*
                     this.socket.emit("increaseSpeed", {
                         to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
                         action: "increaseSpeed",
@@ -267,48 +268,50 @@ export class Board extends A_GameElement
                         maxSpeed
 
 
-                    });
+                    });*/
 
+                }else
+                {
+                   let outPosition = this.balls[i].isOut(this);
+                   console.log('is out p'+outPosition);
+                   if(outPosition !== Position.None){
+                    console.log('is out');
+                    this.balls[i].desactivate();
+                    this.socket.emit("desactivateBall", {
+                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                        action: "desactivateBall"
+                    });
+                   }
+                   if(outPosition !== Position.None && this.isMaster){
+                    if (outPosition == Position.Left && this.players.right !== null)
+                    {
+                        this.players.right.increaseScore();
+                        this.socket.emit("increaseRightScore", {
+                            to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                            action: "increaseRightScore"
+                        });
+    
+                    }
+                        
+                    if (outPosition == Position.Right && this.players.left !== null) {
+                        this.players.left.increaseScore();
+                        this.socket.emit("increaseLeftScore", {
+                            to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                            action: "increaseLeftScore"
+                        });
+                    }
+                    this.socket.emit("ballOut", {
+                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
+                        action: "ballOut"
+                    });
+                    return true;
+                   }
+    
                 }
                
             }
 
-            else if (this.balls[i].isActive() == true)
-            {
-               let outPosition = this.balls[i].isOut(this);
-               if(outPosition !== Position.None && this.isMaster){
-
-                this.balls[i].desactivate();
-                this.socket.emit("desactivateBall", {
-                    to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
-                    action: "desactivateBall"
-                });
-                
-                if (outPosition == Position.Left && this.players.right !== null)
-                {
-                    this.players.right.increaseScore();
-                    this.socket.emit("increaseRightScore", {
-                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
-                        action: "increaseRightScore"
-                    });
-
-                }
-                    
-                if (outPosition == Position.Right && this.players.left !== null) {
-                    this.players.left.increaseScore();
-                    this.socket.emit("increaseLeftScore", {
-                        to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
-                        action: "increaseLeftScore"
-                    });
-                }
-                this.socket.emit("ballOut", {
-                    to: ""+(this.isLeft ? this.idPlayerRight : this.idPlayerLeft),
-                    action: "ballOut"
-                });
-                return true;
-               }
-
-            }
+            
         }
         return false;
     }

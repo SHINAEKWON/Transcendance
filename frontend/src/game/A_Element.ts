@@ -12,10 +12,10 @@ export abstract class A_Element<T extends HTMLElement>
     protected readonly topInitialRelative: number;
 
     // This stores the current position in absolute pixels on the screen
-    private leftCurrentAbsolute: number = 0;
-    private rightCurrentAbsolute: number = 0;
-    private topCurrentAbsolute: number = 0;
-    private bottomCurrentAbsolute: number = 0;
+    public leftCurrentAbsolute: number = 0;
+    public rightCurrentAbsolute: number = 0;
+    public topCurrentAbsolute: number = 0;
+    public bottomCurrentAbsolute: number = 0;
     
     protected isactive: boolean = true;
     

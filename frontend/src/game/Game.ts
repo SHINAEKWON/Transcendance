@@ -211,11 +211,9 @@ export class Game
             }else{
                 this.board.moveBalls();
             }
-            this.board.movePaddles();
+            this. board.movePaddles();
             
-            if (this.mode !== "remote" && this.board.checkBalls() == true)
-                this.ballout();
-            else if (this.mode == "remote" && this.board.checkBallsRemte() == true)
+            if ( this.board.checkBalls() == true)
                 this.ballout();
                 
         }

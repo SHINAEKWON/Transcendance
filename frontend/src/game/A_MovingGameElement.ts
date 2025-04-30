@@ -10,8 +10,8 @@ export abstract class A_MovingGameElement extends A_GameElement
     private speedX: number = 0;
     private speedY: number = 0;
 
-    private leftNewRelative: number;
-    private topNewRelative: number;
+    public leftNewRelative: number;
+    public topNewRelative: number;
 
     private yIntercept: number = 0;
     private absoluteHitXTop: number = 0;
@@ -80,6 +80,10 @@ export abstract class A_MovingGameElement extends A_GameElement
     private calculateYIntercept(): void
     {
         this.yIntercept = this.getCurrentHeightCenter() - (this.speedY / this.speedX * this.getCurrentWidthCenter());
+        this.getCurrentHeightCenter()
+        console.log('this.getCurrentHeightCenter() '+this.getCurrentHeightCenter());
+        console.log('this.getCurrentWidthCenter() '+this.getCurrentWidthCenter());
+        console.log('intercept '+this.yIntercept);
 
         // if (this instanceof Ball)
             // alert("Ball Intercept: " + this.yIntercept);
@@ -189,7 +193,7 @@ export abstract class A_MovingGameElement extends A_GameElement
         //     alert("No new hitpoint found");
     }
 
-    private setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
+    public setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
     {
         if (leftNewRelative !== null)
             this.leftNewRelative = leftNewRelative;
@@ -214,8 +218,7 @@ export abstract class A_MovingGameElement extends A_GameElement
         const newSpeedX: number = this.speedX * (1 + dSpeed);
         const newSpeedY: number = this.speedY * (1 + dSpeed);
 
-        if (Math.pow(Math.pow(newSpeedX, 2) + Math.pow(newSpeedY, 2), 0.5) <= maxSpeed)
-            this.setSpeedComponents(newSpeedX, newSpeedY);
+        
     }
     moveBall(insideElement: A_GameElement | null = null, isRemote: boolean, isMasterBall: boolean, socket: any, idPlayer: number): void
     {
@@ -224,6 +227,7 @@ export abstract class A_MovingGameElement extends A_GameElement
             if(!isRemote || (isRemote && isMasterBall && socket) ){
                 let dx = this.leftNewRelative + this.speedX;
                 let dy = this.topNewRelative + this.speedY;
+        
                 this.setNewPosition(dx, dy);
         
                 if (insideElement !== null
@@ -232,6 +236,7 @@ export abstract class A_MovingGameElement extends A_GameElement
                 ||  this.speedX < 0 && !this.isInsideLeft(insideElement)
                 ||  this.speedX > 0 && !this.isInsideRight(insideElement)))
                 { 
+                  
                  dx = this.leftNewRelative - this.speedX;
                  dy = this.topNewRelative - this.speedY;
                     this.setNewPosition(dx, dy);
@@ -284,7 +289,7 @@ export abstract class A_MovingGameElement extends A_GameElement
         }
     }
 
-    private draw(): void
+    protected draw(): void
     {
         this.element.style.left = `${this.leftNewRelative}%`;
         this.element.style.top = `${this.topNewRelative}%`;

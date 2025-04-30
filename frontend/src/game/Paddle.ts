@@ -157,14 +157,7 @@ export class Paddle extends A_MovingGameElement {
         this.setSpeedComponents(dx, dy);
         
       
-        if (this.mode == "remote" && this.isLocal && this.socket) {
-            this.socket.emit("paddleMove", {
-                paddleId: this.getElementId(),
-                to: ""+this.player?.getVs(),
-                dx,
-                dy
-            });
-        }
+    
     }
 
     keyUpHandler(event: KeyboardEvent): void {
@@ -173,23 +166,20 @@ export class Paddle extends A_MovingGameElement {
             const dy = 0;
             this.setSpeedComponents(dx, dy);
 
-            if (this.mode === "remote" && this.isLocal && this.socket) {
-                this.socket.emit("paddleMove", {
-                    paddleId: this.getElementId(),
-                    to: ""+this.player?.getVs(),
-                    dx,
-                    dy
-                });
-            }
+            
         }
     }
 
     initializeSocketListeners(): void {
         if (!this.socket) return;
 
-        this.socket.on("paddleMove", (data: any) => {
+        this.socket.on("paddleRelativeMove", (data: any) => {
+            console.log('receive paddleRelativeMove top'+data.top);
+            console.log('receive paddleRelativeMove paddleId'+data.paddleId)
+            console.log('receive paddleRelativeMove this.getElementId()'+this.getElementId())
             if (this.mode === "remote" && !this.isLocal && data.paddleId == this.getElementId()) {
-                this.setSpeedComponents(data.dx, data.dy);
+                console.log('set top >>>')
+                this.element.style.top = `${data.top}%`;
             }
         });
     }
@@ -200,5 +190,22 @@ export class Paddle extends A_MovingGameElement {
 
         document.addEventListener("keydown", this.eventListeners["keydown"]);
         document.addEventListener("keyup", this.eventListeners["keyup"]);
+    }
+
+    protected draw(): void
+    {
+
+        if (this.mode === "remote" && this.isLocal && this.socket) {
+            this.socket.emit("paddleRelativeMove", {
+                paddleId: this.getElementId(),
+                to: ""+this.player?.getVs(),
+                top: this.topNewRelative
+            });
+        }
+        
+        this.element.style.left = `${this.leftNewRelative}%`;
+        this.element.style.top = `${this.topNewRelative}%`;
+
+
     }
 } 

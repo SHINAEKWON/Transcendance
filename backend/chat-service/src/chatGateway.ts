@@ -20,12 +20,12 @@ export function registerChatGateway(io: Server, db: any) {
     console.log(`🟢 Utilisateur connecté : userId=${userId}, socket.id=${socket.id}`);
 
      // 📩 Réception message
-     socket.on("paddleMove", async (msg) => {
+     socket.on("paddleRelativeMove", async (msg) => {
       let id = msg.to;
       const targetSocketId = userSocketMap.get(id);
       if(targetSocketId){
         console.log("to "+targetSocketId)
-        io.to(targetSocketId).emit("paddleMove", msg);
+        io.to(targetSocketId).emit("paddleRelativeMove", msg);
       }
       
       console.log(msg)
