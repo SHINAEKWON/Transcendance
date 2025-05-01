@@ -227,7 +227,7 @@ export class Board extends A_GameElement
         
             else if (this.balls[i].isActive() == true && this.ballHitsPaddle(this.balls[i]) !== null)
             {
-                this.balls[i].increaseSpeed(0.1, this.balls[i].getInitialSpeed() * 3);
+                this.balls[i].increaseSpeed(0.1, this.balls[i].getMaxSpeed());
             }
 
             else if (this.balls[i].isActive() == true && (outPosition = this.balls[i].isOut(this)) !== Position.None)

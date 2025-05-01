@@ -146,9 +146,9 @@ export class Paddle extends A_MovingGameElement {
         let dx = 0;
         let dy = 0;
 
-        if (event.key === this.upKey) {
+        if (event.key.toUpperCase() === this.upKey.toUpperCase()) {
             dy = -this.getInitialSpeed();
-        } else if (event.key === this.downKey) {
+        } else if (event.key.toUpperCase() === this.downKey.toUpperCase()) {
             dy = this.getInitialSpeed();
         } else {
             return;
@@ -166,7 +166,7 @@ export class Paddle extends A_MovingGameElement {
     }
 
     keyUpHandler(event: KeyboardEvent): void {
-        if (event.key === this.upKey || event.key === this.downKey) {
+        if (event.key.toUpperCase() === this.upKey.toUpperCase() || event.key.toUpperCase() === this.downKey.toUpperCase()) {
             const dx = 0;
             const dy = 0;
             this.setSpeedComponents(dx, dy);

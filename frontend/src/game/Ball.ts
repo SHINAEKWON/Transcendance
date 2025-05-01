@@ -6,6 +6,8 @@ import { Position } from "./constants.js";
 
 export class Ball extends A_MovingGameElement
 {
+
+    private readonly maxSpeed = 2.1;
     constructor({ballId, onBoard, classList}:
     {
         ballId: string, 
@@ -21,7 +23,7 @@ export class Ball extends A_MovingGameElement
             widthFraction: 1.5, 
             heightFraction: null, 
             backgroundColor: "white", 
-            speed: 0.5, 
+            speed: 1, 
             parentElement: onBoard, 
             classList: classList
         });
@@ -156,5 +158,9 @@ export class Ball extends A_MovingGameElement
         else if (this.isBottomOut(board) == true)
             return Position.Bottom;
         return Position.None;
+    }
+
+    getMaxSpeed(){
+        return this.maxSpeed;
     }
 }
