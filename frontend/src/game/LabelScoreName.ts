@@ -36,6 +36,9 @@ export class LabelScoreName extends A_Element<HTMLDivElement>
         });
         this.element.classList.remove("absolute");
         this.element.classList.add("labelScoreDiv");
+        if(position == Position.Left){
+            this.element.classList.add("active-player-left");
+        }
 
         this.score = score;
 

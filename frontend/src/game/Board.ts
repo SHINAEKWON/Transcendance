@@ -105,11 +105,47 @@ export class Board extends A_GameElement
         return countActiveBalls;
     }
 
+    
+ getServiceDirection(scoreLeft: number, scoreRight: number): number {
+        const totalPoints = scoreLeft + scoreRight;
+      
+        const isDeuce = scoreLeft >= 10 && scoreRight >= 10;
+      
+        const alternateEvery = isDeuce ? 1 : 2;
+      
+        const serviceTurn = Math.floor(totalPoints / alternateEvery);
+      
+        // Pair: left sert → direction = 1
+        // Impair: right sert → direction = -1
+        return serviceTurn % 2 === 0 ? 1 : -1;
+      }
+      
     reinitializeBalls(): void
     {
+        console.log('reinitializeBalls')
+        let scoreLeft = 0;
+        let scoreRight = 0;
+        if(this.players && this.players.left){
+            scoreLeft = this.players.left.getScore();
+        }
+        if(this.players && this.players.right){
+            scoreRight = this.players.right.getScore();
+        }
+        const direction = this.getServiceDirection(scoreLeft, scoreRight);
+        const leftDiv = document.getElementById("labelleft");
+        const rightDiv = document.getElementById("labelright");
+        if (leftDiv && rightDiv) {
+            if (direction == 1) {
+              leftDiv.classList.add("active-player-left");
+              rightDiv.classList.remove("active-player-right");
+            } else {
+              rightDiv.classList.add("active-player-right");
+              leftDiv.classList.remove("active-player-left");
+            }
+          }
         for (let i=0; i < this.balls.length; ++i)
         {
-            this.balls[i].reinitialize();
+            this.balls[i].reinitialize(direction);
         }
     }
 

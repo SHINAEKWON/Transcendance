@@ -7,11 +7,11 @@ import { GameMode } from "./Paddle.js";
 const GAME_NEW: number = 0;
 const GAME_STARTED: number = 1;
 const GAME_PAUSED: number = 2;
-const GAME_ENDED: number = 3;
+const GAME_ENDED: number = 11;
 
 export class Game
 {
-    private readonly score_winning: number = 3;
+    private readonly score_winning: number = 11;
 
     private board: Board;
     private state: number;
@@ -44,7 +44,7 @@ export class Game
             isAI_left: isAI_left,
             avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
-            color_right: "cyan", 
+            color_right: "#3498db",   
             keys_right: [["ArrowUp", "ArrowDown"]], 
             isAI_right: isAI_right,
             avatarPlayerRight: avatarPlayerRight,
@@ -133,7 +133,12 @@ export class Game
         const leadingPlayer: Player | null = this.board.getLoosingPlayer();
         if (leadingPlayer !== null)
         {
-            if (leadingPlayer.getScore() >= this.score_winning)
+            let ecart = 0;
+            if(this.board.players.left && this.board.players.right){
+                ecart = Math.abs(this.board.players.left.getScore() - this.board.players.right.getScore());
+            }
+           
+            if (leadingPlayer.getScore() >= this.score_winning && ecart > 1)
                 return true;
         }
         return false;

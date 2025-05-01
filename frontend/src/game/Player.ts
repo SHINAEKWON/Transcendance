@@ -66,10 +66,12 @@ export class Player
         {
             this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], parentElement: parentElement, classList: [], isLocal, socket, mode}));
         }
+        let suff = this.position == Position.Left ? "left" : "right";
 
         this.label = new LabelScoreName(
         {
-            elementId: "label" + this.name, 
+            
+            elementId: "label" + suff, 
             leftInitialRelative: playerDictionary[this.position].positionLabel.left, 
             topInitialRelative: playerDictionary[this.position].positionLabel.top, 
             widthFraction: 8, 
