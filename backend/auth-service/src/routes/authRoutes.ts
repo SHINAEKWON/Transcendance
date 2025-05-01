@@ -5,13 +5,27 @@ import fastify, { FastifyInstance } from 'fastify';
 import  jwt  from 'jsonwebtoken';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
+import xss from 'xss';
 import { request } from 'http';
 import { error } from 'console';
-import xss from 'xss';
 import { registerUser } from '../services/authService.js';
 import { getAllAuthRecords } from '../models/authModel.js';
 import { authenticateUser } from '../services/authService.js';
 import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
+import { findOrCreateUserWithGoogle } from '../services/authService.js';
+import { cleanEmptyData } from '../utils/utils.js';
+
+/**google signIN */
+import {OAuth2Client} from 'google-auth-library';
+import fastifyJWT from '@fastify/jwt';
+import dotenv from 'dotenv';
+dotenv.config(); // loads environment variables from .env file
+// const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID = "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com";
+console.log('CLIENT_ID = ', CLIENT_ID);
+// console.log('CLIENT_ID = ', process.env.CLIENT_ID);
+
+
 
 /*tocken a ajouter dans le .env */
 const JWT_SECRET="superscret42";
@@ -48,8 +62,8 @@ export default async function authRoutes(app: FastifyInstance) {
             password: string,
             nickname: string,
             email: string,
-            address: string,
-            telephone: string
+            address: string | null,
+            telephone: string | null
         };
         console.log('\n\n\n');
         console.log(username, firstname, lastname, password, nickname, email);
@@ -63,11 +77,7 @@ export default async function authRoutes(app: FastifyInstance) {
           // User information check in backened in case info are not coming from front
           await userRegisterInfoCheck(request, reply);
 
-          const flatNickname = xss(nickname);
-
-          console.log('before register (inside auth/signup)');
-
-          const userResponse = await axios.post('http://user-service:4001/user/register', {
+          const data = cleanEmptyData({
             username,
             firstname,
             lastname,
@@ -76,7 +86,12 @@ export default async function authRoutes(app: FastifyInstance) {
             email,
             address,
             telephone
-          });
+          })
+          const flatNickname = xss(nickname);
+
+          console.log('before register (inside auth/signup)');
+
+          const userResponse = await axios.post('http://user-service:4001/user/register', data);
           console.log('register passed');
           const user_id = userResponse.data.user_id;
           console.log('user id = ', user_id);
@@ -149,6 +164,40 @@ export default async function authRoutes(app: FastifyInstance) {
           reply.status(200).send({message: "authentication success", token});
         } catch (err) {
           console.error('/signin error occured', err);
+        }
+      });
+
+    // Route backend pour Google Sign-In
+    const client = new OAuth2Client(CLIENT_ID);
+
+      app.post('/google-login', async (request, reply) => {
+        const { credential } = request.body as { credential: string };
+
+        try {
+          const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: CLIENT_ID
+          });
+
+          const payload = ticket.getPayload();
+          const email = payload?.email;
+          const firstname = payload?.given_name || 'GOOGLE_USER';
+          const lastname = payload?.family_name || '';
+          const avatar = payload?.picture || '';
+          console.log("Payload complet :", payload);
+
+          // const nickname = payload?:isNicknameValid;
+
+          if (!email || !firstname) {
+            return reply.status(400).send({ error: 'Invalid Google account data.' });
+          }
+          //ici j'appelle find or create je ne sais pas si je vais le garder comme ca :D 
+          const user_id = await findOrCreateUserWithGoogle(email, firstname, lastname, avatar);
+          const token = jwt.sign({ user_id, email, firstname }, JWT_SECRET, { expiresIn: '1h' });
+          return reply.send({ token });
+        } catch (error) {
+          request.log.error(error);
+          return reply.status(401).send({ error: 'Invalid token' });
         }
       });
     }
