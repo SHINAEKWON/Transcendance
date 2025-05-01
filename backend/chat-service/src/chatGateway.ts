@@ -20,36 +20,43 @@ export function registerChatGateway(io: Server, db: any) {
     console.log(`🟢 Utilisateur connecté : userId=${userId}, socket.id=${socket.id}`);
 
      // 📩 Réception message
-     socket.on("paddleMove", async (msg) => {
-      console.log("receive paddleMove")
-      console.log(msg)
+     socket.on("paddleRelativeMove", async (msg) => {
       let id = msg.to;
       const targetSocketId = userSocketMap.get(id);
       if(targetSocketId){
-        console.log("to "+targetSocketId)
+        io.to(targetSocketId).emit("paddleRelativeMove", msg);
+      }
+     });
+
+     // 📩 Réception message
+     socket.on("paddleMove", async (msg) => {
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
         io.to(targetSocketId).emit("paddleMove", msg);
       }
-      
-      console.log(msg)
+     });
+
+     // 📩 Réception message
+     socket.on("ballMove", async (msg) => {
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("ballMove", msg);
+      }
      });
 
      // 📩 Réception message
      socket.on("pressSpace", async (msg) => {
-      console.log("receive pressSpace")
-      console.log(msg)
       let id = msg.to;
       const targetSocketId = userSocketMap.get(id);
       if(targetSocketId){
-        console.log("to "+targetSocketId)
         io.to(targetSocketId).emit("pressSpace", msg);
       }
-      
-      console.log(msg)
      });
 
     // 📩 Réception message
     socket.on("chatMessage", async (msg) => {
-      console.log('receive message ', msg);
       const { content, receiverId } = msg;
       if (!content) return;
 
@@ -63,10 +70,8 @@ export function registerChatGateway(io: Server, db: any) {
       await saveMessage(db, message);
 
       if (receiverId) {
-        console.log('send message to', receiverId);
         const targetSocketId = userSocketMap.get(receiverId);
         if (targetSocketId) {
-          console.log('send message to targetSocketId', targetSocketId);
           io.to(targetSocketId).emit("newMessage", message);
         }
       } else {

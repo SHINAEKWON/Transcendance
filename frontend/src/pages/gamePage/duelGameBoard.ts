@@ -13,8 +13,6 @@ export class DuelGameBoardPage implements Page {
 
     if (duelEncoded) {
       this.duelData = JSON.parse(decodeURIComponent(duelEncoded));
-      console.log("this.duelData");
-      console.log(this.duelData);
     }
 
     const { player1, player2, mode } = this.duelData; // mode = local ou remote

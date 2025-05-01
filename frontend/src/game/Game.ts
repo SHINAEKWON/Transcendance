@@ -17,9 +17,16 @@ export class Game
     private state: number;
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
+    isMasterBall= false;
+    idPlayer = 0;
 
     constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null,private socket: any,private mode: GameMode,private idPlayerLeft: number,private idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
     {
+        const savedUser = localStorage.getItem("transcendenceUser");
+        if(savedUser){
+            const user = JSON.parse(savedUser);
+            this.idPlayer = user.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerLeft;
+        }
         this.board = new Board(
         {
             elementId: "board", 
@@ -44,15 +51,23 @@ export class Game
             socket,
             mode,
             idPlayerLeft,
-            idPlayerRight
+            idPlayerRight,
+            isMasterBall: this.isMasterBall,
+            idPlayer: this.idPlayer
         });
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
         if(socket && mode == "remote"){
             this.socket.on("pressSpace", (data: any) => {
+                this.isMasterBall = false;
+                this.board.setIsMasterBall(this.isMasterBall);
                 this.pressSpace();
             });
+
+            this.socket.on("ballMove", (data: any) => {
+                this.board.setPositionBallAndDraw(data.dx, data.dy);
+            })
         }
     }
 
@@ -87,12 +102,13 @@ export class Game
             case " ":
                 this.pressSpace();
                 if (this.mode == "remote" && this.socket) {
-                    console.log("emit message")
+                    this.isMasterBall = true;
+                    this.board.setIsMasterBall(this.isMasterBall);
                     const storedUser: any = localStorage.getItem("transcendenceUser");
                     if(storedUser){
                         let currentUser = JSON.parse(storedUser);
                         this.socket.emit("pressSpace", {
-                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerRight)
+                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerLeft)
                         });
                     }
                    
@@ -149,7 +165,12 @@ export class Game
     {
         if (this.state == GAME_STARTED)
         {
-            this.board.moveBalls();
+            if(this.mode == "remote"){
+                this.board.moveRemoteBalls() 
+            }else {
+                this.board.moveBalls();
+            }
+            
             this.board.movePaddles();
             
             if (this.board.checkBalls() == true)

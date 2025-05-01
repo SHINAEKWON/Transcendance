@@ -10,8 +10,8 @@ export abstract class A_MovingGameElement extends A_GameElement
     private speedX: number = 0;
     private speedY: number = 0;
 
-    private leftNewRelative: number;
-    private topNewRelative: number;
+    protected leftNewRelative: number;
+    protected topNewRelative: number;
 
     private yIntercept: number = 0;
     private absoluteHitXTop: number = 0;
@@ -189,7 +189,7 @@ export abstract class A_MovingGameElement extends A_GameElement
         //     alert("No new hitpoint found");
     }
 
-    private setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
+    protected setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
     {
         if (leftNewRelative !== null)
             this.leftNewRelative = leftNewRelative;
@@ -239,7 +239,19 @@ export abstract class A_MovingGameElement extends A_GameElement
         }
     }
 
-    private draw(): void
+    public setPositionBallAndDraw(pX: number, pY: number){
+        if (this.isActive() == true)
+        {
+            this.setNewPosition(pX,pY);
+            this.draw();
+
+            if (this.insideElement != null)
+                this.setAbsoluteHitPoint(this.insideElement);
+        
+        }
+    }
+
+    protected draw(): void
     {
         this.element.style.left = `${this.leftNewRelative}%`;
         this.element.style.top = `${this.topNewRelative}%`;

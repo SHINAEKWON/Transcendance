@@ -58,10 +58,7 @@ export class Player
         let isLocal = true;
         if(this.mode == "remote" && storedUser){
             isLocal = JSON.parse(storedUser).username == this.getName();
-            console.log("connected user name = "+JSON.parse(storedUser).username);
         }
-        console.log("player name = "+this.getName());
-        console.log("is local = "+isLocal)
        
        
 
