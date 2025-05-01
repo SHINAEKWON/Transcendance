@@ -416,3 +416,31 @@ animate-glow {
 .glitch-text {
   animation: neon-glitch 2s infinite alternate;
 }
+.active-player-left::after,
+.active-player-right::after {
+  content: ""; /* Nécessaire */
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  
+  bottom: -60px; /* positionné sous le bloc */
+ 
+  z-index: 10;
+}
+
+.active-player-left::after {
+  left: 90px;
+  transform: translateX(-80px);
+  box-shadow: 0 0 10px 5px #facc15;
+  background-color: #facc15;
+  border: 2px solid #facc15;
+}
+
+.active-player-right::after {
+  left: 90px;
+  transform: translateX(-60px);
+  background-color: #3498db;
+  box-shadow: 0 0 10px 5px #3498db;
+  border: 2px solid #3498db;
+}

@@ -6,13 +6,15 @@ import { Position } from "./constants.js";
 
 export class Ball extends A_MovingGameElement
 {
+
+    private readonly maxSpeed = 1;
     constructor({ballId, onBoard, classList}:
     {
         ballId: string, 
-        onBoard: A_GameElement, 
+        onBoard: A_GameElement,   
         classList: string[]
     })
-    {
+    { 
         super(
         {
             elementId: ballId, 
@@ -21,13 +23,13 @@ export class Ball extends A_MovingGameElement
             widthFraction: 1.5, 
             heightFraction: null, 
             backgroundColor: "white", 
-            speed: 0.5, 
+            speed: 0.75, 
             parentElement: onBoard, 
             classList: classList
         });
     }
 
-    initializeSpeed(): void
+    initializeSpeed(directionX: number = 1): void
     {
         // initialize x-speed
         let speedX = (Math.random() * 2 - 1) * this.getInitialSpeed();
@@ -38,16 +40,17 @@ export class Ball extends A_MovingGameElement
         
         // initialize y-speed
         const ballDirectionY = Math.random() > 0.5 ? 1 : -1;
+        speedX = Math.abs(speedX) * directionX;
         let speedY = Math.sqrt(this.getInitialSpeed() ** 2 - speedX ** 2) * ballDirectionY;
         
         this.setSpeedComponents(speedX, speedY);
     }
 
-    reinitialize(): void
+    reinitialize(directionX: number): void
     {
         this.activate();
         this.reinitializePosition();
-        this.initializeSpeed();
+        this.initializeSpeed(directionX);
     }
 
     changeDirectionY(): void
@@ -156,5 +159,9 @@ export class Ball extends A_MovingGameElement
         else if (this.isBottomOut(board) == true)
             return Position.Bottom;
         return Position.None;
+    }
+
+    getMaxSpeed(){
+        return this.maxSpeed;
     }
 }

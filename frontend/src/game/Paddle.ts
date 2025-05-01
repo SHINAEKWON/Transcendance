@@ -66,7 +66,6 @@ export class Paddle extends A_MovingGameElement {
         this.isAI = player.isAI();
 
         if (this.mode === "local" || this.isLocal) {
-            console.log("initializeEventListeners")
             this.initializeEventListeners();
         }
 
@@ -144,33 +143,19 @@ export class Paddle extends A_MovingGameElement {
     }
 
     keyDownHandler(event: KeyboardEvent): void {
-        if(this.socket){
-            console.log("socket ok");
-        }else {
-            console.log("socket KO");
-        }
         let dx = 0;
         let dy = 0;
 
-        if (event.key === this.upKey) {
-            console.log("event.key === this.upKey");
+        if (event.key.toUpperCase() === this.upKey.toUpperCase()) {
             dy = -this.getInitialSpeed();
-        } else if (event.key === this.downKey) {
-            console.log("event.key === this.downKey");
+        } else if (event.key.toUpperCase() === this.downKey.toUpperCase()) {
             dy = this.getInitialSpeed();
         } else {
-            console.log("else");
             return;
         }
 
         this.setSpeedComponents(dx, dy);
-        console.log("this.mode"+this.mode);
-        console.log("tthis.isLocal"+this.isLocal);
-        if(this.socket){
-            console.log("this.socket");
-        }
         if (this.mode == "remote" && this.isLocal && this.socket) {
-            console.log("emit message")
             this.socket.emit("paddleMove", {
                 paddleId: this.getElementId(),
                 to: ""+this.player?.getVs(),
@@ -181,7 +166,7 @@ export class Paddle extends A_MovingGameElement {
     }
 
     keyUpHandler(event: KeyboardEvent): void {
-        if (event.key === this.upKey || event.key === this.downKey) {
+        if (event.key.toUpperCase() === this.upKey.toUpperCase() || event.key.toUpperCase() === this.downKey.toUpperCase()) {
             const dx = 0;
             const dy = 0;
             this.setSpeedComponents(dx, dy);
@@ -201,15 +186,17 @@ export class Paddle extends A_MovingGameElement {
         if (!this.socket) return;
 
         this.socket.on("paddleMove", (data: any) => {
-            console.log("receive message")
-            console.log(data)
-            console.log("this.getElementId()")
-            console.log(this.getElementId());
-            console.log("this.isLocal")
-            console.log(this.isLocal)
+            
             if (this.mode === "remote" && !this.isLocal && data.paddleId == this.getElementId()) {
-                console.log(" this.setSpeedComponents(data.dx, data.dy);")
                 this.setSpeedComponents(data.dx, data.dy);
+            }
+        });
+
+        this.socket.on("paddleRelativeMove", (data: any) => {
+            
+            if (this.mode === "remote" && !this.isLocal && data.paddleId == this.getElementId()) {
+                this.leftNewRelative = data.left;
+                this.topNewRelative = data.top;
             }
         });
     }
@@ -220,5 +207,28 @@ export class Paddle extends A_MovingGameElement {
 
         document.addEventListener("keydown", this.eventListeners["keydown"]);
         document.addEventListener("keyup", this.eventListeners["keyup"]);
+    }
+
+    protected setNewPosition(leftNewRelative: number | null, topNewRelative: number | null): void
+    {
+        if (leftNewRelative !== null)
+            this.leftNewRelative = leftNewRelative;
+        if (topNewRelative !== null)
+            this.topNewRelative = topNewRelative;
+            if (this.mode === "remote" && this.isLocal && this.socket) {
+                this.socket.emit("paddleRelativeMove", {
+                    paddleId: this.getElementId(),
+                    to: ""+this.player?.getVs(),
+                    top: this.topNewRelative,
+                    left: this.leftNewRelative
+                });
+            }
+    }
+
+    protected draw(): void
+    {
+        
+        this.element.style.left = `${this.leftNewRelative}%`;
+        this.element.style.top = `${this.topNewRelative}%`;
     }
 } 

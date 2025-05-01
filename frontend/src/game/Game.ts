@@ -7,19 +7,26 @@ import { GameMode } from "./Paddle.js";
 const GAME_NEW: number = 0;
 const GAME_STARTED: number = 1;
 const GAME_PAUSED: number = 2;
-const GAME_ENDED: number = 3;
+const GAME_ENDED: number = 11;
 
 export class Game
 {
-    private readonly score_winning: number = 3;
+    private readonly score_winning: number = 11;
 
     private board: Board;
     private state: number;
     private animationFrameID: number | null = null;
     private eventListeners: { [key: string]: EventListener } = {};
+    isMasterBall= false;
+    idPlayer = 0;
 
     constructor(playerLeft: string | null, playerRight: string | null, isAI_left : boolean | false, avatarPlayerLeft: string | null,isAI_right: boolean | false, avatarPlayerRight: string | null,private socket: any,private mode: GameMode,private idPlayerLeft: number,private idPlayerRight: number, private endGameEvents: (playerLeft: Player,playerRight: Player) => void)
     {
+        const savedUser = localStorage.getItem("transcendenceUser");
+        if(savedUser){
+            const user = JSON.parse(savedUser);
+            this.idPlayer = user.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerLeft;
+        }
         this.board = new Board(
         {
             elementId: "board", 
@@ -37,22 +44,30 @@ export class Game
             isAI_left: isAI_left,
             avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
-            color_right: "cyan", 
+            color_right: "#3498db",   
             keys_right: [["ArrowUp", "ArrowDown"]], 
             isAI_right: isAI_right,
             avatarPlayerRight: avatarPlayerRight,
             socket,
             mode,
             idPlayerLeft,
-            idPlayerRight
+            idPlayerRight,
+            isMasterBall: this.isMasterBall,
+            idPlayer: this.idPlayer
         });
 
         this.state = GAME_NEW;
         this.initializeEventListeners();
         if(socket && mode == "remote"){
             this.socket.on("pressSpace", (data: any) => {
+                this.isMasterBall = false;
+                this.board.setIsMasterBall(this.isMasterBall);
                 this.pressSpace();
             });
+
+            this.socket.on("ballMove", (data: any) => {
+                this.board.setPositionBallAndDraw(data.dx, data.dy);
+            })
         }
     }
 
@@ -87,12 +102,13 @@ export class Game
             case " ":
                 this.pressSpace();
                 if (this.mode == "remote" && this.socket) {
-                    console.log("emit message")
+                    this.isMasterBall = true;
+                    this.board.setIsMasterBall(this.isMasterBall);
                     const storedUser: any = localStorage.getItem("transcendenceUser");
                     if(storedUser){
                         let currentUser = JSON.parse(storedUser);
                         this.socket.emit("pressSpace", {
-                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerRight)
+                            to: ""+(currentUser.id == this.idPlayerLeft ? this.idPlayerRight : this.idPlayerLeft)
                         });
                     }
                    
@@ -117,7 +133,12 @@ export class Game
         const leadingPlayer: Player | null = this.board.getLoosingPlayer();
         if (leadingPlayer !== null)
         {
-            if (leadingPlayer.getScore() >= this.score_winning)
+            let ecart = 0;
+            if(this.board.players.left && this.board.players.right){
+                ecart = Math.abs(this.board.players.left.getScore() - this.board.players.right.getScore());
+            }
+           
+            if (leadingPlayer.getScore() >= this.score_winning && ecart > 1)
                 return true;
         }
         return false;
@@ -149,7 +170,12 @@ export class Game
     {
         if (this.state == GAME_STARTED)
         {
-            this.board.moveBalls();
+            if(this.mode == "remote"){
+                this.board.moveRemoteBalls() 
+            }else {
+                this.board.moveBalls();
+            }
+            
             this.board.movePaddles();
             
             if (this.board.checkBalls() == true)

@@ -33,7 +33,7 @@ export class OnlinePlayPage implements Page {
                 </div>
 
                 <div class="flex justify-center gap-6">
-                    <button id="start-local-game" disabled class="bg-neon-green text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-green-400 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button id="start-remote-game" disabled class="bg-neon-green text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-green-400 transition disabled:opacity-50 disabled:cursor-not-allowed">
                         ${t("play")}
                     </button>
                     <a href="#duel" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition">
@@ -52,7 +52,7 @@ export class OnlinePlayPage implements Page {
 
     attachEvents(currentUser: any) {
         const userCards = document.querySelectorAll(".user-card");
-        const playButton = document.getElementById("start-local-game") as HTMLButtonElement;
+        const playButton = document.getElementById("start-remote-game") as HTMLButtonElement;
 
         userCards.forEach(card => {
             card.addEventListener("click", () => {
@@ -89,9 +89,19 @@ export class OnlinePlayPage implements Page {
                     mode: "remote"
                 };
 
+                const socket = getSocket()!;
                 const params = new URLSearchParams();
                 params.set('id', duelId);
                 params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
+                const duelLink = `<a href="#duelGameBoard?${params.toString()}" target="_blank" >
+                Hey!👋 Duel time! Join the table 🏓
+                </a> `;
+                if (socket && this.selectedPlayer) {
+                    socket.emit("chatMessage", {
+                        content: duelLink,
+                        receiverId: this.selectedPlayer.id
+                    });
+                }
                 window.location.href = `/#duelGameBoard?${params.toString()}`;
                 
             }
@@ -99,3 +109,7 @@ export class OnlinePlayPage implements Page {
     }
 }
 
+// ici c'est une fonction utilitaire pour acceder à l’objet socket.io
+function getSocket(): any | undefined {
+    return (window as any).socket;
+}

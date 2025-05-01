@@ -8,8 +8,11 @@ export class Board extends A_GameElement
 {
     balls: Ball[] = [];
     players: Players;
+    isMasterBall: boolean;
+    socket: any;
+    idPlayer: number;
     
-    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, avatarPlayerLeft, name_right, color_right, keys_right, isAI_right,avatarPlayerRight,  socket, mode, idPlayerLeft, idPlayerRight}:
+    constructor({elementId, leftInitialRelative, topInitialRelative, widthFraction, heightFraction, backgroundColor, parentElement, classList, count_balls, name_left, color_left, keys_left, isAI_left, avatarPlayerLeft, name_right, color_right, keys_right, isAI_right,avatarPlayerRight,  socket, mode, idPlayerLeft, idPlayerRight, isMasterBall, idPlayer}:
     {
         elementId: string, 
         leftInitialRelative: number, 
@@ -33,7 +36,9 @@ export class Board extends A_GameElement
         socket: any,
         mode: GameMode,
         idPlayerLeft: number,
-        idPlayerRight: number
+        idPlayerRight: number,
+        isMasterBall: boolean,
+        idPlayer: number
         
     })
     {
@@ -56,7 +61,9 @@ export class Board extends A_GameElement
             parentElement: parentElement, 
             classList: classList
         });
-
+        this.isMasterBall = isMasterBall;
+        this.socket = socket;
+        this.idPlayer = idPlayer;
         let playerLeft: Player | null = null;
         let playerRight: Player | null = null;
 
@@ -98,11 +105,47 @@ export class Board extends A_GameElement
         return countActiveBalls;
     }
 
+    
+ getServiceDirection(scoreLeft: number, scoreRight: number): number {
+        const totalPoints = scoreLeft + scoreRight;
+      
+        const isDeuce = scoreLeft >= 10 && scoreRight >= 10;
+      
+        const alternateEvery = isDeuce ? 1 : 2;
+      
+        const serviceTurn = Math.floor(totalPoints / alternateEvery);
+      
+        // Pair: left sert → direction = 1
+        // Impair: right sert → direction = -1
+        return serviceTurn % 2 === 0 ? 1 : -1;
+      }
+      
     reinitializeBalls(): void
     {
+        console.log('reinitializeBalls')
+        let scoreLeft = 0;
+        let scoreRight = 0;
+        if(this.players && this.players.left){
+            scoreLeft = this.players.left.getScore();
+        }
+        if(this.players && this.players.right){
+            scoreRight = this.players.right.getScore();
+        }
+        const direction = this.getServiceDirection(scoreLeft, scoreRight);
+        const leftDiv = document.getElementById("labelleft");
+        const rightDiv = document.getElementById("labelright");
+        if (leftDiv && rightDiv) {
+            if (direction == 1) {
+              leftDiv.classList.add("active-player-left");
+              rightDiv.classList.remove("active-player-right");
+            } else {
+              rightDiv.classList.add("active-player-right");
+              leftDiv.classList.remove("active-player-left");
+            }
+          }
         for (let i=0; i < this.balls.length; ++i)
         {
-            this.balls[i].reinitialize();
+            this.balls[i].reinitialize(direction);
         }
     }
 
@@ -114,7 +157,31 @@ export class Board extends A_GameElement
         }
     }
 
+    moveRemoteBalls(): void
+    {
+        if(this.isMasterBall){
+            for (let i=0; i < this.balls.length; ++i)
+            {
+                this.balls[i].move();
+                if(this.socket){
+                    this.socket.emit("ballMove", {
+                        to: ""+this.idPlayer,
+                        dx: this.balls[i].getLeftNewRelative(),
+                        dy: this.balls[i].getTopNewRelative()
+                    })
+                }
+            }
+        }
+        
+    }
 
+  setPositionBallAndDraw(pX: number, pY: number){
+        for (let i=0; i < this.balls.length; ++i)
+        {
+            this.balls[i].setPositionBallAndDraw(pX, pY);
+            
+        }
+    }
     reinitializePlayers(): void
     {
         for (const direction in this.players) {
@@ -196,7 +263,7 @@ export class Board extends A_GameElement
         
             else if (this.balls[i].isActive() == true && this.ballHitsPaddle(this.balls[i]) !== null)
             {
-                this.balls[i].increaseSpeed(0.1, this.balls[i].getInitialSpeed() * 3);
+                this.balls[i].increaseSpeed(0.1, this.balls[i].getMaxSpeed());
             }
 
             else if (this.balls[i].isActive() == true && (outPosition = this.balls[i].isOut(this)) !== Position.None)
@@ -223,6 +290,10 @@ export class Board extends A_GameElement
         this.players.right?.removeEventListeners();
 
         super.removeEventListeners();
+    }
+
+    setIsMasterBall(ismaster: boolean){
+        this.isMasterBall = ismaster;
     }
 
 }
