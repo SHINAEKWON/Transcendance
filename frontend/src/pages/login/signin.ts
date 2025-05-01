@@ -41,7 +41,6 @@ export class SigninPage implements Page{
         if(app){
             app.innerHTML = html;
         }
-        this.loginButtonHandler();
     }
 
     private loginButtonHandler() {
@@ -80,3 +79,4 @@ export class SigninPage implements Page{
         });
     }
 }
+

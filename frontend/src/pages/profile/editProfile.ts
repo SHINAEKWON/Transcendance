@@ -118,15 +118,19 @@ export class EditProfilePage implements Page {
     private avatarChangeHandler() {
         const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
         if (fileInput) {
-            fileInput.addEventListener("change", (event) => {
-                avatarUploadHandler(event);
-                console.log("editProfile -> before Fetch name");
-                const response = fetch(`${env.backAuth}/verifyUsername`, {
-                    method: 'GET',
-                    credentials: 'include'
+            try {
+                fileInput.addEventListener("change", (event) => {
+                    avatarUploadHandler(event);
+                    console.log("editProfile -> before Fetch name");
+                    const response = fetch(`${env.backAuth}/verifyUsername`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    console.log("editProfile -> after Fetch name");
                 });
-                console.log("editProfile -> after Fetch name");
-            });
+            } catch(error) {
+                console.error ('error from avatarchangehandler: ', error);
+            }
         }
     }
 }

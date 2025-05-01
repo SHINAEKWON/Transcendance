@@ -26,11 +26,15 @@ export async function verifyUsername (request: FastifyRequest, reply: FastifyRep
 
     try {
         console.log("verifyUsername4");
-        await request.jwtVerify();
+
+        await request.jwtVerify(); // <- error vient de la
+
         console.log("verifyUsername5");
+        
         return { user: request.user };
     } catch (error) {
         console.log("verifyUsername error");
+        console.error("Verify username jwtverify error: ", error);
         return reply.status(401).send({ error: 'Token not found or expired'});
     } 
 }

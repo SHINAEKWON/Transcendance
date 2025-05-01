@@ -87,15 +87,14 @@ export default async function authRoutes(app: FastifyInstance) {
       const token = jwt.sign({user_id, username}, JWT_SECRET, {expiresIn: '1h'});
       return reply.code(201).send({ message: 'Auth registration successful ✅', token });
     } catch (err: any) {
-      console.error('Error in route /auth/signup: ', err);
-      if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
-        return reply.status(409).send({ 
-          error: 'a user already exists with this username, nickname, email or phone number.' });
-      }
-      else{
+      //console.error('Error in route /auth/signup: ', err);
+      //if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
+       //return reply.status(409).send({ 
+          //error: 'a user already exists with this username, nickname, email or phone number.' });
+      //}
+      //else{
         return reply.status(500).send({ error: "an error occurred while saving authentication data." });
       }
-    }
   });
       
 
@@ -153,7 +152,7 @@ export default async function authRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/veryfyUsername', async (request, reply) => {
+  app.get('/verifyUsername', async (request, reply) => {
     console.log("Inside auth/verifyUsername");
     verifyUsername(request, reply);
   });
