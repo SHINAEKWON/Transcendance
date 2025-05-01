@@ -128,7 +128,12 @@ export class Sidebar {
                     const chatMessages = document.getElementById("chat-messages")!;
                     const response = document.createElement("div");
                     response.className = "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
-                    response.textContent = msg.content;
+                    if(msg.content.startsWith('<a ')){
+                      response.innerHTML = msg.content;
+                    }else {
+                      response.textContent = msg.content;
+                    }
+                    
                     chatMessages.appendChild(response);
                     chatMessages.scrollTo(0, chatMessages.scrollHeight);
                 }
@@ -163,7 +168,7 @@ export class Sidebar {
                 btn.setAttribute("data-nbmessage", "0");
                 const badge = btn.querySelector(".notif-badge") as HTMLElement;
                 if (badge) {
-                    badge.textContent = "";
+                    badge.textContent = ""; 
                     badge.classList.add("hidden");
                 }
                 btn.classList.remove("pulse");
@@ -184,8 +189,12 @@ export class Sidebar {
                     div.className = isMe
                         ? "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]"
                         : "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
-
-                    div.textContent = msg.content;
+                        if(msg.content?.startsWith('<a ')){
+                          div.innerHTML = msg.content;
+                        }else {
+                          div.textContent = msg.content;
+                        }
+                    
                     chatMessages.appendChild(div);
                 });
 
@@ -210,7 +219,13 @@ export class Sidebar {
             if (messageText !== "") {
                 const userMessage = document.createElement("div");
                 userMessage.className = "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]";
-                userMessage.textContent = messageText;
+
+                if(messageText?.startsWith('<a ')){
+                  userMessage.innerHTML = messageText;
+                }else {
+                  userMessage.textContent = messageText;
+                }
+               
                 chatMessages.appendChild(userMessage);
                 chatMessages.scrollTo(0, chatMessages.scrollHeight);
                 chatInput.value = "";
