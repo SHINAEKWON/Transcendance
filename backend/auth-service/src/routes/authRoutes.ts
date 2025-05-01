@@ -5,9 +5,9 @@ import fastify, { FastifyInstance } from 'fastify';
 import  jwt  from 'jsonwebtoken';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
+import xss from 'xss';
 import { request } from 'http';
 import { error } from 'console';
-import xss from 'xss';
 import { registerUser } from '../services/authService.js';
 import { getAllAuthRecords } from '../models/authModel.js';
 import { authenticateUser } from '../services/authService.js';
@@ -20,8 +20,10 @@ import {OAuth2Client} from 'google-auth-library';
 import fastifyJWT from '@fastify/jwt';
 import dotenv from 'dotenv';
 dotenv.config(); // loads environment variables from .env file
-const CLIENT_ID = process.env.CLIENT_ID;
+// const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID = "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com";
 console.log('CLIENT_ID = ', CLIENT_ID);
+// console.log('CLIENT_ID = ', process.env.CLIENT_ID);
 
 
 
@@ -167,7 +169,7 @@ export default async function authRoutes(app: FastifyInstance) {
     // Route backend pour Google Sign-In
     const client = new OAuth2Client(CLIENT_ID);
 
-      app.post('/google', async (request, reply) => {
+      app.post('/google-login', async (request, reply) => {
         const { credential } = request.body as { credential: string };
 
         try {
@@ -178,15 +180,19 @@ export default async function authRoutes(app: FastifyInstance) {
 
           const payload = ticket.getPayload();
           const email = payload?.email;
-          const name = payload?.name;
+          const firstname = payload?.given_name;
+          const lastname = payload?.family_name;
+          console.log("Payload complet :", payload);
 
-          if (!email || !name) {
+          // const nickname = payload?:isNicknameValid;
+
+          if (!email || !firstname) {
             return reply.status(400).send({ error: 'Invalid Google account data.' });
           }
           //ici j'appelle find or create je ne sais pas si je vais le garder comme ca :D 
-          const user_id = await findOrCreateUserWithGoogle(email, name);
-          const token = app.jwt.sign(email);
-
+          const user_id = await findOrCreateUserWithGoogle(email, firstname);
+          // const token = app.jwt.sign(email);
+          const token = jwt.sign({ user_id, email, firstname }, JWT_SECRET, { expiresIn: '1h' });
           return reply.send({ token });
         } catch (error) {
           request.log.error(error);
