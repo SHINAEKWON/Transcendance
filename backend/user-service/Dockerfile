@@ -44,9 +44,9 @@ COPY --from=builder /app/uploads ./uploads
 COPY --from=builder /app/db ./db   
 
 # Monter un volume pour la base SQLite
-# Une fois la methode API installee, effacer les volumes
 
-#VOLUME ["/app/data"]
+# VOLUME ["/app/data"]
+VOLUME ["/app/uploads"]
 
 # Définir la variable d’environnement
 ENV PORT=4001

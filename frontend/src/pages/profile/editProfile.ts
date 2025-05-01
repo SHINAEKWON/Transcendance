@@ -2,10 +2,15 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { getLang } from "../../i18n/language.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
-// import { } from "../../frontapp/profile/profilePhotoUpload.js";
+import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
+import { env } from "../../env/env.js";
 
 export class EditProfilePage implements Page {
     render() {
+        setTimeout(() => {
+            this.avatarChangeHandler();
+        }, 50);
+
         const t = (key: keyof typeof editProfileTranslations) => getTranslation("editProfile", key);
 
         const user = {
@@ -32,8 +37,6 @@ export class EditProfilePage implements Page {
             { src: "", label: tAvatar("custom"), isUpload: true }
         ];
             
-        // Shin Ae : Upload handler here ??
-
         const avatarOptions = avatars.map((avatar, i) => {
             if (avatar.isUpload) {
                 return `
@@ -109,6 +112,25 @@ export class EditProfilePage implements Page {
         if (app) {
             app.innerHTML = html;
             RedirectEvents.attachRedirectEvents();
+        }
+    }
+    
+    private avatarChangeHandler() {
+        const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
+        if (fileInput) {
+            try {
+                fileInput.addEventListener("change", (event) => {
+                    avatarUploadHandler(event);
+                    console.log("editProfile -> before Fetch name");
+                    const response = fetch(`${env.backAuth}/verifyUsername`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    console.log("editProfile -> after Fetch name");
+                });
+            } catch(error) {
+                console.error ('error from avatarchangehandler: ', error);
+            }
         }
     }
 }

@@ -6,6 +6,9 @@ import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import cors from '@fastify/cors';
+import fastifyCookie from '@fastify/cookie';
+import  jwt  from 'jsonwebtoken'
+import fastifyJwt from '@fastify/jwt';
 
 const app = Fastify ({ logger: true });
 
@@ -29,6 +32,8 @@ app.setErrorHandler((err, request, reply) => {
 });
 
 // Add all routes in auth service
+app.register(fastifyCookie);
+app.register(fastifyJwt, { secret: process.env.JWT_SECRET!,});
 app.register(authRoutes);
 
 // Server launch

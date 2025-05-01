@@ -15,9 +15,13 @@ app.register(cors, {
   credentials: true
 });
 
-app.register(userRoutes);
-app.register(fastifyMultipart); // Upload Plugin
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 2097152,
+  }
+}); // Upload Plugin
 
+app.register(userRoutes);
 
 // Launch Server
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {

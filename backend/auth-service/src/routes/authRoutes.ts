@@ -12,6 +12,7 @@ import { registerUser } from '../services/authService.js';
 import { getAllAuthRecords } from '../models/authModel.js';
 import { authenticateUser } from '../services/authService.js';
 import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
+import { verifyUsername } from '../services/verifyUserinfo.js';
 import { findOrCreateUserWithGoogle } from '../services/authService.js';
 import { cleanEmptyData } from '../utils/utils.js';
 
@@ -24,8 +25,6 @@ dotenv.config(); // loads environment variables from .env file
 const CLIENT_ID = "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com";
 console.log('CLIENT_ID = ', CLIENT_ID);
 // console.log('CLIENT_ID = ', process.env.CLIENT_ID);
-
-
 
 /*tocken a ajouter dans le .env */
 const JWT_SECRET="superscret42";
@@ -111,6 +110,24 @@ export default async function authRoutes(app: FastifyInstance) {
           }
         }
       });
+      console.log('register passed');
+      const user_id = userResponse.data.user_id;
+      console.log('user id = ', user_id);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await registerUser(user_id, hashedPassword);
+      //generation du web token
+      const token = jwt.sign({user_id, username}, JWT_SECRET, {expiresIn: '1h'});
+      return reply.code(201).send({ message: 'Auth registration successful ✅', token });
+    } catch (err: any) {
+      //console.error('Error in route /auth/signup: ', err);
+      //if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
+       //return reply.status(409).send({ 
+          //error: 'a user already exists with this username, nickname, email or phone number.' });
+      //}
+      //else{
+        return reply.status(500).send({ error: "an error occurred while saving authentication data." });
+      }
+  });
       
 
       /* signIN ==> auth reçoit :{ email ou username + password}
@@ -201,4 +218,12 @@ export default async function authRoutes(app: FastifyInstance) {
         }
       });
     }
+  });
+
+  app.get('/verifyUsername', async (request, reply) => {
+    console.log("Inside auth/verifyUsername");
+    verifyUsername(request, reply);
+  });
+
+}
 

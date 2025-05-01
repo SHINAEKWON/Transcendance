@@ -10,15 +10,17 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@fastify/multipart": "^9.0.3",
     "@tailwindcss/cli": "^4.0.15",
     "@tailwindcss/postcss": "^4.0.15",
-    "@types/node": "^22.13.11",
     "concurrently": "^8.2.2",
+    "fastify": "^5.3.2",
     "live-server": "^1.2.2",
-    "socket.io-client": "^4.6.1",
-    "typescript": "^5.8.3"
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
-    "esbuild": "^0.25.2"
+    "@types/node": "^22.15.3",
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.3"
   }
 }
