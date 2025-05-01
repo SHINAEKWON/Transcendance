@@ -5,7 +5,7 @@ c'est l'intermediaire entre fastify et authModel*/
 
 import bcrypt from 'bcrypt';
 import axios from 'axios';
-
+import { cleanEmptyData } from '../utils/utils.js';
 //fonction qui assure l'enregistrement des donnes d'authenfication d'un utilisateur
 import { insertAuthData, AuthData, getAuthByUserId  } from '../models/authModel.js';
 
@@ -57,7 +57,7 @@ export const authenticateUser = async (userId: number, password: string) => {
 /*
 1- verifier si user existe dans la user.db
 */
-export async function findOrCreateUserWithGoogle(email: string, firstName: string) {
+export async function findOrCreateUserWithGoogle(email: string, firstname: string, lastname: string, avatar: string) {
   try {
     const userResponse = await axios.post('http://user-service:4001/user/checkUser', {
       email,
@@ -70,16 +70,20 @@ export async function findOrCreateUserWithGoogle(email: string, firstName: strin
     } catch (error:any) {
     if(error.response && error.response.status === 404){
       console.log('User does not exist, creating new user');
-      const registerResponse = await axios.post('http://user-service:4001/user/register', {
-        firstname: firstName,
-        lastname: '',
+      const google_data = {
+        firstname,
+        lastname,
         username: 'google-' + Math.random().toString(36).substring(2, 10),
         nickname: 'google-' + Math.random().toString(36).substring(2, 8),
-        avatar: '',
+        avatar,
         email,
         address: '',
         telephone: ''
-      });
+      };
+      console.log('\n\ngoogle data  = ', google_data, '\n\n');
+      // const data = cleanEmptyData(google_data);
+      // console.log('\n\ndata = ', data, '\n\n');
+      const registerResponse = await axios.post('http://user-service:4001/user/register', google_data);
       return registerResponse.data.user_id;
     }
     console.error("Erreur findOrCreateUserWithGoogle:", error);
