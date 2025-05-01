@@ -12,6 +12,18 @@ import { registerUser } from '../services/authService.js';
 import { getAllAuthRecords } from '../models/authModel.js';
 import { authenticateUser } from '../services/authService.js';
 import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
+import { findOrCreateUserWithGoogle } from '../services/authService.js';
+
+
+/**google signIN */
+import {OAuth2Client} from 'google-auth-library';
+import fastifyJWT from '@fastify/jwt';
+import dotenv from 'dotenv';
+dotenv.config(); // loads environment variables from .env file
+const CLIENT_ID = process.env.CLIENT_ID;
+console.log('CLIENT_ID = ', CLIENT_ID);
+
+
 
 /*tocken a ajouter dans le .env */
 const JWT_SECRET="superscret42";
@@ -149,6 +161,36 @@ export default async function authRoutes(app: FastifyInstance) {
           reply.status(200).send({message: "authentication success", token});
         } catch (err) {
           console.error('/signin error occured', err);
+        }
+      });
+
+    // Route backend pour Google Sign-In
+    const client = new OAuth2Client(CLIENT_ID);
+
+      app.post('/google', async (request, reply) => {
+        const { credential } = request.body as { credential: string };
+
+        try {
+          const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: CLIENT_ID
+          });
+
+          const payload = ticket.getPayload();
+          const email = payload?.email;
+          const name = payload?.name;
+
+          if (!email || !name) {
+            return reply.status(400).send({ error: 'Invalid Google account data.' });
+          }
+          //ici j'appelle find or create je ne sais pas si je vais le garder comme ca :D 
+          const user_id = await findOrCreateUserWithGoogle(email, name);
+          const token = app.jwt.sign(email);
+
+          return reply.send({ token });
+        } catch (error) {
+          request.log.error(error);
+          return reply.status(401).send({ error: 'Invalid token' });
         }
       });
     }
