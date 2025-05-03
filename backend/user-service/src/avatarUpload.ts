@@ -21,8 +21,8 @@ export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Prom
             fs.mkdirSync(uploadDir, { recursive : true });
         }
 
-        console.log(part); // What does part look like ?
-
+        // console.log(part); // What does part look like ?
+        
         const validFileTypes = ['image/jpeg', 'image/gif', 'image/png'];
 
         let extension: string = '';
@@ -50,7 +50,10 @@ export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Prom
         const filepath = path.join(uploadDir, fullFilename);
         const writeStream = fs.createWriteStream(filepath);
 
-      //  await part. .file.pipe(writeStream);
+        if (part.type === 'file') {
+            const filePart = part as MultipartFile;
+            await part.file.pipe(writeStream);
+        }
 
         // IMPORTANT //
         // Ici mise a jour de DB ? Faire une autre app au lieu de tout traiter ici ?

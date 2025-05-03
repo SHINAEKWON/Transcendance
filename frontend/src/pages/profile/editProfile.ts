@@ -119,14 +119,33 @@ export class EditProfilePage implements Page {
         const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
         if (fileInput) {
             try {
-                fileInput.addEventListener("change", (event) => {
-                    avatarUploadHandler(event);
-                    console.log("editProfile -> before Fetch name");
-                    const response = fetch(`${env.backAuth}/verifyUsername`, {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-                    console.log("editProfile -> after Fetch name");
+                fileInput.addEventListener("change", async (event) => {
+                    try {
+                        const token = localStorage.getItem("authToken");
+
+                        if (!token) {console.error("No Token found");}
+                        else { console.log("token: ", token);}
+
+                        const response = await fetch(`${env.backUser}/verifyUsername`, {
+                            method: "GET",
+                            headers: {
+                                "Authorization": `Bearer ${token}`,
+                            }
+                        });
+                        if (!response.ok) {
+                            const msg = await response.text();
+                            console.error("Response Not OK", response.status, msg);
+                            throw new Error(`(${response.status})) ${msg}`);
+                        }
+                        const jwtReponse = await response.json();
+                        const extractedEmail = jwtReponse.user.email;
+                        console.log ("Logged in user's email: ", extractedEmail);
+                        
+                        avatarUploadHandler(event, extractedEmail);
+                    } catch (error) { 
+                        console.error ("Error: ", error);
+                    }
+                    
                 });
             } catch(error) {
                 console.error ('error from avatarchangehandler: ', error);

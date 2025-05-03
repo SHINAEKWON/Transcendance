@@ -205,7 +205,9 @@ export default async function authRoutes(app: FastifyInstance) {
         await deleteAuthByUserId(userId);
         res.status(200).send({ message: 'Auth supprimé.' });
     });
-    }
+
+    
+}
 
     
   

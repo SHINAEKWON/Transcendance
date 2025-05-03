@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
+import { verifyUsername } from '../verifyUserInfo.js';
 import { fileErrorCode } from '../fileErrorCode.js';
 import {
   sendFriendRequest,
@@ -146,6 +147,11 @@ export async function userRoutes(app: FastifyInstance) {
       console.error(error);
       return res.status(500).send({ error: 'Internal Server Error'});
     }
+  });
+
+  app.get('/verifyUsername', async (req, res) => {
+    console.log("inside get/verifyUsername");
+    return verifyUsername(req, res);
   });
 
   // Envoyer une demande d'amitié
