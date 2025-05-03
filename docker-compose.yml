@@ -15,6 +15,7 @@ services:
       - ./backend/auth-service/.env
     volumes:
       - auth-data:/app/data
+      - ./ssl:/app/ssl:ro
     
   user-service:
     build:
@@ -30,18 +31,7 @@ services:
     volumes:
       - user-data:/app/data
       - user-uploads:/app/uploads
-
-  game-service:
-    build:
-      context: ./backend/game-service
-      dockerfile: Dockerfile
-    container_name: game
-    networks:
-      - transnet
-    expose:
-      - "4002"
-    volumes:
-      - game-data:/app/data
+      - ./ssl:/app/ssl:ro
 
   chat-service:
     build:
@@ -56,16 +46,20 @@ services:
       - "4003:4003"
     volumes:
       - chat-data:/app/data
+      - ./ssl:/app/ssl:ro
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   container_name: front
-  #   networks:
-  #     - transnet
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+    container_name: front
+    networks:
+      - transnet
 
 networks:
   transnet:

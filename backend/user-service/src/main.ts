@@ -7,7 +7,11 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { userRoutes } from './routes/userRoutes.js';
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: true,
+  https: {
+    key: fs.readFileSync('./ssl/selfsigned.key'),
+    cert: fs.readFileSync('./ssl/selfsigned.crt')
+  } });
 const PORT = 4001;
 
 app.register(cors, {
@@ -29,5 +33,5 @@ app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
     app.log.error(err);
     process.exit(1);
   }
-  console.log(`🚀 user-service listening on http://localhost:${PORT}`);
+  console.log(`🚀 user-service listening on https://localhost:${PORT}`);
 });

@@ -27,12 +27,12 @@ export async function userRoutes(app: FastifyInstance) {
 
     try {
         // Supprimer les données liées dans auth-service
-        await fetch(`http://auth-service:4000/auth/user/${userId}`, {
+        await fetch(`https://auth-service:4000/auth/user/${userId}`, {
             method: 'DELETE'
         });
 
         // Supprimer les données liées dans chat-service
-        await fetch(`http://chat-service:4003/messages/user/${userId}`, {
+        await fetch(`https://chat-service:4003/messages/user/${userId}`, {
             method: 'DELETE'
         });
 

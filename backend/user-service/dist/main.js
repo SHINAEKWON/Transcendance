@@ -10,5 +10,5 @@ app.listen({ port: PORT }, (err) => {
         app.log.error(err);
         process.exit(1);
     }
-    console.log(`🚀 user-service listening on http://localhost:${PORT}`);
+    console.log(`🚀 user-service listening on https://localhost:${PORT}`);
 });

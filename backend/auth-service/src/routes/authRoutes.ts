@@ -90,7 +90,7 @@ export default async function authRoutes(app: FastifyInstance) {
           };
           console.log('before register (inside auth/signup)');
 
-          const userResponse = await axios.post('http://user-service:4001/user/register', data);
+          const userResponse = await axios.post('https://user-service:4001/user/register', data);
           console.log('register passed');
           const user_id = userResponse.data.user_id;
           console.log('user id = ', user_id);
@@ -141,7 +141,7 @@ export default async function authRoutes(app: FastifyInstance) {
           }
           // console.log('in authRoutes, email = ', email, 'username = ', username);
           //demander a user-service si l'utilisateur existe
-          const userResponse = await axios.post('http://user-service:4001/user/checkUser', {
+          const userResponse = await axios.post('https://user-service:4001/user/checkUser', {
             // username,
             email
           }

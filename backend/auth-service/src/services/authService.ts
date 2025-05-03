@@ -59,7 +59,7 @@ export const authenticateUser = async (userId: number, password: string) => {
 */
 export async function findOrCreateUserWithGoogle(email: string, firstname: string, lastname: string, avatar: string) {
   try {
-    const userResponse = await axios.post('http://user-service:4001/user/checkUser', {
+    const userResponse = await axios.post('https://user-service:4001/user/checkUser', {
       email,
     })
     const user_id = userResponse.data.user_id;
@@ -82,7 +82,7 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
       console.log('\n\ngoogle data  = ', google_data, '\n\n');
       // const data = cleanEmptyData(google_data);
       // console.log('\n\ndata = ', data, '\n\n');
-      const registerResponse = await axios.post('http://user-service:4001/user/register', google_data);
+      const registerResponse = await axios.post('https://user-service:4001/user/register', google_data);
       return registerResponse.data.user_id;
     }
     console.error("Erreur findOrCreateUserWithGoogle:", error);

@@ -6,6 +6,7 @@ import { initDB } from './db.js';
 import { chatRoutes } from './routes/chatRoutes.js';
 import { registerChatGateway } from './chatGateway.js';
 import cors from '@fastify/cors';
+import fs from 'fs';
 
 // 🪄 DÉCLARATION pour TypeScript
 declare module 'fastify' {
@@ -14,7 +15,12 @@ declare module 'fastify' {
   }
 }
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: true,
+  https: {
+    key: fs.readFileSync('./ssl/selfsigned.key'),
+    cert: fs.readFileSync('./ssl/selfsigned.crt')
+  } });
+
 app.register(fastifySocketIO, {
   cors: {
     origin: true,
@@ -37,5 +43,5 @@ app.ready().then(async () => {
 
 app.listen({ port: PORT , host: '0.0.0.0'}, (err) => {
   if (err) throw err;
-  console.log(`💬 chat-service listening on http://localhost:${PORT}`);
+  console.log(`💬 chat-service listening on https://localhost:${PORT}`);
 });

@@ -9,8 +9,14 @@ import cors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
 import  jwt  from 'jsonwebtoken'
 import fastifyJwt from '@fastify/jwt';
+import fs from 'fs';
 
-const app = Fastify ({ logger: true });
+const app = Fastify ({ logger: true,
+    https: {
+      key: fs.readFileSync('./ssl/selfsigned.key'),
+      cert: fs.readFileSync('./ssl/selfsigned.crt')
+    } 
+});
 
 const PORT = 4000;
 
@@ -42,5 +48,5 @@ app.listen ({ port: PORT, host: "0.0.0.0" }, (err, address) => {
         app.log.error(err);
         process.exit(1);
     }
-    app.log.info(`Server is now listening at http://localhost:${PORT}`);
+    app.log.info(`Server is now listening at https://localhost:${PORT}`);
 });
