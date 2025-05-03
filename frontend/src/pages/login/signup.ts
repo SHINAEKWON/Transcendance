@@ -1,6 +1,13 @@
 import { env } from "../../env/env.js";
 import * as CustomValidityReport from "../../frontapp/signup_policy/CustomValidityReport.js";
-
+import { jwtDecode } from "jwt-decode";
+import { getUserInfo } from "../../services/userService.js";
+interface JwtPayload {
+    id: number;
+    email: string;
+    iat: number;
+    exp: number;
+  }
 export class SignupPage implements Page{
     render() {
         // Shin Ae : Event Handler, attach this render to Submit Button Handler
@@ -10,7 +17,6 @@ export class SignupPage implements Page{
             CustomValidityReport.firstnameChecker();
             CustomValidityReport.lastnameChecker();
             CustomValidityReport.usernameChecker();
-            CustomValidityReport.nicknameChecker();
             CustomValidityReport.passwordChecker();
         }, 50);
         const html = `
@@ -29,13 +35,8 @@ export class SignupPage implements Page{
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div>
-                            <label class="block text-neon-purple mb-1" for="username">ID</label>
+                            <label class="block text-neon-purple mb-1" for="username">Login</label>
                             <input type="text" id="username" name="username" required
-                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
-                        </div>
-                        <div>
-                            <label class="block text-neon-purple mb-1" for="nickname">Nickname</label>
-                            <input type="text" id="nickname" name="nickname" required
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
                         </div>
                         <div class="md:col-span-2">
@@ -50,7 +51,7 @@ export class SignupPage implements Page{
                                 class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" 
                                 maxlength='30' />
                             <ul id="password-requirements" class="text-sm mt-2 text-red-500">
-                            <li id="length">❌ Between 12 and 30 characters</li>
+                            <li id="length">❌ Between 8 and 30 characters</li>
                             <li id="uppercase">❌ Include a uppercase letter</li>
                             <li id="lowercase">❌ Include a lowercase letter</li>
                             <li id="number">❌ Include a number</li>
@@ -94,11 +95,11 @@ export class SignupPage implements Page{
                 username: (document.getElementById('username') as HTMLInputElement).value,
                 firstname: (document.getElementById('firstname') as HTMLInputElement).value,
                 lastname: (document.getElementById('lastname') as HTMLInputElement).value,
-                nickname: (document.getElementById('nickname') as HTMLInputElement).value,
                 email: (document.getElementById('email') as HTMLInputElement).value,
                 password: (document.getElementById('password') as HTMLInputElement).value,
                 address: (document.getElementById('postalAddress') as HTMLInputElement).value,
-                telephone: (document.getElementById('phoneNumber') as HTMLInputElement).value
+                telephone: (document.getElementById('phoneNumber') as HTMLInputElement).value,
+                avatar : "./public/images/profile.jpg"
             };
 
             try {
@@ -118,9 +119,15 @@ export class SignupPage implements Page{
                   }
                   
                 const data = await response.json();
+               
+        localStorage.setItem("authToken", data.token); // <--- sauvegarde du token
+        const decoded = jwtDecode<JwtPayload>(data.token);
+        console.log('decode ', decoded);
+        const userInfo = await getUserInfo(decoded.id);
+        localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));
                 alert('Account successfully created!');
-                console.log("Account created for following user:");
-                console.log(formData.username);
+                window.location.href = "#profile";
+                window.location.reload();
             } catch (err: any) {
                 alert('Failed to create account!');
                 console.log("Failed to create account! : " + err.message);

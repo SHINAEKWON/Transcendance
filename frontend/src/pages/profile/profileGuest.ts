@@ -2,11 +2,14 @@
 
 export class ProfileGuestPage implements Page{
     render() {
-        const guestData = localStorage.getItem("transcendenceUser");
-        const guest = guestData ? JSON.parse(guestData) : {
-            username: "GuestPlayer",
-            avatar: "./public/images/guest_avatar.png"
-        };
+        const guestLs = localStorage.getItem("transcendenceUser");
+        if (!guestLs) {
+            window.location.hash = "#welcome";
+            return;
+        }
+
+ 
+    const guest = JSON.parse(guestLs);
 
         const html = `
             <div class="max-w-xl mx-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black p-8 rounded-2xl shadow-2xl mt-10 border border-blue-500 animate-fade-in">

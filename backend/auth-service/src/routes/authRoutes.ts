@@ -9,10 +9,9 @@ import xss from 'xss';
 import { request } from 'http';
 import { error } from 'console';
 import { registerUser } from '../services/authService.js';
-import { getAllAuthRecords } from '../models/authModel.js';
+import { deleteAuthByUserId, getAllAuthRecords } from '../models/authModel.js';
 import { authenticateUser } from '../services/authService.js';
 import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
-import { verifyUsername } from '../services/verifyUserinfo.js';
 import { findOrCreateUserWithGoogle } from '../services/authService.js';
 import { cleanEmptyData } from '../utils/utils.js';
 
@@ -25,6 +24,8 @@ dotenv.config(); // loads environment variables from .env file
 const CLIENT_ID = "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com";
 console.log('CLIENT_ID = ', CLIENT_ID);
 // console.log('CLIENT_ID = ', process.env.CLIENT_ID);
+
+
 
 /*tocken a ajouter dans le .env */
 const JWT_SECRET="superscret42";
@@ -50,84 +51,66 @@ export default async function authRoutes(app: FastifyInstance) {
           firstname,
           lastname,
           password,
-          nickname,
           email,
           address,
-          telephone
+          telephone,
+          avatar
         } = request.body as {
             username: string,
             firstname: string,
             lastname: string,
             password: string,
-            nickname: string,
             email: string,
             address: string | null,
-            telephone: string | null
+            telephone: string | null,
+            avatar: string | null
         };
         console.log('\n\n\n');
-        console.log(username, firstname, lastname, password, nickname, email);
+        console.log(username, firstname, lastname, password, email);
         console.log('\n\n\n');
 
-        if (!username || !firstname || !lastname || !password || !nickname || !email) {
+        if (!username || !firstname || !lastname || !password || !email) {
             return reply.status(400).send({ message: "Tous les champs sont requis." });
         }
       
         try {
           // User information check in backened in case info are not coming from front
           await userRegisterInfoCheck(request, reply);
+         
 
-          const data = cleanEmptyData({
+          const data = {
             username,
             firstname,
             lastname,
             password,
-            nickname,
             email,
             address,
-            telephone
-          })
-          const flatNickname = xss(nickname);
-
+            telephone,
+            avatar
+          };
           console.log('before register (inside auth/signup)');
 
           const userResponse = await axios.post('http://user-service:4001/user/register', data);
           console.log('register passed');
           const user_id = userResponse.data.user_id;
           console.log('user id = ', user_id);
+          const id = user_id.id;
           const hashedPassword = await bcrypt.hash(password, 10);
-          await registerUser(user_id, hashedPassword);
+          await registerUser(id, hashedPassword);
           //generation du web token
-          const token = jwt.sign({user_id, username}, JWT_SECRET, {expiresIn: '1h'});
+          const token = jwt.sign({id, username}, JWT_SECRET, {expiresIn: '1h'});
           return reply.code(201).send({ message: 'Auth registration successful ✅', token });
         } catch (err: any) {
           console.error('Error in route /auth/signup: ', err);
           if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
            return reply.status(409).send({ 
-              error: 'a user already exists with this username, nickname, email or phone number.' });
+              error: 'a user already exists with this username, email or phone number.' });
           }
           else{
             return reply.status(500).send({ error: "an error occurred while saving authentication data." });
           }
         }
       });
-      console.log('register passed');
-      const user_id = userResponse.data.user_id;
-      console.log('user id = ', user_id);
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await registerUser(user_id, hashedPassword);
-      //generation du web token
-      const token = jwt.sign({user_id, username}, JWT_SECRET, {expiresIn: '1h'});
-      return reply.code(201).send({ message: 'Auth registration successful ✅', token });
-    } catch (err: any) {
-      //console.error('Error in route /auth/signup: ', err);
-      //if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
-       //return reply.status(409).send({ 
-          //error: 'a user already exists with this username, nickname, email or phone number.' });
-      //}
-      //else{
-        return reply.status(500).send({ error: "an error occurred while saving authentication data." });
-      }
-  });
       
 
       /* signIN ==> auth reçoit :{ email ou username + password}
@@ -203,8 +186,6 @@ export default async function authRoutes(app: FastifyInstance) {
           const avatar = payload?.picture || '';
           console.log("Payload complet :", payload);
 
-          // const nickname = payload?:isNicknameValid;
-
           if (!email || !firstname) {
             return reply.status(400).send({ error: 'Invalid Google account data.' });
           }
@@ -217,13 +198,14 @@ export default async function authRoutes(app: FastifyInstance) {
           return reply.status(401).send({ error: 'Invalid token' });
         }
       });
+
+      app.delete('/auth/user/:id', async (req, res) => {
+        const { id } = req.params as { id: string };
+        const userId = Number(id);
+        await deleteAuthByUserId(userId);
+        res.status(200).send({ message: 'Auth supprimé.' });
+    });
     }
-  });
 
-  app.get('/verifyUsername', async (request, reply) => {
-    console.log("Inside auth/verifyUsername");
-    verifyUsername(request, reply);
-  });
-
-}
-
+    
+  

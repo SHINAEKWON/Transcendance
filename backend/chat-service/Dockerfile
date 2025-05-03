@@ -20,7 +20,7 @@ RUN npm install --legacy-peer-deps
 RUN npm install typescript better-sqlite3
 
 # Copier le reste du projet
-COPY . .
+COPY src/ ./src
 
 # Compiler le TypeScript
 RUN npx tsc

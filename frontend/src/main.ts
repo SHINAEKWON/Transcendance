@@ -108,43 +108,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function initSocket() {
-    // ✅ Connexion automatique + WebSocket chat
-    const savedUser = localStorage.getItem("transcendenceUser");
-    if (savedUser) {
-        console.log("savedUser ok")
-        const user = JSON.parse(savedUser);
-        let socket: any = null;
-        if (env.env == "docker") {
-            socket = io({
-                path: env.backChatSocketPath,
-                transports: ["websocket"],
-                auth: { userId: "" + user.id }
-            });
-        } else {
-            socket = io(env.backChat, {
-                path: env.backChatSocketPath,
-                transports: ["websocket"],
-                auth: { userId: "" + user.id }
-            });
-        }
+import { getUserInfo } from './services/userService.js'; // à adapter selon ton path
 
+async function initSocket() {
+  const savedUser = localStorage.getItem("transcendenceUser");
 
-        socket.on("connect", () => {
-            console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
-        });
+  if (!savedUser) return;
 
-        socket.on("connect_error", (err: any) => {
-            console.error("❌ Erreur de connexion socket :", err.message);
-        });
+  try {
+    const user = JSON.parse(savedUser);
 
+    const found: any = await getUserInfo(user.id);
 
-
-
-        (window as any).socket = socket;
-
-        if (!window.location.hash || window.location.hash === "#welcome") {
-            window.location.hash = "#profileGuest";
-        }
+    if (!found || !found.id) {
+      console.warn("🚫 Utilisateur introuvable en base. Réinitialisation du cache.");
+      localStorage.removeItem("transcendenceUser");
+      window.location.hash = "#welcome";
+      return;
     }
+
+    let socket: any = null;
+    if (env.env == "docker") {
+      socket = io({
+        path: env.backChatSocketPath,
+        transports: ["websocket"],
+        auth: { userId: "" + user.id }
+      });
+    } else {
+      socket = io(env.backChat, {
+        path: env.backChatSocketPath,
+        transports: ["websocket"],
+        auth: { userId: "" + user.id }
+      });
+    }
+
+    socket.on("removedUser", async (msg: any) => {
+      let id = msg.id;
+      new Sidebar().render();
+     });
+
+    socket.on("connect", () => {
+      console.log("🔌 Connecté au chat-service socket.io avec ID :", socket.id);
+    });
+
+    socket.on("connect_error", (err: any) => {
+      console.error("❌ Erreur de connexion socket :", err.message);
+    });
+
+    (window as any).socket = socket;
+
+    if (!window.location.hash || window.location.hash === "#welcome") {
+      window.location.hash = "#profileGuest";
+    }
+
+  } catch (err) {
+    console.error("❌ Erreur lors de la vérification de l'utilisateur :", err);
+    localStorage.removeItem("transcendenceUser");
+    window.location.hash = "#welcome";
+  }
 }
+

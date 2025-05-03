@@ -1,7 +1,7 @@
 
 import { FastifyInstance } from 'fastify';
 import { initDB } from '../db.js';
-import { getConversation, createMessage } from '../messageModel.js';
+import { getConversation, createMessage, deleteMessagesByUserId } from '../messageModel.js';
 
 export async function chatRoutes(app: FastifyInstance) {
     // Récupérer les messages entre deux utilisateurs
@@ -65,5 +65,13 @@ export async function chatRoutes(app: FastifyInstance) {
   
       return res.send({ message: `Conversation between ${user1} and ${user2} deleted` });
     });
+
+    app.delete('/messages/user/:id', async (req, res) => {
+      const { id } = req.params as { id: string };
+        const userId = Number(id);
+      await deleteMessagesByUserId(userId);
+      res.status(200).send({ message: 'Messages supprimés.' });
+  });
+  
   }
   

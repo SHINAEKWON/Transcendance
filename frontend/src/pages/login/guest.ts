@@ -6,12 +6,12 @@ export class GuestPage implements Page{
         <div class="flex items-center justify-center bg-dark-blue">
           <div class="bg-gray-800 bg-opacity-90 p-8 rounded-2xl shadow-lg w-full max-w-3xl text-center space-y-8">
             <h2 class="text-4xl font-gaming text-neon-blue animate-glow">Play as Guest</h2>
-            <p class="text-neon-purple text-xl">Choose a nickname and your fighter style</p>
+            <p class="text-neon-purple text-xl">Choose a login and your fighter style</p>
   
             <!-- Pseudo Input -->
             <div>
-              <label for="guestName" class="block text-neon-green mb-3 text-lg">Enter your nickname:</label>
-              <input type="text" id="guestName" name="guestName" required
+              <label for="login" class="block text-neon-green mb-3 text-lg">Enter your login:</label>
+              <input type="text" id="login" name="login" required
                 class="w-full px-5 py-3 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-green text-lg" />
             </div>
   
@@ -85,16 +85,16 @@ export class GuestPage implements Page{
 
     //   ici si on clique sur Continue as guest, on lit le usrname et on recupere l'avatar et on les envoie au backend via fetch
         button?.addEventListener('click', async () => {
-        const nicknameInput = document.getElementById('guestName') as HTMLInputElement;
-        const nickname = nicknameInput?.value.trim();
+        const loginElement = document.getElementById('login') as HTMLInputElement;
+        const login = loginElement?.value.trim();
         const selectedAvatar = Array.from(document.querySelectorAll('input[name="avatar"]'))
         .find((input) => (input as HTMLInputElement).checked) as HTMLInputElement | undefined;
 
         // const avatar = (document.querySelector('input[name="avatar"]') as HTMLInputElement)?.value;
         // const avatarUrl = this.getAvatarUrl(avatar);
   
-        if (!nickname) {
-          alert("⚠️ Please enter your nickname!");
+        if (!login) {
+          alert("⚠️ Please enter your login!");
           return;
         }
 
@@ -109,7 +109,7 @@ export class GuestPage implements Page{
           const res = await fetch(`${env.backUser}/user/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstname: nickname, lastname: nickname, username: nickname,nickname: nickname, avatar: avatarUrl, email: `${nickname}@guest.42.fr`, address: "", telephone: `${nickname}_telephone`})
+            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}@guest.42.fr`, address: "", telephone: ``})
           });
 
           if (!res.ok) {
@@ -119,10 +119,11 @@ export class GuestPage implements Page{
           }
   
           const userResponse = await res.json();
+          console.log('userResponse ', userResponse)
           const user = {
-            id : userResponse.user_id,
+            id : userResponse.user_id.id,
             avatar: avatarUrl,
-            username: nickname,
+            username: login,
             type: "guest"
           }
           console.log("✅ User created:", user);
@@ -133,6 +134,7 @@ export class GuestPage implements Page{
  
            // Redirection vers la page de profil
            window.location.hash = "#profileGuest";
+           window.location.reload();
 
         } catch (err) {
           console.error("❌ Failed to create user:", err);
@@ -140,15 +142,6 @@ export class GuestPage implements Page{
         }
       });
     }
-  
-    // getAvatarUrl(avatarValue: string): string {
-    //   switch (avatarValue) {
-    //     case 'avatar1': return './public/images/avatar1.png';
-    //     case 'avatar2': return './public/images/avatar2.png';
-    //     case 'avatar3': return './public/images/avatar3.png';
-    //     default: return './public/images/avatar1.png';
-    //   }
-    // }
 
     getAvatarUrl(avatarValue: string): string {
         const avatars: Record<string, string> = {

@@ -13,7 +13,7 @@ export const isusernameValid = (idnum: string):boolean => {
 };
 
 export const isPasswordValid = (password: string):boolean => {
-  const length = password.length >= 12 && password.length <= 30;
+  const length = password.length >= 8 && password.length <= 30;
   const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W])(?!.*(.)\1\1).*$/.test(password);
   return length && regex;
 };
@@ -22,7 +22,3 @@ export const isEmailValid = (email: string):boolean => {
 	return validator.isEmail(email);
 };
 
-export const isNicknameValid = (nickname: string):boolean => {
-  const length = nickname.length >= 3 && nickname.length <= 20;
-  return length;
-};

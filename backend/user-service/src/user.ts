@@ -5,7 +5,6 @@ export class User {
       public firstname: string,
       public lastname: string,
       public username: string,
-      public nickname: string,
       public avatar: string | null = null,
       public status: string = 'offline',
       public email: string,

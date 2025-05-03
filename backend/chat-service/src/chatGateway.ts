@@ -19,6 +19,16 @@ export function registerChatGateway(io: Server, db: any) {
     socket.userId = userId;
     console.log(`🟢 Utilisateur connecté : userId=${userId}, socket.id=${socket.id}`);
 
+    
+    // 📩 Réception message
+    socket.on("removedUser", async (msg) => {
+      console.log('removedUser ', msg)
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("removedUser", msg);
+      }
+     });
      // 📩 Réception message
      socket.on("paddleRelativeMove", async (msg) => {
       let id = msg.to;

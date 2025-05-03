@@ -6,16 +6,12 @@ export class ProfilePage implements Page {
     render() {
         const t = (key: keyof typeof profileTranslations) => getTranslation("profile", key);
 
-        const user = {
-            username: "AsmaPro",
-            email: "asma@gaming.com",
-            status: "in-game", // 'online', 'offline', 'in-game'
-            avatar: "./public/images/profile.jpg",
-            level: 12,
-            matches: 128,
-            wins: 72,
-            losses: 56,
-        };
+        const savedUser = localStorage.getItem("transcendenceUser");
+        let user;
+        if(savedUser){
+            user = JSON.parse(savedUser);
+        }
+        
 
         const winRate = ((user.wins / user.matches) * 100).toFixed(1);
 
@@ -25,31 +21,11 @@ export class ProfilePage implements Page {
             "in-game": `<span class="flex items-center gap-2 text-yellow-300 font-semibold"><span class="w-3 h-3 rounded-full bg-yellow-300 animate-pulse"></span>${t('in-game')}</span>`,
         };
 
-        const friends = [
-            { name: "PlayerOne", avatar: "./public/images/player1_avatar.png", status: "online" },
-            { name: "PingQueen", avatar: "./public/images/player2_avatar.png", status: "in-game" },
-            { name: "ShadowAce", avatar: "./public/images/avatar1.png", status: "offline" }
-        ];
-
-        const friendCards = friends.map(friend => `
-            <div class="flex items-center justify-between bg-gray-700 p-4 rounded-lg">
-                <div class="flex items-center space-x-4">
-                    <img src="${friend.avatar}" class="w-12 h-12 rounded-full border-2 ${friend.status === 'online' ? 'border-green-400' : (friend.status === 'in-game' ? 'border-yellow-300' : 'border-gray-500')}">
-                    <div>
-                        <p class="text-white font-semibold">${friend.name}</p>
-                        <p class="text-sm">${statusBadge[friend.status as "online" | "offline" | "in-game"]}</p>
-                    </div>
-                </div>
-                <div class="flex space-x-2">
-                    <button class="bg-neon-orange text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('challenge')}</button>
-                    <button class="bg-neon-purple text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('invite')}</button>
-                    <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-opacity-80 text-sm">${t('block')}</button>
-                </div>
-            </div>
-        `).join("");
-
         const html = `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl">
+            <div class="flex flex-col items-center mb-8 space-y-6">
+            <p class="text-neon-orange text-3xl"> << WELCOME!!>> </p>
+            </div>
                 <!-- Header -->
                 <div class="flex justify-between items-start mb-8">
                     <!-- Avatar + Info -->
@@ -94,15 +70,6 @@ export class ProfilePage implements Page {
                         </div>
                     </div>
                 </div>
-
-                <!-- Friends -->
-                <div class="mt-10">
-                    <h4 class="text-neon-green text-lg font-semibold mb-4">${t('friendsTitle')}</h4>
-                    <div class="space-y-4">
-                        ${friendCards}
-                    </div>
-                </div>
-            </div>
         `;
 
         const app = document.getElementById('app');

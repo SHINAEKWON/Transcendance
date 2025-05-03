@@ -37,3 +37,22 @@ export async function createMessage(senderId: string, receiverId: string, conten
     timestamp: new Date().toISOString(),
   };
 }
+export async function deleteMessagesByUserId(userId: number) {
+  const db = await initDB();
+
+  const userIdStr = userId.toString();
+
+  try {
+      await db.run(
+          'DELETE FROM messages WHERE senderId = ? OR receiverId = ?',
+          userIdStr,
+          userIdStr
+      );
+      console.log(`Messages supprimés pour user_id=${userId}`);
+  } catch (error) {
+      console.error('Erreur lors de la suppression des messages :', error);
+      throw error;
+  } finally {
+      await db.close();
+  }
+}

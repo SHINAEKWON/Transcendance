@@ -15,8 +15,3 @@ export const passwordCheck = (password: string) => {
     const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W])(?!.*(.)\1\1).*$/.test(password);
     return length && regex;
 };
-
-export const nicknameCheck = (nickname: string) => {
-    const length = nickname.length >= 3 && nickname.length <= 20;
-    return length;
-};

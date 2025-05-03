@@ -15,6 +15,4 @@ export async function userRegisterInfoCheck( request: FastifyRequest, reply: Fas
         return reply.status(400).send({ message: "Invalid password" });
 	if (!checkers.isEmailValid(query.email))
 		return reply.status(400).send({ message: "Invalid email form" });
-    if (!checkers.isNicknameValid(query.nickname))
-        return reply.status(400).send({ message: "Invalid nickname" });
 }

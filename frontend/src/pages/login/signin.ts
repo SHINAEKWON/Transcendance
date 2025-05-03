@@ -1,5 +1,14 @@
 import { env } from "../../env/env";
+import { jwtDecode } from "jwt-decode";
+import { getUserInfo } from "../../services/userService";
 
+
+interface JwtPayload {
+  user_id: number;
+  email: string;
+  iat: number;
+  exp: number;
+}
 export class SigninPage implements Page {
   render() {
     setTimeout(this.loginButtonHandler.bind(this), 50);
@@ -122,10 +131,14 @@ export class SigninPage implements Page {
         }
         const data = await response.json(); // <--- extraction de la réponse JSON
         localStorage.setItem("authToken", data.token); // <--- sauvegarde du token
-    
-
+        const decoded = jwtDecode<JwtPayload>(data.token);
+        console.log('decode ', decoded);
+        const userInfo = await getUserInfo(decoded.user_id);
+        localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));
         alert("Connexion réussie !");
         console.log("Login envoyé au backend :", formData.email);
+        window.location.hash = "#profile";
+        window.location.reload();
 
       } catch (err: any) {
         alert("Connexion échouée.");

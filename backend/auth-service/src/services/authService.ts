@@ -74,7 +74,6 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
         firstname,
         lastname,
         username: 'google-' + Math.random().toString(36).substring(2, 10),
-        nickname: 'google-' + Math.random().toString(36).substring(2, 8),
         avatar,
         email,
         address: '',
@@ -89,5 +88,7 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
     console.error("Erreur findOrCreateUserWithGoogle:", error);
     throw error;
   }
+
+  
 }
 

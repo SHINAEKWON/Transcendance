@@ -20,7 +20,8 @@ RUN npm install --legacy-peer-deps
 RUN npm install typescript better-sqlite3
 
 # Copier le reste du projet
-COPY . .
+COPY src/ ./src
+COPY uploads/ ./uploads
 
 # Compiler le TypeScript
 RUN npx tsc
@@ -40,8 +41,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/uploads ./uploads
-# <-- AJOUTER cette ligne
-COPY --from=builder /app/db ./db   
+   
 
 # Monter un volume pour la base SQLite
 

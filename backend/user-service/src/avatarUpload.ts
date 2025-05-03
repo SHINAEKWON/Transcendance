@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { fileErrorCode } from './fileErrorCode.js';
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { MultipartFile } from '@fastify/multipart';
+
 
 export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Promise<number> {
     console.log("from avatarUpload");
@@ -47,7 +49,8 @@ export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Prom
         const fullFilename = filename + "." + extension;
         const filepath = path.join(uploadDir, fullFilename);
         const writeStream = fs.createWriteStream(filepath);
-        await part.file.pipe(writeStream);
+
+      //  await part. .file.pipe(writeStream);
 
         // IMPORTANT //
         // Ici mise a jour de DB ? Faire une autre app au lieu de tout traiter ici ?

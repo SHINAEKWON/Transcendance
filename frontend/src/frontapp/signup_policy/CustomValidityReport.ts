@@ -51,7 +51,7 @@ export function usernameChecker() {
 
     if (usernameInput) {
         usernameInput.addEventListener("input", () => {
-            const checks = signupRules.nicknameCheck(usernameInput.value);
+            const checks = signupRules.usernameCheck(usernameInput.value);
 
             if (checks) {
                 usernameInput.setCustomValidity("");
@@ -62,47 +62,6 @@ export function usernameChecker() {
         });
     }
 }
-
-
-export function nicknameChecker() {
-    const nicknameInput = document.getElementById("nickname") as HTMLInputElement;
-
-    if (!nicknameInput)
-        return ;
-
-    if (nicknameInput) {
-        nicknameInput.addEventListener("input", () => {
-            const checks = signupRules.nicknameCheck(nicknameInput.value);
-
-            if (checks) {
-                nicknameInput.setCustomValidity("");
-            } else {
-                nicknameInput.setCustomValidity("Nickname length must be between 3~20 and contain only alphabet, number and special characters ( _, - and .)");
-            }
-            nicknameInput.reportValidity();
-        });
-    }
-}
-
-// export function passwordChecker() {
-//     const passwordInput = document.getElementById("password") as HTMLInputElement;
-
-//     if (!passwordInput)
-//         return ;
-
-//     if (passwordInput) {
-//         passwordInput.addEventListener("input", () => {
-//             const checks = signupRules.passwordCheck(passwordInput.value);
-
-//             if (checks) {
-//                 passwordInput.setCustomValidity("");
-//             } else {
-//                 passwordInput.setCustomValidity("Password must meet all requirements");
-//             }
-//             passwordInput.reportValidity();
-//         });
-//     }
-// }
 
 
 export function passwordChecker() {
@@ -117,7 +76,7 @@ export function passwordChecker() {
         const pass = passwordInput.value;
     
         const checks = {
-          length: pass.length >= 12 && pass.length <= 30,
+          length: pass.length >= 8 && pass.length <= 30,
           uppercase: /[A-Z]/.test(pass),
           lowercase: /[a-z]/.test(pass),
           number: /[0-9]/.test(pass),

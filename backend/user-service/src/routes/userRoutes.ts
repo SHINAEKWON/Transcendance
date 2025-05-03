@@ -1,9 +1,14 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
-import { NewCreateUser } from '../userModel.js';
-import { getAllUsers, getUser, createUser, updateUser, deleteUser, isUserBlocked, blockUser, unblockUser, getUserByEmail, getUserByUsername } from '../userModel.js';
+import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
 import { fileErrorCode } from '../fileErrorCode.js';
+import {
+  sendFriendRequest,
+  acceptFriendRequest,
+  removeFriend,
+  getAllUsersWithFriendStatus
+} from '../userModel.js';
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -16,53 +21,51 @@ export async function userRoutes(app: FastifyInstance) {
     return await getUser(Number(id));
   });
 
-  app.put('/users/:id', async (req, res) => {
-    const { id } = req.params as { id: string };
-    const { username, avatar } = req.body as { username: string; avatar: string };
-    return await updateUser(Number(id), username, avatar);
-  });
-
   app.delete('/users/:id', async (req, res) => {
     const { id } = req.params as { id: string };
-    return await deleteUser(Number(id));
-  });
+    const userId = Number(id);
 
-  app.get('/users/:id/blocked/:targetId', async (req, res) => {
-    const { id, targetId } = req.params as { id: string; targetId: string };
-    const blocked = await isUserBlocked(id, targetId);
-    return { blocked };
-  });
+    try {
+        // Supprimer les données liées dans auth-service
+        await fetch(`http://auth-service:4000/auth/user/${userId}`, {
+            method: 'DELETE'
+        });
 
-  app.post('/users/:id/block/:targetId', async (req, res) => {
-    const { id, targetId } = req.params as { id: string; targetId: string };
-    await blockUser(id, targetId);
-    return { message: `User ${targetId} blocked by ${id}` };
-  });
+        // Supprimer les données liées dans chat-service
+        await fetch(`http://chat-service:4003/messages/user/${userId}`, {
+            method: 'DELETE'
+        });
 
-  app.delete('/users/:id/block/:targetId', async (req, res) => {
-    const { id, targetId } = req.params as { id: string; targetId: string };
-    await unblockUser(id, targetId);
-    return { message: `User ${targetId} unblocked by ${id}` };
-  });
+        // Supprimer les amitiés (dans user-service si c'est là où est la table friends)
+        await deleteFriends(userId);
+
+        // Supprimer le user lui-même
+        await deleteUser(userId);
+
+        res.status(200).send({ message: 'Utilisateur et toutes les données associées supprimées.' });
+    } catch (error) {
+        console.error('Erreur lors de la suppression complète :', error);
+        res.status(500).send({ error: 'Erreur lors de la suppression.' });
+    }
+});
+
 
   /*****Modification apportee par AHlem nouvelle structure bdd */
 
   app.post('/user/register', async (req, res) => {
-    console.log("request arrived to users/register");
+    console.log("request arrived to users/register ", req.body);
     const {
       firstname,
       lastname,
       username,
-      nickname,
       avatar,
       email,
       address,
-      telephone
+      telephone,
     } = req.body as {
       firstname: string;
       lastname: string;
       username: string;
-      nickname: string;
       avatar?: string;
       email: string;
       address?: string;
@@ -74,7 +77,6 @@ export async function userRoutes(app: FastifyInstance) {
       firstname,
       lastname,
       username,
-      nickname,
       avatar ?? null,
       'offline',
       email,
@@ -84,9 +86,12 @@ export async function userRoutes(app: FastifyInstance) {
 
     try {
       console.log("request came to userRoutes\n");
-      const user_id = await NewCreateUser(user);
+      const user_id:any = await createUser(user);
+      console.log("user_id\n", user_id);
+      const id = user_id.id;
+      console.log("id\n", id);
       console.log("after NewCreateUser\n");
-      res.code(201).send({ message: "Utilisateur créé", user_id });
+      res.code(201).send({ message: "Utilisateur créé", user_id});
     } catch (err: any) {
       res.code(409).send({ error: err.message });
     }
@@ -142,6 +147,79 @@ export async function userRoutes(app: FastifyInstance) {
       return res.status(500).send({ error: 'Internal Server Error'});
     }
   });
+
+  // Envoyer une demande d'amitié
+  app.post('/users/:id/friends/:targetId', async (req, res) => {
+    const { id, targetId } = req.params as { id: string; targetId: string };
+  
+    try {
+      const result = await sendFriendRequest(Number(id), Number(targetId));
+      res.code(201).send(result);
+    } catch (err: any) {
+      res.code(400).send({ error: err.message });
+    }
+  });
+  
+  // Accepter une demande d'amitié
+  app.put('/users/:id/friends/:targetId', async (req, res) => {
+    const { id, targetId } = req.params as { id: string; targetId: string };
+  
+    try {
+      const result = await acceptFriendRequest(Number(id), Number(targetId));
+      res.code(200).send(result);
+    } catch (err: any) {
+      res.code(400).send({ error: err.message });
+    }
+  });
+  
+  // Supprimer un ami (ou annuler une demande)
+  app.delete('/users/:id/friends/:targetId', async (req, res) => {
+    const { id, targetId } = req.params as { id: string; targetId: string };
+  
+    try {
+      const result = await removeFriend(Number(id), Number(targetId));
+      res.code(200).send(result);
+    } catch (err: any) {
+      res.code(400).send({ error: err.message });
+    }
+  });
+  
+  // Liste des amis
+  app.get('/users/:id/usersFriendsStatus', async (req, res) => {
+    const { id } = req.params as { id: string };
+  
+    try {
+      const friends = await getAllUsersWithFriendStatus(Number(id));
+      res.code(200).send(friends);
+    } catch (err: any) {
+      res.code(500).send({ error: err.message });
+    }
+  });
+  
+  
+  // Bloquer un ami
+app.post('/users/:id/friends/:targetId/block', async (req, res) => {
+  const { id, targetId } = req.params as { id: string; targetId: string };
+
+  try {
+      const result = await blockFriend(Number(id), Number(targetId));
+      res.code(200).send(result);
+  } catch (err: any) {
+      res.code(400).send({ error: err.message });
+  }
+});
+
+// Débloquer un ami
+app.delete('/users/:id/friends/:targetId/block', async (req, res) => {
+  const { id, targetId } = req.params as { id: string; targetId: string };
+
+  try {
+      const result = await unblockFriend(Number(id), Number(targetId));
+      res.code(200).send(result);
+  } catch (err: any) {
+      res.code(400).send({ error: err.message });
+  }
+});
 
 
 }

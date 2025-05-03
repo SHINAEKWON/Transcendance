@@ -49,3 +49,20 @@ export async function getAllAuthRecords() {
   return await db.all('SELECT * FROM auth_data ');
 }
 
+export async function deleteAuthByUserId(userId: number) {
+  const db = await connectDB();
+
+  try {
+      await db.run(
+          'DELETE FROM auth_data WHERE user_id = ?',
+          userId
+      );
+      console.log(`auth_data supprimé pour user_id=${userId}`);
+  } catch (error) {
+      console.error('Erreur lors de la suppression de auth_data :', error);
+      throw error;
+  } finally {
+      await db.close();
+  }
+}
+

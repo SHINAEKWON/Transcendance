@@ -1,258 +1,395 @@
-import { getUsersList } from '../services/userService.js';
+// sidebar.ts
+import { getUsersFriendsStatus } from '../services/userService.js';
 import { getConversation } from '../services/chatService.js';
 import { User } from "../models/user";
+import { env } from '../env/env.js';
 
 declare var Socket: any;
 
 export class Sidebar {
-
-    render() {
-        const html = `
+  render() {
+    const html = `
       <div class="flex flex-col h-full">
-        <!-- Liste d’amis scrollable -->
-        <div class="flex-1 pr-1" style="overflow: auto; max-height: 500px">
+        <div class="flex-1 pr-1" style="overflow: auto; max-height: 520px">
           <ul id="list-user" class="space-y-4"></ul>
         </div>
 
-        <!-- Fenêtre de chat stylée neon -->
-        <div id="chat-window" class="mt-4 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg shadow-lg overflow-hidden border border-blue-500 h-[300px]">
-          <!-- Header -->
+        <div id="chat-window" class="mt-4 hidden flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg shadow-lg overflow-hidden border border-blue-500 h-[300px]">
           <div class="flex justify-between items-center px-4 py-2 border-b border-blue-700">
             <h3 id="chat-title" class="text-white text-lg">Chat</h3>
             <button id="chat-close" class="text-white text-xl hover:text-red-500">×</button>
           </div>
 
-          <!-- Messages -->
           <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2 flex flex-col"></div>
 
-          <!-- Barre d'envoi -->
           <div class="border-t border-blue-700 px-3 py-1 bg-gray-900 flex items-center">
             <input 
               type="text" 
               id="chat-input"
               placeholder="Type a message..."
-              class="flex-1 bg-gray-700 text-white px-3 py-1.5 text-sm rounded-l-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-[0_0_10px_#3b82f6] transition duration-150"
+              class="flex-1 bg-gray-700 text-white px-3 py-1.5 text-sm rounded-l-full focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <button 
               id="chat-send-btn"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-sm rounded-r-full shadow-md hover:shadow-blue-500/70 transition duration-200"
-            >
-              Send
-            </button>
+              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-sm rounded-r-full"
+            >Send</button>
           </div>
         </div>
       </div>
     `;
 
-        const app = document.getElementById('sidebar');
-        if (app) {
-            app.innerHTML = html;
-        }
+    const app = document.getElementById('sidebar');
+    if (app) app.innerHTML = html;
 
-        this.renderFriend().then(() => {
-            this.chatEvents();
-        });
+    this.renderFriend().then(() => {
+      setTimeout(() => {
+        this.chatEvents();
+      }, 200);
+      
+    });
+  }
+
+  async renderFriend() {
+    const users = await getUsersFriendsStatus();
+    if (!users) { return; }
+
+    const usersHtml = document.getElementById("list-user");
+    let result = '';
+
+    const storedUser = localStorage.getItem("transcendenceUser");
+    const myId = storedUser ? JSON.parse(storedUser).id : null;
+
+    const me = users.find((u: any) => u.id === myId);
+    const others = users.filter((u: any) => u.id !== myId);
+
+    // Afficher moi-même
+    if (me) {
+        result += `
+       <li class="flex flex-col items-center bg-gray-800 px-2 py-1 rounded-lg animate-pulse">
+         <img src="${me.avatar}" class="w-12 h-12 rounded-full border border-neon-green shadow-md">
+         <p class="mt-1 text-neon-green text-center font-bold text-lg leading-none">${me.username}</p>
+       </li> `;
     }
 
-    // generer dynamiquement la liste des amis
-    async renderFriend() {
-        const users = await getUsersList();
-        const usersHtml = document.getElementById("list-user");
-        let result = '';
+    others.forEach((user: any) => {
+        const isFriend = user.friend_status === 'accepted';
+        const isPending = user.friend_status === 'pending';
+        const isBlocked = user.friend_status === 'blocked';
+        const isBlockedByMe = isBlocked && user.action_user_id === myId;
+        const hasBlockedMe = isBlocked && user.action_user_id !== myId;
+        const sentByMe = user.action_user_id === myId;
 
-        if (users && users.length > 0) {
-            users.forEach((user: User) => {
-                result += `
-          <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between">
-            <div class="flex items-center">
-              <img src="${user.avatar}" class="w-12 h-12 rounded-full border border-blue-400 shadow-[0_0_10px_#3b82f6]">
-              <p class="ml-4 text-white font-semibold">${user.username}</p>
-            </div>
-            <button 
-              class="open-chat relative bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-md hover:shadow-blue-400"
-              data-nbmessage="0"
-              data-id="${user.id}"
-              data-user="${user.username}"
-              data-avatar="${user.avatar}"
-            >
-              <span class="chat-icon">💬</span>
-              <span class="notif-badge hidden absolute -top-2 -right-2 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md">
-                1
-              </span>
-            </button>
-          </li>`;
-            });
+        let rowStyle = hasBlockedMe ? 'opacity-50 grayscale pointer-events-none' : '';
+        let actionButtons = '';
 
-            if (usersHtml) {
-                usersHtml.innerHTML = result;
-            }
+        if (isFriend) {
+            actionButtons += `
+           <button class="open-chat relative bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-md" data-id="${user.id}" data-user="${user.username}" data-avatar="${user.avatar}">
+             💬
+             <span class="notif-badge hidden absolute -top-2 -right-2 bg-pink-600 text-xs font-bold px-2 py-0.5 rounded-full">1</span>
+           </button>`;
+           actionButtons += `
+            <div class="relative inline-block">
+                <button class="love-btn bg-pink-600 hover:bg-pink-700 text-white px-2 py-1 ml-2 rounded text-sm" data-id="${user.id}">🚫</button>
+                <div class="hidden action-invite absolute right-0 top-full mt-1 space-x-1 flex">
+                <button class="block-btn bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded" data-id="${user.id}">⛔</button>
+                <button class="reject-invite-btn bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm" data-id="${user.id}">❌</button>
+                </div>
+            </div>`;
+
+            
         }
-    }
-
-
-    chatEvents() {
-        const socket = getSocket()!; // hedhi pour récupérer l'objet socket.io
-
-        // Nouveau message recu via socket
-        socket.on("newMessage", (msg: any) => {
-            const chatMessages = document.getElementById("chat-messages")!;
-
-            setTimeout(() => {
-                const chatWindow = document.getElementById("chat-window");
-                const chatUserId = chatWindow?.getAttribute("data-id");
-
-
-                // Si le chat n'est pas ouvert OU ouvert avec une autre personne
-                if (!chatUserId || chatUserId !== msg.senderId) {
-                    // Afficher la notif
-                    const buttons = document.getElementsByClassName("open-chat");
-                    for (let i = 0; i < buttons.length; i++) {
-                        const btn = buttons[i] as HTMLElement;
-                        if (btn.getAttribute("data-id") === msg.senderId) {
-                            let nb = parseInt(btn.getAttribute("data-nbmessage") || "0");
-                            nb++;
-                            btn.setAttribute("data-nbmessage", nb.toString());
-
-                            const badge = btn.querySelector(".notif-badge") as HTMLElement;
-                            if (badge) {
-                                badge.textContent = nb.toString();
-                                badge.classList.remove("hidden");
-                            }
-
-                            btn.classList.add("pulse");
-                            break;
-                        }
-                    }
-                } else {
-                    // Chat ouvert avec la bonne personne → afficher direct
-                    const chatMessages = document.getElementById("chat-messages")!;
-                    const response = document.createElement("div");
-                    response.className = "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
-                    if(msg.content.startsWith('<a ')){
-                      response.innerHTML = msg.content;
-                    }else {
-                      response.textContent = msg.content;
-                    }
-                    
-                    chatMessages.appendChild(response);
-                    chatMessages.scrollTo(0, chatMessages.scrollHeight);
-                }
-
-            }, 100);
-        });
-
-        // si on clic sur bouton message pour ouvrir un chat
-        const chatButtons = document.getElementsByClassName("open-chat");
-        for (let i = 0; i < chatButtons.length; i++) {
-            const btn = chatButtons[i] as HTMLElement;
-
-            btn.addEventListener("click", async () => {
-                const user = btn.getAttribute("data-user");
-                const userId = btn.getAttribute("data-id");
-                const avatar = btn.getAttribute("data-avatar");
-
-                const chatWindow = document.getElementById("chat-window")!;
-                const chatTitle = document.getElementById("chat-title")!;
-                const chatMessages = document.getElementById("chat-messages")!;
-
-                // Ajouter les infos de l'utilisateur dans le chat window
-                chatWindow.setAttribute("data-id", userId || "");
-                chatWindow.setAttribute("data-user", user || "");
-                chatWindow.setAttribute("data-avatar", avatar || "");
-
-                chatTitle.textContent = `💬 Chat with ${user}`;
-                chatMessages.innerHTML = "";
-                chatWindow.classList.remove("hidden");
-
-                // reinitialiser le compteur et badge
-                btn.setAttribute("data-nbmessage", "0");
-                const badge = btn.querySelector(".notif-badge") as HTMLElement;
-                if (badge) {
-                    badge.textContent = ""; 
-                    badge.classList.add("hidden");
-                }
-                btn.classList.remove("pulse");
-
-                // Charger anciens messages
-                const storedUser = localStorage.getItem("transcendenceUser");
-                const myId = storedUser ? JSON.parse(storedUser).id : null;
-
-                console.log("myId =", myId);
-
-                const messages = await getConversation(myId!, userId!);
-
-                messages.forEach((msg: any) => {
-                    const div = document.createElement("div");
-                    const isMe = String(msg.senderId) === String(myId);
-                    console.log("💡 myId =", myId, "↔️ sender =", msg.senderId);
-
-                    div.className = isMe
-                        ? "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]"
-                        : "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
-                        if(msg.content?.startsWith('<a ')){
-                          div.innerHTML = msg.content;
-                        }else {
-                          div.textContent = msg.content;
-                        }
-                    
-                    chatMessages.appendChild(div);
-                });
-
-                //Scroll tout en bas
-                chatMessages.scrollTo(0, chatMessages.scrollHeight);
-            });
+        if (isBlockedByMe) {
+          actionButtons += `
+          <button class="unblock-btn bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded" data-id="${user.id}">♻️</button>`;
+        } 
+        else if (!user.friend_status) {
+            actionButtons += `<button class="send-invite-btn bg-green-600 hover:bg-green-700 text-white px-2 py-1 ml-2 rounded" data-id="${user.id}">👤</button>`;
+        }
+        else if (isPending && !sentByMe) {
+            actionButtons += `
+            <div class="relative inline-block">
+                <button class="love-btn bg-pink-600 hover:bg-pink-700 text-white px-2 py-1 ml-2 rounded text-sm" data-id="${user.id}">💖</button>
+                <div class="hidden action-invite absolute right-0 top-full mt-1 space-x-1 flex">
+                    <button class="accept-invite-btn bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-sm" data-id="${user.id}">✅</button>
+                    <button class="reject-invite-btn bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm" data-id="${user.id}">❌</button>
+                </div>
+            </div>`;
+        }
+        else if (isPending && sentByMe) {
+            actionButtons += `
+            <div class="relative">
+                <button class="toggle-cancel-btn bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 ml-2 rounded text-sm">...</button>
+                <div class="cancel-dropdown hidden absolute right-0 top-full mt-1 bg-gray-700 text-white text-sm px-2 py-1 rounded shadow-lg z-10">
+                    <button class="cancel-invite-btn hover:text-red-500 text-sm" data-id="${user.id}">❌</button>
+                </div>
+            </div>`;
         }
 
-        // bouton de fermeture du chat
-        const closeBtn = document.getElementById("chat-close");
-        closeBtn?.addEventListener("click", () => {
-            document.getElementById("chat-window")?.classList.add("hidden");
-        });
+        result += `
+         <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between ${rowStyle}">
+           <div class="flex items-center">
+             <img src="${user.avatar}" class="w-12 h-12 rounded-full border border-blue-400">
+             <p class="ml-4 text-white font-semibold">${user.username}</p>
+           </div>
+           <div class="flex items-center space-x-2">
+             ${actionButtons}
+           </div>
+         </li>`;
+    });
 
-        // ici c'est la parrtie d l'envoi d’un message
-        const chatSendBtn = document.getElementById("chat-send-btn");
-        const chatInput = document.getElementById("chat-input") as HTMLInputElement;
-        const chatMessages = document.getElementById("chat-messages")!;
-
-        function sendMessage() {
-            const messageText = chatInput.value.trim();
-            if (messageText !== "") {
-                const userMessage = document.createElement("div");
-                userMessage.className = "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]";
-
-                if(messageText?.startsWith('<a ')){
-                  userMessage.innerHTML = messageText;
-                }else {
-                  userMessage.textContent = messageText;
-                }
-               
-                chatMessages.appendChild(userMessage);
-                chatMessages.scrollTo(0, chatMessages.scrollHeight);
-                chatInput.value = "";
-
-                const chatWindow = document.getElementById("chat-window")!;
-                const userId = chatWindow.getAttribute("data-id");
-                if (socket && userId) {
-                    socket.emit("chatMessage", {
-                        content: messageText,
-                        receiverId: userId
-                    });
-                }
-            }
-        }
-
-        chatSendBtn?.addEventListener("click", sendMessage);
-
-        chatInput?.addEventListener("keydown", (event: KeyboardEvent) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        });
-    }
+    if (usersHtml) usersHtml.innerHTML = result;
+    this.attachFriendActions();
 }
 
-// ici c'est une fonction utilitaire pour acceder à l’objet socket.io
+
+
+attachFriendActions() {
+  const storedUser = localStorage.getItem("transcendenceUser");
+  const myId = storedUser ? JSON.parse(storedUser).id : null;
+
+  document.querySelectorAll('.send-invite-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'POST' });
+          this.renderFriend();
+      });
+  });
+
+  // 💖 → Toggle ✅ ❌
+  document.querySelectorAll('.love-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+          const parent = (e.currentTarget as HTMLElement).parentElement;
+          const dropdown = parent?.querySelector('.action-invite') as HTMLElement;
+          if (dropdown) {
+              dropdown.classList.toggle('hidden');
+          }
+      });
+  });
+
+  // ✅ Accepter
+  document.querySelectorAll('.accept-invite-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'PUT' });
+          this.renderFriend();
+      });
+  });
+
+  // ❌ Rejeter
+  document.querySelectorAll('.reject-invite-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
+          this.renderFriend();
+      });
+  });
+
+  // Annuler invitation envoyée
+  document.querySelectorAll('.cancel-invite-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
+          this.renderFriend();
+      });
+  });
+
+  // Toggle menu ...
+  document.querySelectorAll('.toggle-cancel-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+          const parent = (e.currentTarget as HTMLElement).parentElement;
+          const dropdown = parent?.querySelector('.cancel-dropdown') as HTMLElement;
+          if (dropdown) {
+              dropdown.classList.toggle('hidden');
+          }
+      });
+  });
+
+  // Bloquer
+  document.querySelectorAll('.block-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'POST' });
+          this.renderFriend();
+      });
+  });
+
+  // Débloquer
+  document.querySelectorAll('.unblock-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+          const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
+          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'DELETE' });
+          this.renderFriend();
+      });
+  });
+}
+
+
+
+  chatEvents() {
+    const socket = getSocket()!; // hedhi pour récupérer l'objet socket.io
+
+    // Nouveau message recu via socket
+    socket.on("newMessage", (msg: any) => {
+        const chatMessages = document.getElementById("chat-messages")!;
+
+        setTimeout(() => {
+            const chatWindow = document.getElementById("chat-window");
+            const chatUserId = chatWindow?.getAttribute("data-id");
+
+
+            // Si le chat n'est pas ouvert OU ouvert avec une autre personne
+            if (!chatUserId || chatUserId !== msg.senderId) {
+                // Afficher la notif
+                const buttons = document.getElementsByClassName("open-chat");
+                for (let i = 0; i < buttons.length; i++) {
+                    const btn = buttons[i] as HTMLElement;
+                    if (btn.getAttribute("data-id") === msg.senderId) {
+                        let nb = parseInt(btn.getAttribute("data-nbmessage") || "0");
+                        nb++;
+                        btn.setAttribute("data-nbmessage", nb.toString());
+
+                        const badge = btn.querySelector(".notif-badge") as HTMLElement;
+                        if (badge) {
+                            badge.textContent = nb.toString();
+                            badge.classList.remove("hidden");
+                        }
+
+                        btn.classList.add("pulse");
+                        break;
+                    }
+                }
+            } else {
+                // Chat ouvert avec la bonne personne → afficher direct
+                const chatMessages = document.getElementById("chat-messages")!;
+                const response = document.createElement("div");
+                response.className = "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
+                if(msg.content.startsWith('<a ')){
+                  response.innerHTML = msg.content;
+                }else {
+                  response.textContent = msg.content;
+                }
+                
+                chatMessages.appendChild(response);
+                chatMessages.scrollTo(0, chatMessages.scrollHeight);
+            }
+
+        }, 100);
+    });
+
+    // si on clic sur bouton message pour ouvrir un chat
+    const chatButtons = document.getElementsByClassName("open-chat");
+    for (let i = 0; i < chatButtons.length; i++) {
+        const btn = chatButtons[i] as HTMLElement;
+
+        btn.addEventListener("click", async () => {
+            const user = btn.getAttribute("data-user");
+            const userId = btn.getAttribute("data-id");
+            const avatar = btn.getAttribute("data-avatar");
+
+            const chatWindow = document.getElementById("chat-window")!;
+            const chatTitle = document.getElementById("chat-title")!;
+            const chatMessages = document.getElementById("chat-messages")!;
+
+            // Ajouter les infos de l'utilisateur dans le chat window
+            chatWindow.setAttribute("data-id", userId || "");
+            chatWindow.setAttribute("data-user", user || "");
+            chatWindow.setAttribute("data-avatar", avatar || "");
+
+            chatTitle.textContent = `💬 Chat with ${user}`;
+            chatMessages.innerHTML = "";
+            chatWindow.classList.remove("hidden");
+
+            // reinitialiser le compteur et badge
+            btn.setAttribute("data-nbmessage", "0");
+            const badge = btn.querySelector(".notif-badge") as HTMLElement;
+            if (badge) {
+                badge.textContent = ""; 
+                badge.classList.add("hidden");
+            }
+            btn.classList.remove("pulse");
+
+            // Charger anciens messages
+            const storedUser = localStorage.getItem("transcendenceUser");
+            const myId = storedUser ? JSON.parse(storedUser).id : null;
+
+            console.log("myId =", myId);
+
+            const messages = await getConversation(myId!, userId!);
+
+            messages.forEach((msg: any) => {
+                const div = document.createElement("div");
+                const isMe = String(msg.senderId) === String(myId);
+                console.log("💡 myId =", myId, "↔️ sender =", msg.senderId);
+
+                div.className = isMe
+                    ? "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]"
+                    : "bg-purple-600 text-white px-4 py-2 rounded-lg self-start max-w-[75%] shadow-[0_0_10px_#a855f7]";
+                    if(msg.content?.startsWith('<a ')){
+                      div.innerHTML = msg.content;
+                    }else {
+                      div.textContent = msg.content;
+                    }
+                
+                chatMessages.appendChild(div);
+            });
+
+            //Scroll tout en bas
+            chatMessages.scrollTo(0, chatMessages.scrollHeight);
+        });
+    }
+
+    // bouton de fermeture du chat
+    const closeBtn = document.getElementById("chat-close");
+    closeBtn?.addEventListener("click", () => {
+        document.getElementById("chat-window")?.classList.add("hidden");
+        const chatWindow = document.getElementById("chat-window");
+           chatWindow?.removeAttribute("data-id");
+    });
+
+    // ici c'est la parrtie d l'envoi d’un message
+    const chatSendBtn = document.getElementById("chat-send-btn");
+    const chatInput = document.getElementById("chat-input") as HTMLInputElement;
+    const chatMessages = document.getElementById("chat-messages")!;
+
+    function sendMessage() {
+        const messageText = chatInput.value.trim();
+        if (messageText !== "") {
+            const userMessage = document.createElement("div");
+            userMessage.className = "bg-blue-600 text-white px-4 py-2 rounded-lg self-end max-w-[75%] shadow-[0_0_10px_#3b82f6]";
+
+            if(messageText?.startsWith('<a ')){
+              userMessage.innerHTML = messageText;
+            }else {
+              userMessage.textContent = messageText;
+            }
+           
+            chatMessages.appendChild(userMessage);
+            chatMessages.scrollTo(0, chatMessages.scrollHeight);
+            chatInput.value = "";
+
+            const chatWindow = document.getElementById("chat-window")!;
+            const userId = chatWindow.getAttribute("data-id");
+            if (socket && userId) {
+                socket.emit("chatMessage", {
+                    content: messageText,
+                    receiverId: userId
+                });
+            }
+        }
+    }
+
+    chatSendBtn?.addEventListener("click", sendMessage);
+
+    chatInput?.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+}
+}
+
 function getSocket(): any | undefined {
-    return (window as any).socket;
+  return (window as any).socket;
 }
