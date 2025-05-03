@@ -1,41 +1,33 @@
+
 //dans ce fichier, on trouve le contrat d'interface avec le service auth
 
-
-import fastify, { FastifyInstance } from 'fastify';
-import  jwt  from 'jsonwebtoken';
-import axios from 'axios';
-import bcrypt from 'bcrypt';
 import xss from 'xss';
-import { request } from 'http';
-import { error } from 'console';
-import { registerUser } from '../services/authService.js';
-import { deleteAuthByUserId, getAllAuthRecords } from '../models/authModel.js';
-import { authenticateUser } from '../services/authService.js';
-import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
-import { findOrCreateUserWithGoogle } from '../services/authService.js';
-import { cleanEmptyData } from '../utils/utils.js';
-
-/**google signIN */
-import {OAuth2Client} from 'google-auth-library';
-import fastifyJWT from '@fastify/jwt';
+import axios from 'axios';
+import request from 'http';
+import error from 'console';
+import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-dotenv.config(); // loads environment variables from .env file
-// const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_ID = "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com";
-console.log('CLIENT_ID = ', CLIENT_ID);
-// console.log('CLIENT_ID = ', process.env.CLIENT_ID);
+import jwt  from 'jsonwebtoken';
+// import fastifyJWT from '@fastify/jwt'; // je vais peut etre l'utiliser plutard
+import {OAuth2Client} from 'google-auth-library';
+import fastify, { FastifyInstance } from 'fastify';
+import { cleanEmptyData } from '../utils/utils.js';
+import { registerUser } from '../services/authService.js';
+import { authenticateUser } from '../services/authService.js';
+import { findOrCreateUserWithGoogle } from '../services/authService.js';
+import { deleteAuthByUserId, getAllAuthRecords } from '../models/authModel.js';
+import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
 
 
-
-/*tocken a ajouter dans le .env */
-const JWT_SECRET="superscret42";
+dotenv.config();
+const CLIENT_ID = process.env.CLIENT_ID;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export default async function authRoutes(app: FastifyInstance) {
+
   app.get('/auth', async (req, res) => {
     return await getAllAuthRecords();
   });
-
-
   // si /auth/signup/ est sollicite, notre service va:
   // solliciter user-service pour creer un user
   // attendre la reponse avec le user_id
@@ -74,10 +66,7 @@ export default async function authRoutes(app: FastifyInstance) {
         }
       
         try {
-          // User information check in backened in case info are not coming from front
           await userRegisterInfoCheck(request, reply);
-         
-
           const data = {
             username,
             firstname,
@@ -89,7 +78,6 @@ export default async function authRoutes(app: FastifyInstance) {
             avatar
           };
           console.log('before register (inside auth/signup)');
-
           const userResponse = await axios.post('http://user-service:4001/user/register', data);
           console.log('register passed');
           const user_id = userResponse.data.user_id;
@@ -97,12 +85,10 @@ export default async function authRoutes(app: FastifyInstance) {
           const id = user_id.id;
           const hashedPassword = await bcrypt.hash(password, 10);
           await registerUser(id, hashedPassword);
-          //generation du web token
           const token = jwt.sign({id, username}, JWT_SECRET, {expiresIn: '1h'});
           return reply.code(201).send({ message: 'Auth registration successful ✅', token });
         } catch (err: any) {
-          console.error('Error in route /auth/signup: ', err);
-          if (err.reponse === 'SQLITE_CONSTRAINT' && err.reponse.status === 500){
+          if (err.response.status === 409){
            return reply.status(409).send({ 
               error: 'a user already exists with this username, email or phone number.' });
           }
