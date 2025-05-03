@@ -29,6 +29,17 @@ export function registerChatGateway(io: Server, db: any) {
         io.to(targetSocketId).emit("removedUser", msg);
       }
      });
+
+    // 📩 friends events
+    socket.on("friendsEvents", async (msg) => {
+      console.log('friendsEvents ', msg)
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("friendsEvents", msg);
+      }
+     });
+
      // 📩 Réception message
      socket.on("paddleRelativeMove", async (msg) => {
       let id = msg.to;

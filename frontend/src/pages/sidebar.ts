@@ -7,6 +7,14 @@ import { env } from '../env/env.js';
 declare var Socket: any;
 
 export class Sidebar {
+
+  constructor(private initSocket: boolean = true){
+
+  }
+
+  setInitSocket(initSocket: boolean){
+    this.initSocket = initSocket;
+  }
   render() {
     const html = `
       <div class="flex flex-col h-full">
@@ -41,15 +49,24 @@ export class Sidebar {
     const app = document.getElementById('sidebar');
     if (app) app.innerHTML = html;
 
-    this.renderFriend().then(() => {
+    this.renderFriend(null).then(() => {
       setTimeout(() => {
         this.chatEvents();
+        if(this.initSocket){
+          this.installSocket();
+        }
       }, 200);
       
     });
   }
 
-  async renderFriend() {
+  async renderFriend(targetId: any) {
+    const socket = getSocket()!;
+    if (socket && targetId != null) {
+      socket.emit("friendsEvents", {
+        to: ""+targetId
+    });
+    }
     const users = await getUsersFriendsStatus();
     if (!users) { return; }
 
@@ -140,11 +157,14 @@ export class Sidebar {
 
     if (usersHtml) usersHtml.innerHTML = result;
     this.attachFriendActions();
+    setTimeout(() => {
+      this.chatEvents();
+    }, 200);
 }
 
 
 
-attachFriendActions() {
+public attachFriendActions() {
   const storedUser = localStorage.getItem("transcendenceUser");
   const myId = storedUser ? JSON.parse(storedUser).id : null;
 
@@ -152,7 +172,7 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'POST' });
-          this.renderFriend();
+          this.renderFriend(targetId);
       });
   });
 
@@ -172,7 +192,7 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'PUT' });
-          this.renderFriend();
+          this.renderFriend(targetId);
       });
   });
 
@@ -181,7 +201,13 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
-          this.renderFriend();
+          this.renderFriend(targetId);
+          const chatWindow = document.getElementById("chat-window");
+          let id = chatWindow?.getAttribute("data-id");
+          if(id && (id == targetId)){
+            document.getElementById("chat-window")?.classList.add("hidden");
+            chatWindow?.removeAttribute("data-id");
+          }
       });
   });
 
@@ -190,7 +216,7 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
-          this.renderFriend();
+          this.renderFriend(targetId);
       });
   });
 
@@ -202,6 +228,7 @@ attachFriendActions() {
           if (dropdown) {
               dropdown.classList.toggle('hidden');
           }
+          
       });
   });
 
@@ -210,7 +237,13 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'POST' });
-          this.renderFriend();
+          this.renderFriend(targetId);
+          const chatWindow = document.getElementById("chat-window");
+          let id = chatWindow?.getAttribute("data-id");
+          if(id && (id == targetId)){
+            document.getElementById("chat-window")?.classList.add("hidden");
+            chatWindow?.removeAttribute("data-id");
+          }
       });
   });
 
@@ -219,18 +252,18 @@ attachFriendActions() {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
           await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'DELETE' });
-          this.renderFriend();
+          this.renderFriend(targetId);
       });
   });
 }
 
 
-
-  chatEvents() {
-    const socket = getSocket()!; // hedhi pour récupérer l'objet socket.io
+  installSocket(){
+    const socket = getSocket()!;
 
     // Nouveau message recu via socket
     socket.on("newMessage", (msg: any) => {
+      console.log("newMessage ...")
         const chatMessages = document.getElementById("chat-messages")!;
 
         setTimeout(() => {
@@ -276,6 +309,10 @@ attachFriendActions() {
 
         }, 100);
     });
+  }
+
+  chatEvents() {
+    const socket = getSocket()!;
 
     // si on clic sur bouton message pour ouvrir un chat
     const chatButtons = document.getElementsByClassName("open-chat");
@@ -312,11 +349,7 @@ attachFriendActions() {
             // Charger anciens messages
             const storedUser = localStorage.getItem("transcendenceUser");
             const myId = storedUser ? JSON.parse(storedUser).id : null;
-
-            console.log("myId =", myId);
-
             const messages = await getConversation(myId!, userId!);
-
             messages.forEach((msg: any) => {
                 const div = document.createElement("div");
                 const isMe = String(msg.senderId) === String(myId);

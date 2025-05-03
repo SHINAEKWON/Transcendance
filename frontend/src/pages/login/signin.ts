@@ -95,6 +95,13 @@ export class SigninPage implements Page {
         const data = await res.json();
         alert("Connexion Google réussie !");
         console.log("Réponse backend :", data);
+        localStorage.setItem("authToken", data.token); // <--- sauvegarde du token
+        const decoded = jwtDecode<JwtPayload>(data.token);
+        console.log('decode ', decoded);
+        const userInfo = await getUserInfo(decoded.user_id);
+        localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));   
+        window.location.hash = "#profile";
+        window.location.reload();
 
         // Tu peux rediriger ici
         // window.location.href = "/home";
