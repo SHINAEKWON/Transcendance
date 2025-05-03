@@ -93,7 +93,14 @@ export async function userRoutes(app: FastifyInstance) {
       console.log("after NewCreateUser\n");
       res.code(201).send({ message: "Utilisateur créé", user_id});
     } catch (err: any) {
-      res.code(409).send({ error: err.message });
+      console.log("\n\nerror in user/register : \n", err);
+      if (err.code === 'SQLITE_CONSTRAINT'){
+        const message = err.message as string;
+        if (message.includes('username') || message.includes('email') || message.includes('telephone') ){
+          return res.status(409).send({ error: 'a user already exists with this login, email or phone number.'});
+        }
+      }
+      res.status(409).send({ error: err.message });
     }
   });
 
