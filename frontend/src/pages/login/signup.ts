@@ -18,6 +18,10 @@ export class SignupPage implements Page{
             CustomValidityReport.lastnameChecker();
             CustomValidityReport.usernameChecker();
             CustomValidityReport.passwordChecker();
+            document.getElementById('signup-popup-close')?.addEventListener('click', () => {
+                document.getElementById('signup-popup')?.classList.add('hidden');
+            });
+            
         }, 50);
         const html = `
             <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
@@ -74,7 +78,17 @@ export class SignupPage implements Page{
                         class="w-full mt-4 py-2 bg-neon-purple hover:bg-neon-green transition text-white font-semibold rounded-lg shadow">
                         Create Account
                     </button>
+                    
                 </form>
+
+                <!-- Popup d'erreur -->
+                <div id="signup-popup" class="hidden fixed top-6 left-1/2 transform -translate-x-1/2 bg-neon-purple text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md w-full">
+                    <div class="flex justify-between items-start">
+                        <div id="signup-popup-message" class="text-sm"></div>
+                        <button id="signup-popup-close" class="ml-4 text-white hover:text-gray-200 text-xl leading-none">&times;</button>
+                    </div>
+                </div>
+
             </div>
         `;
 
@@ -129,9 +143,45 @@ export class SignupPage implements Page{
                 window.location.href = "#profile";
                 window.location.reload();
             } catch (err: any) {
-                alert('Failed to create account!');
-                console.log("Failed to create account! : " + err.message);
+                console.error("Erreur d'inscription : ", err);
+            
+                let message = 'Échec de la création du compte.';
+                let fields = {};
+            
+                try {
+                    const errorJson = JSON.parse(err.message?.split(') ')[1]);
+                    message = errorJson.message || message;
+                    fields = errorJson.fields || {};
+                } catch (parseErr) {
+                    console.warn("Impossible d'analyser le message d'erreur JSON :", parseErr);
+                }
+            
+                this.showPopup(message, fields);
             }
+            
         });
     }
+
+    private showPopup(message: string, fields?: Record<string, string>) {
+        const popup = document.getElementById('signup-popup');
+        const popupMessage = document.getElementById('signup-popup-message');
+    
+        if (!popup || !popupMessage) return;
+    
+        let html = `<p class="font-semibold mb-2">${message}</p>`;
+        if (fields) {
+            html += '<ul class="list-disc list-inside text-sm">';
+            for (const [field, msg] of Object.entries(fields)) {
+                html += `<li><strong>${field}:</strong> ${msg}</li>`;
+            }
+            html += '</ul>';
+        }
+    
+        popupMessage.innerHTML = html;
+        popup.classList.remove('hidden');
+        
+        
+    }
+    
+    
 }

@@ -17,12 +17,13 @@ import { authenticateUser } from '../services/authService.js';
 import { findOrCreateUserWithGoogle } from '../services/authService.js';
 import { deleteAuthByUserId, getAllAuthRecords } from '../models/authModel.js';
 import { userRegisterInfoCheck } from '../services/signupQueryCheck/userRegisterInfoCheck.js';
+import https from 'https';
 
 
 dotenv.config();
 const CLIENT_ID = process.env.CLIENT_ID;
 const JWT_SECRET = process.env.JWT_SECRET as string;
-
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 export default async function authRoutes(app: FastifyInstance) {
 
   app.get('/auth', async (req, res) => {
@@ -36,68 +37,106 @@ export default async function authRoutes(app: FastifyInstance) {
   // envoyer une reponse au client 
 
   app.post('/signup', async (request, reply) => {
-        console.log('Request came to /auth/signup', request.body);
-      
-        const {
-          username,
-          firstname,
-          lastname,
-          password,
-          email,
-          address,
-          telephone,
-          avatar
-        } = request.body as {
-            username: string,
-            firstname: string,
-            lastname: string,
-            password: string,
-            email: string,
-            address: string | null,
-            telephone: string | null,
-            avatar: string | null
-        };
-        console.log('\n\n\n');
-        console.log(username, firstname, lastname, password, email);
-        console.log('\n\n\n');
-
-        if (!username || !firstname || !lastname || !password || !email) {
-            return reply.status(400).send({ message: "Tous les champs sont requis." });
-        }
-      
-        try {
-          await userRegisterInfoCheck(request, reply);
-          const data = {
-            username,
-            firstname,
-            lastname,
-            password,
-            email,
-            address,
-            telephone,
-            avatar
-          };
-          console.log('before register (inside auth/signup)');
-
-          const userResponse = await axios.post('https://user-service:4001/user/register', data);
-          console.log('register passed');
-          const user_id = userResponse.data.user_id;
-          console.log('user id = ', user_id);
-          const id = user_id.id;
-          const hashedPassword = await bcrypt.hash(password, 10);
-          await registerUser(id, hashedPassword);
-          const token = jwt.sign({id, username}, JWT_SECRET, {expiresIn: '1h'});
-          return reply.code(201).send({ message: 'Auth registration successful ✅', token });
-        } catch (err: any) {
-          if (err.response.status === 409){
-           return reply.status(409).send({ 
-              error: 'a user already exists with this username, email or phone number.' });
-          }
-          else{
-            return reply.status(500).send({ error: "an error occurred while saving authentication data." });
-          }
-        }
+    console.log('Request came to /auth/signup', request.body);
+  
+    const {
+      username,
+      firstname,
+      lastname,
+      password,
+      email,
+      address,
+      telephone,
+      avatar
+    } = request.body as {
+      username: string,
+      firstname: string,
+      lastname: string,
+      password: string,
+      email: string,
+      address: string | null,
+      telephone: string | null,
+      avatar: string | null
+    };
+  
+    // Vérification champs obligatoires
+    if (!username || !firstname || !lastname || !password || !email) {
+      return reply.status(400).send({
+        error: true,
+        code: 'MISSING_FIELDS',
+        message: "Tous les champs obligatoires doivent être remplis."
       });
+    }
+  
+    try {
+      await userRegisterInfoCheck(request, reply); // Ta validation custom si nécessaire
+  
+      const userData = {
+        username,
+        firstname,
+        lastname,
+        password,
+        email,
+        address,
+        telephone,
+        avatar
+      };
+  
+      console.log('before register (inside auth/signup)');
+  
+      const userResponse = await axios.post(
+        'https://user-service:4001/user/register',
+        userData,
+        { httpsAgent }
+      );
+  
+      console.log('register passed');
+      const user_id = userResponse.data.user_id;
+      const id = user_id.id;
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await registerUser(id, hashedPassword);
+  
+      const token = jwt.sign({ id, username }, JWT_SECRET, { expiresIn: '1h' });
+  
+      return reply.code(201).send({
+        message: 'Inscription réussie ✅',
+        token
+      });
+  
+    } catch (err: any) {
+      // Erreur venant du user-service
+      if (err.response && err.response.status === 409) {
+        const backendError = err.response.data;
+  
+        // Si c’est une erreur de validation champ par champ
+        if (backendError.code === 'VALIDATION_ERROR') {
+          return reply.status(409).send({
+            error: true,
+            code: 'VALIDATION_ERROR',
+            fields: backendError.fields,
+            message: 'Des champs contiennent des données déjà utilisées.'
+          });
+        }
+  
+        // Sinon, erreur générique de conflit
+        return reply.status(409).send({
+          error: true,
+          code: 'USER_ALREADY_EXISTS',
+          message: 'Un utilisateur existe déjà avec ces identifiants.'
+        });
+      }
+  
+      // Autres erreurs serveur
+      console.error('Erreur interne lors de l’inscription :', err);
+      return reply.status(500).send({
+        error: true,
+        code: 'SERVER_ERROR',
+        message: "Une erreur est survenue lors de l'inscription."
+      });
+    }
+  });
+  
       
 
       /* signIN ==> auth reçoit :{ email ou username + password}
@@ -131,8 +170,8 @@ export default async function authRoutes(app: FastifyInstance) {
           const userResponse = await axios.post('https://user-service:4001/user/checkUser', {
             // username,
             email
-          }
-          );
+          }, { httpsAgent } );
+          
 
           const user_id = userResponse.data.user_id;
           if (!user_id){

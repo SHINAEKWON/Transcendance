@@ -22,7 +22,6 @@ RUN npm install typescript better-sqlite3
 # Copier le reste du projet
 COPY src/ ./src
 
-COPY public/ ./public
 
 COPY .env .env
 

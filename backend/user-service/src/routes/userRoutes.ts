@@ -9,6 +9,7 @@ import {
   removeFriend,
   getAllUsersWithFriendStatus
 } from '../userModel.js';
+import { checkUserUniqueness } from '../userService.js';
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -53,7 +54,6 @@ export async function userRoutes(app: FastifyInstance) {
   /*****Modification apportee par AHlem nouvelle structure bdd */
 
   app.post('/user/register', async (req, res) => {
-    console.log("request arrived to users/register ", req.body);
     const {
       firstname,
       lastname,
@@ -71,7 +71,7 @@ export async function userRoutes(app: FastifyInstance) {
       address?: string;
       telephone?: string;
     };
-
+  
     const user = new User(
       null,
       firstname,
@@ -83,24 +83,25 @@ export async function userRoutes(app: FastifyInstance) {
       address ?? null,
       telephone ?? null
     );
-
+  
+    // Étape 1 : Check validations
+    const validationErrors = await checkUserUniqueness({ username, email, telephone });
+  
+    if (validationErrors) {
+      return res.status(409).send({
+        error: true,
+        code: 'VALIDATION_ERROR',
+        fields: validationErrors
+      });
+    }
+  
+    // Étape 2 : Créer l'utilisateur
     try {
-      console.log("request came to userRoutes\n");
-      const user_id:any = await createUser(user);
-      console.log("user_id\n", user_id);
-      const id = user_id.id;
-      console.log("id\n", id);
-      console.log("after NewCreateUser\n");
-      res.code(201).send({ message: "Utilisateur créé", user_id});
+      const user_id = await createUser(user);
+      return res.code(201).send({ message: 'Utilisateur créé', user_id });
     } catch (err: any) {
-      console.log("\n\nerror in user/register : \n", err);
-      if (err.code === 'SQLITE_CONSTRAINT'){
-        const message = err.message as string;
-        if (message.includes('username') || message.includes('email') || message.includes('telephone') ){
-          return res.status(409).send({ error: 'a user already exists with this login, email or phone number.'});
-        }
-      }
-      res.status(409).send({ error: err.message });
+      console.error(err);
+      return res.status(500).send({ error: true, code: 'SERVER_ERROR', message: 'Erreur serveur.' });
     }
   });
 

@@ -8,7 +8,8 @@ import axios from 'axios';
 import { cleanEmptyData } from '../utils/utils.js';
 //fonction qui assure l'enregistrement des donnes d'authenfication d'un utilisateur
 import { insertAuthData, AuthData, getAuthByUserId  } from '../models/authModel.js';
-
+import https from 'https';
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 export const registerUser = async (
     user_id: number,
     password_hash: string,
@@ -61,7 +62,7 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
   try {
     const userResponse = await axios.post('https://user-service:4001/user/checkUser', {
       email,
-    })
+    }, { httpsAgent } )
     const user_id = userResponse.data.user_id;
     if (user_id){
       console.log('user already exists, user_id = ', user_id);
@@ -82,7 +83,7 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
       console.log('\n\ngoogle data  = ', google_data, '\n\n');
       // const data = cleanEmptyData(google_data);
       // console.log('\n\ndata = ', data, '\n\n');
-      const registerResponse = await axios.post('https://user-service:4001/user/register', google_data);
+      const registerResponse = await axios.post('https://user-service:4001/user/register', google_data, { httpsAgent });
       return registerResponse.data.user_id;
     }
     console.error("Erreur findOrCreateUserWithGoogle:", error);

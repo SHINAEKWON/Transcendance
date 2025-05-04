@@ -69,6 +69,19 @@ export async function getUserByUsername(username: string)
   }
   return row.id; 
 }
+
+export async function getUserByTelephone(telephone: string)
+{
+  const db = await connectDB();
+  const row =  await  db.get<{id: number}>(
+    'SELECT * FROM users WHERE telephone = ?', [telephone]);
+  if (!row){
+    return null;
+  }
+  return row.id; 
+}
+
+
 // Envoyer une demande d'ami
 export async function sendFriendRequest(userId: number, friendId: number) {
   const db = await connectDB();
