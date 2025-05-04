@@ -6,11 +6,13 @@ import { aiPlayTranslations, gameTranslations, localPlayTranslations, onlinePlay
 import { createLocalTournamentTranslations, createTournamentTranslations, tournamentsTranslations } from '../translations/tournaments.js';
 import { profileTranslations } from '../translations/profile.js';
 import { editProfileTranslations } from '../translations/editProfile.js';
+import { sidebarTranslations } from '../translations/sidebar.js';
 
 
 const translationsMap = {
   welcome: welcomeTranslations,
   navbar: navbarTranslations,
+  sidebar: sidebarTranslations,
   language: languageTranslations,
   game: gameTranslations,
   localPlay: localPlayTranslations,

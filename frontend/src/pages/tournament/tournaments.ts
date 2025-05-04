@@ -21,17 +21,20 @@ export class TournamentsPage implements Page {
                             ${t("join")}
                         </button>
                     </div>
-                    <div class="bg-gray-900 p-8 rounded-lg hover:ring-2 hover:ring-neon-purple cursor-pointer flex items-center">
+                    <div class="bg-gray-900 p-8 rounded-lg hover:ring-2 hover:ring-neon-purple cursor-pointer flex items-center relative">
                         <img src="./public/images/online_tournament.png" class="w-50 h-50 object-cover rounded-lg mr-4">
                         <div>
                             <h3 class="text-xl text-neon-purple mb-2">${t("onlineTitle")}</h3>
                             <p class="text-gray-400">${t("onlineDesc")}</p>
                             <p class="text-sm text-neon-green mt-2">${t("startOnline")}</p>
                         </div>
-                        <button data-page="createRemoteTournament" class="redirect-btn bg-neon-purple text-white px-6 py-2 rounded-lg hover:bg-opacity-80 ml-auto">
-                            ${t("join")}
-                        </button>
-                    </div>
+
+                        <p class="text-ms text-black italic absolute bottom-4 right-3" 
+                        style="text-shadow: 0 0 3px white, 0 0 5px white;">
+                            ${t("comingSoon")}
+                        </p>
+                    </div>                
+
                 </div>
             </div>
         `;

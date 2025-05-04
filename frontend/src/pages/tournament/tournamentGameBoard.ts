@@ -1,22 +1,24 @@
+declare const confetti: any;
+import { getTranslation } from "../../i18n/i18n.js";
+import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
 
 export class TournamentGameBoardPage implements Page {
   private tournamentData: any = null;
-  private winners: any[] = []; // stocke les vainqueurs
-  private finalWinner: any = null; // stocke le grand gagnant
+  private winners: any[] = []; 
+  private finalWinner: any = null; 
 
   constructor() {
-    this.endGameEvents = this.endGameEvents.bind(this); // Important de binder le contexte
+    this.endGameEvents = this.endGameEvents.bind(this); 
   }
 
-  // les classes pour allumer et ettendre les box
   private highlightMatch(matchIndex: number) {
     const matchBox = document.getElementById(`match-${matchIndex}`);
     if (matchBox) {
       matchBox.classList.add('animate-glow');
-      matchBox.classList.add('border-blue-400'); // ➔ Contour lumineux bleu
-      matchBox.classList.remove('border-white/20'); // ➔ Enlève l'ancien contour gris
+      matchBox.classList.add('border-blue-400');
+      matchBox.classList.remove('border-white/20');
     }
   }
 
@@ -25,14 +27,15 @@ export class TournamentGameBoardPage implements Page {
     if (matchBox) {
       matchBox.classList.remove('animate-glow');
       matchBox.classList.remove('border-blue-400');
-      matchBox.classList.add('border-white/20'); // ➔ Remet le contour normal
+      matchBox.classList.add('border-white/20');
     }
   }
-
 
   private currentMatchIndex = 0;
 
   private endGameEvents(playerLeft: Player, playerRight: Player) {
+    const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
+
     console.log("Match terminé");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
@@ -44,12 +47,9 @@ export class TournamentGameBoardPage implements Page {
       avatar: winner.getAvatar()
     });
 
-    // Éteindre l'ancien match
     this.unhighlightMatch(this.currentMatchIndex);
 
-
-    // 🏆 Mise à jour immédiate dans l'arbre du tournoi
-    const winnerBoxId = this.currentMatchIndex === 0 ? "winner1" : "winner2"; // winner1 pour premier match, winner2 pour deuxième
+    const winnerBoxId = this.currentMatchIndex === 0 ? "winner1" : "winner2";
     const winnerBox = document.getElementById(winnerBoxId);
 
     if (winnerBox) {
@@ -67,9 +67,7 @@ export class TournamentGameBoardPage implements Page {
     this.currentMatchIndex++;
 
     if (this.currentMatchIndex === 1) {
-      // Après premier match ➔ Lancer 2ème match (P3 vs P4)
       appGame.innerHTML = "";
-
       const [p1, p2, p3, p4] = this.tournamentData.players;
       let socket = null;
       if (this.tournamentData.mode === "remote") {
@@ -88,14 +86,10 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.endGameEvents
       ).render();
-      // Allumer le nouveau match (match-1)
-      this.highlightMatch(this.currentMatchIndex)
-
+      this.highlightMatch(this.currentMatchIndex);
 
     } else if (this.currentMatchIndex === 2) {
-      // Après 2ème match ➔ Lancer la finale entre les 2 winners
       appGame.innerHTML = "";
-
       const [winner1, winner2] = this.winners;
       let socket = null;
       if (this.tournamentData.mode === "remote") {
@@ -114,18 +108,16 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.finalMatchEndEvent.bind(this)
       ).render();
-      // Allumer le nouveau match (match-1)
       this.highlightMatch(this.currentMatchIndex);
     }
   }
 
-
-
   private finalMatchEndEvent(playerLeft: Player, playerRight: Player) {
+    const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
+
     console.log("Finale terminée");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
-    console.log(`Grand gagnant: ${winner.getName()}`);
 
     this.finalWinner = {
       username: winner.getName(),
@@ -134,23 +126,21 @@ export class TournamentGameBoardPage implements Page {
 
     const appGame = document.getElementById('appGame');
     if (appGame) {
-      // 1. Nettoyer complètement l'intérieur et changer les styles
       appGame.innerHTML = "";
       appGame.className = "flex flex-col items-center justify-center p-10 rounded-xl shadow-2xl";
 
-      // 2. Ajouter l'affichage du gagnant
       appGame.innerHTML = `
         <div class="flex flex-col items-center space-y-6 animate-bounce-in">
           <img src="${this.finalWinner.avatar}" class="w-32 h-32 rounded-full border-4 border-white shadow-lg animate-pulse" />
           <div class="text-3xl font-extrabold text-white animate-glow">🏆 ${this.finalWinner.username} 🏆</div>
-          <div class="text-lg text-white">Champion du tournoi !</div>
+          <div class="text-lg text-white">${t("tournamentChampion")}</div>
           <div class="flex space-x-6 mt-6">
             <button id="rematchBtn" class="px-6 py-3 bg-neon-green text-black font-bold rounded-lg hover:bg-green-400 transition">
-              🔥 Rematch
+              🔥 ${t("rematch")}
             </button>
-            <button id="newTournamentBtn" class="px-6 py-3 bg-neon-purple text-white font-bold rounded-lg hover:bg-purple-400 transition">
-              🏆 New Tournament
-            </button>
+            <a href="#createLocalTournament" class="px-6 py-3 bg-neon-purple text-white font-bold rounded-lg hover:bg-purple-400 transition">
+              🏆 ${t("newTournament")}
+            </a>
           </div>
         </div>
       `;
@@ -160,14 +150,18 @@ export class TournamentGameBoardPage implements Page {
         spread: 70,
         origin: { y: 0.6 }
       });
-
-
     }
+
+    const rematchBtn = document.getElementById("rematchBtn");
+    rematchBtn?.addEventListener("click", () => {
+    window.location.reload();
+    });
+
   }
 
-
-
   async render() {
+    const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
+
     const hash = window.location.hash;
     const urlParams = new URLSearchParams(hash.split('?')[1]);
     const tournamentId = urlParams.get('id');
@@ -207,23 +201,17 @@ export class TournamentGameBoardPage implements Page {
             </div>
           </div>
 
-          <!-- Ligne 2 : carte des vainqueurs -->
           <div class="flex justify-center">
-            <div id="match-2"class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
+            <div id="match-2" class="flex items-center justify-around space-x-2 border border-white/20 p-4 rounded-lg shadow-md bg-gray-800/30 min-w-[360px] max-w-[370px]">
               ${this.renderEmptyMatchBox("winner1")}
               ${this.renderVersus()}
               ${this.renderEmptyMatchBox("winner2")}
             </div>
           </div>
+        </div>
 
-
-          
-
-        
-      </div>
-      <div class="flex justify-center relative">
-          <div id="appGame" style="height: 380px" class="relative w-200 rounded-lg border-white shadow-2xl overflow-visible">
-          </div>
+        <div class="flex justify-center relative">
+          <div id="appGame" style="height: 380px" class="relative w-200 rounded-lg border-white shadow-2xl overflow-visible"></div>
         </div>
     `;
 
@@ -247,9 +235,7 @@ export class TournamentGameBoardPage implements Page {
         socket,
         this.endGameEvents
       ).render();
-      // Allumer le nouveau match (match-1)
-      this.highlightMatch(this.currentMatchIndex)
-
+      this.highlightMatch(this.currentMatchIndex);
     }
   }
 
@@ -269,17 +255,6 @@ export class TournamentGameBoardPage implements Page {
         <div class="text-xs text-gray-400">${id}</div>
       </div>
     `;
-  }
-
-
-  renderEmptyWinnerBox() {
-    return `
-    
-      <div class="flex flex-col items-center space-y-1 text-center">
-        <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">🏅</div>
-        <div class="text-xs text-gray-400 mt-1">Username</div>
-        </div>
-      `;
   }
 
   renderVersus() {

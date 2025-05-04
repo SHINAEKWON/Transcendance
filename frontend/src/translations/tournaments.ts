@@ -54,7 +54,14 @@ export const tournamentsTranslations = {
       de: "Beitreten",
       ar: "انضمام",
       ko: "참가하기"
-    }
+    },
+    comingSoon: {
+      en: "Coming Soon ..",
+      fr: "Bientôt disponible ..",
+      de: "Kommt bald ..",
+      ar: ".. قريبا",
+      ko: "곧 출시 .."
+  }  
   } as const;
 
   export const createTournamentTranslations = {
@@ -113,8 +120,14 @@ export const tournamentsTranslations = {
       de: "Du musst genau 4 Spieler haben, um das Turnier zu starten.",
       ar: "يجب أن يكون لديك 4 لاعبين بالضبط لبدء البطولة.",
       ko: "토너먼트를 시작하려면 정확히 4명의 플레이어가 있어야 합니다."
+    },
+    back: {
+      en: "⬅ Back",
+      fr: "⬅ Retour",
+      de: "⬅ Zurück",
+      ar: "⬅ رجوع",
+      ko: "⬅ 뒤로"
     }
-    
   } as const;
 
   export const createLocalTournamentTranslations = {
@@ -166,6 +179,13 @@ export const tournamentsTranslations = {
       de: "Bitte alle Spielernamen ausfüllen.",
       ar: "يرجى ملء جميع أسماء اللاعبين.",
       ko: "모든 플레이어 이름을 입력하세요."
+    },
+    back: {
+      en: "⬅ Back",
+      fr: "⬅ Retour",
+      de: "⬅ Zurück",
+      ar: "⬅ رجوع",
+      ko: "⬅ 뒤로"
     }
     
   } as const;

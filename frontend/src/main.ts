@@ -21,6 +21,7 @@ import { OnlinePlayPage } from './pages/gamePage/online-play.js';
 import { DuelGameBoardPage } from './pages/gamePage/duelGameBoard.js';
 import { CreateLocalTournamentPage } from './pages/tournament/createLocalTournament.js';
 import { CreateRemoteTournamentPage } from './pages/tournament/createRemoteTournament.js';
+import { getUserInfo } from './services/userService.js'; // à adapter selon ton path
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -52,9 +53,8 @@ window.addEventListener('hashchange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-
-
-  initSocket();
+  (async () => {
+  await initSocket(); 
   const navbar = new Navbar();
   const appElement: HTMLElement | null = document.getElementById('navbar');
   if (appElement) {
@@ -104,12 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   router.init(); // ✅ Initialiser `router`
   console.log("after router init")
-
-
+})();
 
 });
 
-import { getUserInfo } from './services/userService.js'; // à adapter selon ton path
 
 async function initSocket() {
   const savedUser = localStorage.getItem("transcendenceUser");

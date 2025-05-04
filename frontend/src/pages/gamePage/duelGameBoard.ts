@@ -1,15 +1,25 @@
+declare const confetti: any;
+import { getTranslation } from "../../i18n/i18n.js";
+import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
 
 export class DuelGameBoardPage implements Page {
   private duelData: any = null;
+  private pageMode = '';
 
   async render() {
+    const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
+
     const hash = window.location.hash;
     const urlParams = new URLSearchParams(hash.split('?')[1]);
     const duelEncoded = urlParams.get('duel');
     const duelId = urlParams.get('id');
-
+    const modeParam = urlParams.get('mode');
+    if(modeParam){
+      this.pageMode = modeParam;
+    }
+    
     if (duelEncoded) {
       this.duelData = JSON.parse(decodeURIComponent(duelEncoded));
     }
@@ -18,26 +28,26 @@ export class DuelGameBoardPage implements Page {
 
     const rulesHtml = `
     <div class="flex justify-center mt-4">
-    <button id="showRulesBtn" class="text-xs px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded-full text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-pulse">
-    📜 Rules
-    </button>
-  </div>
-  
+      <button id="showRulesBtn" class="text-xs px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded-full text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-blue animate-pulse">
+      📜 ${t("rulesButton")}
+      </button>
+    </div>
 
-      <div id="rulesModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
-        <div class="bg-gray-800 text-white p-6 rounded-lg w-full max-w-md shadow-xl relative">
-          <button id="closeRulesBtn" class="absolute top-2 right-2 text-gray-400 hover:text-white text-xl">&times;</button>
-          <h3 class="text-2xl font-bold mb-4 text-center text-gradient">Game Rules — PHΛN†ØM[404]</h3>
-          <ul class="text-sm space-y-3 leading-relaxed">
-            <li>🎯 <strong>Goal:</strong> Reach 11 points, win by 2.</li>
-            <li>🥇 Match: 1 set only.</li>
-            <li>🔁 <strong>Serve:</strong> Switch every 2 points. At 10–10: switch every point.</li>
-            <li>💡 <strong>Indicator:</strong> A light shows who serves.</li>
-            <li>🕹 <strong>Turn:</strong> Players hit the ball alternately.</li>
-            <li>❌ <strong>Lose point:</strong> If ball exits without contact.</li>
-          </ul>
-        </div>
+    <div id="rulesModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+      <div class="bg-gray-800 text-white p-6 rounded-lg w-full max-w-md shadow-xl relative">
+        <button id="closeRulesBtn" class="absolute top-2 right-2 text-gray-400 hover:text-white text-xl">&times;</button>
+        <h3 class="text-2xl font-bold mb-4 text-center text-gradient">${t('rulesTitle')}</h3>
+        <ul class="text-sm space-y-3 leading-relaxed">
+          <li>🎯 <strong>${t('goalTitle')}</strong> ${t('goal')}</li>
+          <li>🥇 ${t('match')}</li>
+          <li>🔁 <strong>${t('serve')}</strong> ${t('serveRule')}</li>
+          <li>💡 <strong>${t('indicator')}</strong> ${t('indicatorRule')}</li>
+          <li>🕹 <strong>${t('turn')}</strong> ${t('turnRule')}</li>
+          <li>🤖 <strong>${t('robotDuel')}</strong> ${t('robotDuelRule')}</li>
+          <li>❌ <strong>${t('losePoint')}</strong> ${t('losePointRule')}</li>
+        </ul>
       </div>
+    </div>
     `;
 
     const html = `
@@ -67,8 +77,9 @@ export class DuelGameBoardPage implements Page {
 
       let socket = null;
       if (mode === "remote") {
-        console.log("set socket ...");
+        console.log("set socket ...fffdd");
         socket = getSocket();
+        console.log('soooooo ',socket);
       }
 
       new GameBoardPage(
@@ -85,7 +96,6 @@ export class DuelGameBoardPage implements Page {
         this.handleEndGame.bind(this)
       ).render();
 
-      // 🎯 Gestion de la modale des règles
       document.getElementById('showRulesBtn')?.addEventListener('click', () => {
         document.getElementById('rulesModal')?.classList.remove('hidden');
       });
@@ -97,6 +107,8 @@ export class DuelGameBoardPage implements Page {
   }
 
   private handleEndGame(playerLeft: Player, playerRight: Player) {
+    const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
+
     console.log("🏁 Duel terminé");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
@@ -110,7 +122,15 @@ export class DuelGameBoardPage implements Page {
         <div class="flex flex-col items-center space-y-6 animate-bounce-in">
           <img src="${winner.getAvatar()}" class="w-40 h-40 rounded-full border-4 border-white shadow-lg animate-pulse" />
           <div class="text-3xl font-extrabold text-white animate-glow">🏆 ${winner.getName()} 🏆</div>
-          <div class="text-lg text-white">Vainqueur du Duel !</div>
+          <div class="text-lg text-white">${t("duelWinner")}</div>
+          <div class="flex space-x-6 mt-6">
+            <button id="rematchBtn" class="px-6 py-3 bg-neon-green text-black font-bold rounded-lg hover:bg-green-400 transition">
+              🔥 ${t("rematch")}
+            </button>
+            <a href="#${this.pageMode}" class="px-6 py-3 bg-neon-purple text-white font-bold rounded-lg hover:bg-purple-400 transition">
+              ⚔️ ${t("newDuel")}
+            </a>
+          </div>
         </div>
       `;
 
@@ -119,8 +139,14 @@ export class DuelGameBoardPage implements Page {
         spread: 70,
         origin: { y: 0.6 }
       });
+
+      const rematchBtn = document.getElementById("rematchBtn");
+      rematchBtn?.addEventListener("click", () => {
+      window.location.reload();
+      });
     }
   }
+
 
   renderPlayerBox(player: any, isLeft: boolean) {
     const borderColor = isLeft ? "border-yellow-400" : "border-blue-400";

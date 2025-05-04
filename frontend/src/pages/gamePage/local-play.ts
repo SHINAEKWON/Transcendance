@@ -82,6 +82,9 @@ export class LocalPlayPage implements Page {
         <button id="startPlay" class="bg-neon-orange text-black px-10 py-5 rounded-lg font-bold text-xl hover:scale-105 transition animate-float">
           🚀 ${t("startPlay") || "Start Playing"}
         </button>
+        <a href="#duel" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition animate-float">
+            ${t("back")}
+        </a>
       </div>
     </div>
     `;
@@ -123,6 +126,7 @@ export class LocalPlayPage implements Page {
 
         const params = new URLSearchParams();
         params.set('id', duelId);
+        params.set('mode', 'localPlay');
         params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
         window.location.href = `/#duelGameBoard?${params.toString()}`;
       });

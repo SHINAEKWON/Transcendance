@@ -6,6 +6,20 @@ export const profileTranslations = {
       ar: "الملف الشخصي",
       ko: "프로필"
     },
+    welcome: {
+      en: "WELCOME!!",
+      fr: "BIENVENUE !!",
+      de: "WILLKOMMEN!!",
+      ar: "!! أهلاً وسهلاً",
+      ko: "환영합니다!!"
+    },
+    guestPlayer: {
+      en: "🕶️ Guest Player! 🕶️",
+      fr: "🕶️ Joueur Invité ! 🕶️",
+      de: "🕶️ Gastspieler! 🕶️",
+      ar: "!! 🕶️ لاعب خفي 🕶️",
+      ko: "🕶️ 게스트 플레이어! 🕶️"
+  },
     editProfile: {
       en: " Edit",
       fr: " Modifier",

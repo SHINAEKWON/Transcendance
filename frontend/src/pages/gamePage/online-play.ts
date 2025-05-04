@@ -93,6 +93,7 @@ export class OnlinePlayPage implements Page {
                 const params = new URLSearchParams();
                 params.set('id', duelId);
                 params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
+                params.set('mode', 'onlinePlay');
                 const duelLink = `<a href="#duelGameBoard?${params.toString()}" target="_blank" >
                 Hey!👋 Duel time! Join the table 🏓
                 </a> `;

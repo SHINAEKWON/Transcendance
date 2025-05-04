@@ -6,6 +6,13 @@ export const navbarTranslations = {
         "ar": "فانتوم[404]",
         "ko": "팬텀[404]"
     },
+    logout: {
+      en: "Log out",
+      fr: "Quitter",
+      de: "Log out",
+      ar: "خروج",
+      ko: "로그아웃"
+  },  
     profile: {
       en: "Profile",
       fr: "Profil",

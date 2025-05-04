@@ -102,6 +102,7 @@ export class AIPlayPage implements Page {
                 };
                 const params = new URLSearchParams();
                 params.set('id', duelId);
+                params.set('mode', 'aiPlay');
                 params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
                 window.location.href = `/#duelGameBoard?${params.toString()}`;
 

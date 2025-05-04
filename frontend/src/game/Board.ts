@@ -160,6 +160,7 @@ export class Board extends A_GameElement
     moveRemoteBalls(): void
     {
         if(this.isMasterBall){
+            console.log('is master')
             for (let i=0; i < this.balls.length; ++i)
             {
                 this.balls[i].move();

@@ -24,7 +24,7 @@ export class ProfilePage implements Page {
         const html = `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl">
             <div class="flex flex-col items-center mb-8 space-y-6">
-            <p class="text-neon-orange text-3xl"> << WELCOME!!>> </p>
+            <p class="text-neon-orange text-3xl"> << ${t('welcome')} >> </p>
             </div>
                 <!-- Header -->
                 <div class="flex justify-between items-start mb-8">

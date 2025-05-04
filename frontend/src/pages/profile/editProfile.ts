@@ -102,7 +102,9 @@ export class EditProfilePage implements Page {
 
             <!-- Buttons -->
             <div class="flex justify-between mt-10">
-                <button data-redirect="/profile" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-opacity-80 transition">${t("cancel")}</button>
+            <a href="#profile" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition animate-float">
+            ${t("cancel")}
+            </a>
                 <button class="bg-neon-green text-black px-6 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition">${t("saveChanges")}</button>
             </div>
         </div>

@@ -1,6 +1,9 @@
 
 
-export class ProfileGuestPage implements Page{
+import { getTranslation } from "../../i18n/i18n.js";
+import { profileTranslations } from "../../translations/profile.js";
+
+export class ProfileGuestPage implements Page {
     render() {
         const guestLs = localStorage.getItem("transcendenceUser");
         if (!guestLs) {
@@ -8,16 +11,19 @@ export class ProfileGuestPage implements Page{
             return;
         }
 
- 
-    const guest = JSON.parse(guestLs);
+        const guest = JSON.parse(guestLs);
+
+        // Fonction pour récupérer les traductions
+        const t = (key: keyof typeof profileTranslations) => getTranslation("profile", key);
+
 
         const html = `
             <div class="max-w-xl mx-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black p-8 rounded-2xl shadow-2xl mt-10 border border-blue-500 animate-fade-in">
                 <div class="flex flex-col items-center space-y-6">
-                <p class="text-neon-orange text-3xl"> << WELCOME!!>> </p>
+                <p class="text-neon-orange text-3xl"> << ${t('welcome')} >> </p>
                 <img src="${guest.avatar}" alt="Guest Avatar" class="w-35 h-35 rounded-full border-4 border-blue-400 shadow-[0_0_15px_#3b82f6] hover:scale-105 transition-transform duration-300">
                 <h3 class="text-2xl text-neon-green font-bold font-gaming tracking-wide drop-shadow">${guest.username}</h3>
-                <p class="text-neon-purple italic text-sm">🕶️ Guest Player! 🕶️</p>
+                <p class="text-neon-purple italic text-sm">${t('guestPlayer')}</p>
                 
                 <div class="text-4xl text-white animate-bounce">👻</div>
                     

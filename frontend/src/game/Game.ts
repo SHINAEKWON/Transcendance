@@ -7,11 +7,11 @@ import { GameMode } from "./Paddle.js";
 const GAME_NEW: number = 0;
 const GAME_STARTED: number = 1;
 const GAME_PAUSED: number = 2;
-const GAME_ENDED: number = 11;
+const GAME_ENDED: number = 3;
 
 export class Game
 {
-    private readonly score_winning: number = 11;
+    private readonly score_winning: number = 3;
 
     private board: Board;
     private state: number;
@@ -60,6 +60,7 @@ export class Game
         this.initializeEventListeners();
         if(socket && mode == "remote"){
             this.socket.on("pressSpace", (data: any) => {
+                console.log('receive press space')
                 this.isMasterBall = false;
                 this.board.setIsMasterBall(this.isMasterBall);
                 this.pressSpace();
@@ -85,6 +86,7 @@ export class Game
 
     private pressSpace(): void
     {
+        console.log('this.state ', this.state)
         if (this.state == GAME_NEW || this.state == GAME_PAUSED)
             this.start();
         else if (this.state == GAME_STARTED)
@@ -101,7 +103,10 @@ export class Game
         {
             case " ":
                 this.pressSpace();
+                console.log('press space ....',this.mode)
+                console.log('press space this.socket ....',this.socket)
                 if (this.mode == "remote" && this.socket) {
+                    console.log('set press space ....')
                     this.isMasterBall = true;
                     this.board.setIsMasterBall(this.isMasterBall);
                     const storedUser: any = localStorage.getItem("transcendenceUser");
@@ -120,6 +125,7 @@ export class Game
 
     private start(): void
     {
+        console.log('GAME_STARTED')
         this.changeState(GAME_STARTED);
     }
 
@@ -170,6 +176,7 @@ export class Game
     {
         if (this.state == GAME_STARTED)
         {
+            
             if(this.mode == "remote"){
                 this.board.moveRemoteBalls() 
             }else {

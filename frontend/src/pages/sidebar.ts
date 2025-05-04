@@ -1,8 +1,11 @@
-// sidebar.ts
+
 import { getUsersFriendsStatus } from '../services/userService.js';
 import { getConversation } from '../services/chatService.js';
 import { User } from "../models/user";
 import { env } from '../env/env.js';
+import { getTranslation } from "../i18n/i18n.js";
+import { sidebarTranslations } from "../translations/sidebar.js";
+
 
 declare var Socket: any;
 
@@ -16,6 +19,9 @@ export class Sidebar {
     this.initSocket = initSocket;
   }
   render() {
+
+    const t = (key: keyof typeof sidebarTranslations) => getTranslation("sidebar", key);
+
     const html = `
       <div class="flex flex-col h-full">
         <div class="flex-1 pr-1" style="overflow: auto; max-height: 520px">
@@ -24,23 +30,23 @@ export class Sidebar {
 
         <div id="chat-window" class="mt-4 hidden flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg shadow-lg overflow-hidden border border-blue-500 h-[300px]">
           <div class="flex justify-between items-center px-4 py-2 border-b border-blue-700">
-            <h3 id="chat-title" class="text-white text-lg">Chat</h3>
+           <h3 id="chat-title" class="text-white text-lg">${t("chatTitle")}</h3>
             <button id="chat-close" class="text-white text-xl hover:text-red-500">×</button>
           </div>
 
-          <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2 flex flex-col"></div>
+          <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2 text-xs flex flex-col"></div>
 
           <div class="border-t border-blue-700 px-3 py-1 bg-gray-900 flex items-center">
             <input 
               type="text" 
               id="chat-input"
-              placeholder="Type a message..."
-              class="flex-1 bg-gray-700 text-white px-3 py-1.5 text-sm rounded-l-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="${t('placeholderMessage')}"
+              class="flex-1 bg-gray-700 text-white px-3 py-1.5 text-xs rounded-l-full focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <button 
               id="chat-send-btn"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-sm rounded-r-full"
-            >Send</button>
+              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-xs rounded-r-full"
+              >${t("send")}</button>
           </div>
         </div>
       </div>
@@ -313,6 +319,7 @@ public attachFriendActions() {
 
   chatEvents() {
     const socket = getSocket()!;
+    const t = (key: keyof typeof sidebarTranslations) => getTranslation("sidebar", key);
 
     // si on clic sur bouton message pour ouvrir un chat
     const chatButtons = document.getElementsByClassName("open-chat");
@@ -333,7 +340,7 @@ public attachFriendActions() {
             chatWindow.setAttribute("data-user", user || "");
             chatWindow.setAttribute("data-avatar", avatar || "");
 
-            chatTitle.textContent = `💬 Chat with ${user}`;
+            chatTitle.textContent = `💬 ${t("chatWith")} ${user}`;
             chatMessages.innerHTML = "";
             chatWindow.classList.remove("hidden");
 
