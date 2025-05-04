@@ -9,9 +9,9 @@ import { getTokenPayload } from '../../frontapp/tokenParser.js';
 
 export class EditProfilePage implements Page {
     render() {
-        setTimeout(() => {
-            this.avatarChangeHandler();
-        }, 50);
+        // setTimeout(() => {
+        //     this.avatarChangeHandler();
+        // }, 50);
 
         const t = (key: keyof typeof editProfileTranslations) => getTranslation("editProfile", key);
 
@@ -114,36 +114,42 @@ export class EditProfilePage implements Page {
         if (app) {
             app.innerHTML = html;
             RedirectEvents.attachRedirectEvents();
+
+            this.avatarChangeHandler();
         }
     }
     
     private avatarChangeHandler() {
         const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
+
         if (fileInput)
         {
             try {
-                
                 fileInput.addEventListener("change", async (event) => {
-                        console.log("fileInput print: ", fileInput);
         
                         const file = fileInput.files?.[0];
-                        let filename: string = "";
+
+                        let oldFilename: string = "";
+                        let newFilename: string = "";
                         const formData = new FormData();
 
                         if (file) {
                             console.log("file name print: ", file.name);
-                            filename = file.name;
-                            formData.append("avatarfile", file);
+                            oldFilename = file.name;
+                            formData.append('avatarfile', file);
                         } else {
-                            throw new Error("File not added");
+                            console.log("No file selected");
+                            return ;
                         }
 
                         const token = localStorage.getItem("authToken");
                         console.log("🍋 Token: ", token);
                         let tokenPayLoad = null;
+
                         if (token !== null) {
                             tokenPayLoad = getTokenPayload(token);
                             console.log("🥘 Token Payload: ", tokenPayLoad);
+
                             const response = await fetch(`${env.backUser}/getUsername`, {
                                 method: 'POST',
                                 headers: { 'Content-Type' : 'application/json' },
@@ -162,6 +168,19 @@ export class EditProfilePage implements Page {
                                     credentials: 'include',
                                     body: formData,
                                 });
+                                console.log("Upload response:", await responseUpload.text());
+
+                                // Rename request
+                                newFilename = username;
+                                const reponseRename = await fetch(`${env.backUser}/renameUpload`, {
+                                    method: 'POST',
+                                    credentials: 'include',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ oldName: oldFilename, newName: newFilename })
+                                });
+
 
 
                             } else {

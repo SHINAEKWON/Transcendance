@@ -21,7 +21,6 @@ app.register(cors, {
 
 
 app.register(fastifyMultipart, {
-  attachFieldsToBody:true,
   limits: {
     fileSize: 2097152,
   }

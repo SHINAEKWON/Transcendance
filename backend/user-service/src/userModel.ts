@@ -70,6 +70,21 @@ export async function getUserByUsername(username: string)
   }
   return row.id; 
 }
+
+
+
+
+
+
+
+// export async function renameAvatarPath
+
+
+
+
+
+
+
 // Envoyer une demande d'ami
 export async function sendFriendRequest(userId: number, friendId: number) {
   const db = await connectDB();

@@ -134,53 +134,52 @@ export async function userRoutes(app: FastifyInstance) {
     /**** Avatar Upload App (requested from editProfile of Frontend) ****/
 
 
-    app.post('/getUsername', async (req, res) => {
-      try {
-        console.log("Inside /getUsername");
-
-        console.log("req.body:", req.body);
-
-        const body = req.body as { id : number };
-        const id: number = body.id;
-
-        console.log("extracted user_id : ", id);
-
-        // chercher username and return it with status response
-        const query = await getUser(id);
-        const username = query.username;
-
-        return res.status(200).send({ username });
-
-      } catch (error) {
-
-        console.error("500 Error has occured: ", error);
-        return res.status(500).send({ message: 'Failed to extract username'});
-
-      }
-    });
-
-
-  app.post('/upload', async (req, res) => {
+  app.post('/getUsername', async (req, res) => {
     try {
-        console.log("from Upload");
-        avatarUpload(res, req);
-        return res.status(200).send({ message: 'Successfully uploaded' });
+      console.log("Inside /getUsername");
+
+      console.log("req.body:", req.body);
+
+      const body = req.body as { id : number };
+      const id: number = body.id;
+
+      console.log("extracted user_id : ", id);
+
+      // chercher username and return it with status response
+      const query = await getUser(id);
+      const username = query.username;
+
+      return res.status(200).send({ username });
+
     } catch (error) {
-      console.error(error);
-      return res.status(500).send({ error: 'Internal Server Error'});
+
+      console.error("500 Error has occured: ", error);
+      return res.status(500).send({ message: 'Failed to extract username'});
+
     }
   });
 
-  // Envoyer une demande d'amitié
-  app.post('/users/:id/friends/:targetId', async (req, res) => {
-    const { id, targetId } = req.params as { id: string; targetId: string };
-  
-    try {
-      const result = await sendFriendRequest(Number(id), Number(targetId));
-      res.code(201).send(result);
-    } catch (err: any) {
-      res.code(400).send({ error: err.message });
+  app.post('/upload', async (req, res) => {
+    if (!req.isMultipart()) {
+      return res.status(400).send({ error: 'Request is not multipart/form-data' });
     }
+    try {
+      await avatarUpload(res, req);
+      return res.status(200).send({ message: 'Upload complete' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Internal Server Error: Failed to upload: ' });
+    }
+  });
+
+  app.post('/renameUpload', async (req, res) => {
+    console.log("Inside renameUpload");
+    const body = req.body as { newName: string, oldName: string };
+    const oldName = body.oldName;
+    const newName = body.newName;
+    console.log("oldName: ", oldName, " newName: ", newName);
+    
+    return res.status(200).send({ message: 'renameupload, end of function' });
   });
   
   // Accepter une demande d'amitié
