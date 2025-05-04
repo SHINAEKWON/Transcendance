@@ -153,7 +153,7 @@ export default async function authRoutes(app: FastifyInstance) {
         try {
 
           const {
-            // username,
+            username,
             email,
             password
           } = request.body as {
@@ -161,14 +161,14 @@ export default async function authRoutes(app: FastifyInstance) {
             email: string | null;
             password: string;
           };
-          // if (!password || (!username && !email)){
-          if (!password || (!email)){
+          if (!password || (!username && !email)){
+          // if (!password || (!email)){
             reply.status(400).send({error: 'Missing identifier or password'});
           }
           // console.log('in authRoutes, email = ', email, 'username = ', username);
           //demander a user-service si l'utilisateur existe
           const userResponse = await axios.post('https://user-service:4001/user/checkUser', {
-            // username,
+            username,
             email
           }, { httpsAgent } );
           

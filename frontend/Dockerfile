@@ -40,7 +40,7 @@ RUN mkdir -p /var/www/transcendence/public && \
     cp -r dist/* /var/www/transcendence/ &&\
     cp -r public/* /var/www/transcendence/public/
 
-EXPOSE 443
+EXPOSE 3000
 # 🔧 Lier les logs à stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log

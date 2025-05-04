@@ -108,19 +108,19 @@ export async function userRoutes(app: FastifyInstance) {
     app.post('/user/checkUser', async (req, res) => {
       console.log("request arrived to users/ckeckUser");
       const {
-        // username,
+        username,
         email,
       } = req.body as {
-        // username: string | null;
+        username: string | null;
         email: string | null;
       };
       console.log('email = ', email);
       try {
         let user_id = undefined;
-        // if (username){
-        //   user_id = await getUserByUsername(username);
-        // }
-        // else 
+        if (username){
+          user_id = await getUserByUsername(username);
+        }
+        else 
         if (email){
           console.log('je suis dans else id email ', email);
           user_id = await getUserByEmail(email);

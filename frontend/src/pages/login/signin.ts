@@ -21,8 +21,8 @@ export class SigninPage implements Page {
 
         <form id="signin-form" class="space-y-6">
           <div>
-            <label class="block text-neon-purple mb-1" for="email">Login</label>
-            <input type="text" id="email" name="email" required
+            <label class="block text-neon-purple mb-1" for="username">Login</label>
+            <input type="text" id="username" name="username" required
               class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-neon-blue" />
           </div>
           <div>
@@ -99,8 +99,9 @@ export class SigninPage implements Page {
         console.log("Réponse backend :", data);
         localStorage.setItem("authToken", data.token); // <--- sauvegarde du token
         const decoded = jwtDecode<JwtPayload>(data.token);
+        const userId = decoded.user_id ?? (decoded as any).id;
         console.log('decode ', decoded);
-        const userInfo = await getUserInfo(decoded.user_id);
+        const userInfo = await getUserInfo(userId);
         localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));   
         window.location.hash = "#profile";
         window.location.reload();
@@ -122,7 +123,7 @@ export class SigninPage implements Page {
       e.preventDefault();
 
       const formData = {
-        email: (document.getElementById("email") as HTMLInputElement).value,
+        username: (document.getElementById("username") as HTMLInputElement).value,
         password: (document.getElementById("password") as HTMLInputElement).value,
       };
 
@@ -145,13 +146,13 @@ export class SigninPage implements Page {
         const userInfo = await getUserInfo(decoded.user_id);
         localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));
         alert("Connexion réussie !");
-        console.log("Login envoyé au backend :", formData.email);
+        console.log("Login envoyé au backend :", formData.username);
         window.location.hash = "#profile";
         window.location.reload();
 
       } catch (err: any) {
         alert("Connexion échouée.");
-        console.log(formData.email, " échec :", err.message);
+        console.log(formData.username, " échec :", err.message);
       }
     });
   }

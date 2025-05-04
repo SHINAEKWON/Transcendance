@@ -9,7 +9,13 @@ import { cleanEmptyData } from '../utils/utils.js';
 //fonction qui assure l'enregistrement des donnes d'authenfication d'un utilisateur
 import { insertAuthData, AuthData, getAuthByUserId  } from '../models/authModel.js';
 import https from 'https';
-const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+
+const httpsAgent = new https.Agent({  
+  rejectUnauthorized: false  
+});
+
+
 export const registerUser = async (
     user_id: number,
     password_hash: string,
@@ -84,7 +90,8 @@ export async function findOrCreateUserWithGoogle(email: string, firstname: strin
       // const data = cleanEmptyData(google_data);
       // console.log('\n\ndata = ', data, '\n\n');
       const registerResponse = await axios.post('https://user-service:4001/user/register', google_data, { httpsAgent });
-      return registerResponse.data.user_id;
+      return registerResponse.data.user_id.id;
+
     }
     console.error("Erreur findOrCreateUserWithGoogle:", error);
     throw error;

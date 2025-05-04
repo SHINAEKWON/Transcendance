@@ -28,7 +28,7 @@ export async function connectDB() {
       status TEXT DEFAULT 'offline',
       email TEXT UNIQUE NOT NULL,
       address TEXT,
-      telephone TEXT UNIQUE,
+      telephone TEXT,
       matches INTEGER DEFAULT 0,
       wins INTEGER DEFAULT 0,
       losses INTEGER DEFAULT 0,
