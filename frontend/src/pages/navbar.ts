@@ -48,10 +48,9 @@ export class Navbar {
                         </button>
 
                         <!-- 🔥 Menu caché -->
-                        <div id="menu-dropdown" style="margin-left: 5px; width: 140px" class="hidden w-30 bg-gray-700 rounded-md shadow-lg z-[9999]">
-                        <button id="logout-btn" class="w-full text-center px-4 py-2 text-white hover:bg-red-600" style="font-size: 12px">
-                        🏃‍➡️ ${t( "logout")}  
-                            </button>
+                        <div id="menu-dropdown" style="margin-left: 5px; width: 130px" class="hidden w-30 bg-gray-700 rounded-md shadow-lg z-[9999]">
+                        <button id="logout-btn" class="w-full text-center px-4 py-2 text-white hover:bg-red-600" style="font-size: 10px">${t("logout")}  
+                        </button>
                     </div>
 
                     </div>

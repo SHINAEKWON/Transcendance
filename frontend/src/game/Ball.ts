@@ -7,7 +7,7 @@ import { Position } from "./constants.js";
 export class Ball extends A_MovingGameElement
 {
 
-    private readonly maxSpeed = 1;
+    private readonly maxSpeed = 1.2;
     constructor({ballId, onBoard, classList}:
     {
         ballId: string, 
@@ -23,7 +23,7 @@ export class Ball extends A_MovingGameElement
             widthFraction: 1.5, 
             heightFraction: null, 
             backgroundColor: "white", 
-            speed: 0.75, 
+            speed: 0.85, 
             parentElement: onBoard, 
             classList: classList
         });

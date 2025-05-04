@@ -7,9 +7,9 @@ export const navbarTranslations = {
         "ko": "팬텀[404]"
     },
     logout: {
-      en: "Log out",
+      en: "Log-out",
       fr: "Quitter",
-      de: "Log out",
+      de: "Log-out",
       ar: "خروج",
       ko: "로그아웃"
   },  
