@@ -11,6 +11,8 @@ RUN apt update && \
 
 WORKDIR /app
 
+ARG GOOGLE_CLIENT_ID
+ENV GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
 
 COPY package.json ./
@@ -27,7 +29,7 @@ RUN npm install --legacy-peer-deps
 RUN npm run build
 
 RUN cp ./index.html ./dist/index.html
-
+RUN sed -i "s|{{GOOGLE_CLIENT_ID}}|$GOOGLE_CLIENT_ID|g" ./dist/index.html
 
 COPY nginx/transcendence.conf /etc/nginx/sites-available/transcendence.conf
 RUN rm /etc/nginx/sites-enabled/default && \

@@ -12,7 +12,9 @@ interface JwtPayload {
 export class SigninPage implements Page {
   render() {
     setTimeout(this.loginButtonHandler.bind(this), 50);
-
+    const googleClientId = document
+    .getElementById("googleClientId")
+    ?.getAttribute("data-google-client-id");
     const html = `
       <div class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 class="text-3xl font-gaming text-neon-blue mb-6 animate-glow text-center">Sign In</h2>
@@ -39,7 +41,7 @@ export class SigninPage implements Page {
         <!-- Google Sign-In -->
         <div class="text-center">
           <div id="g_id_onload"
-            data-client_id="1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com"
+            data-client_id="${googleClientId}"
             data-callback="handleCredentialResponse"
             data-auto_prompt="false">
           </div>
@@ -157,8 +159,11 @@ export class SigninPage implements Page {
   private renderGoogleButton() {
     const google = (window as any).google;
     if (google && google.accounts && google.accounts.id) {
+      const googleClientId = document
+      .getElementById("googleClientId")
+      ?.getAttribute("data-google-client-id");
       google.accounts.id.initialize({
-        client_id: "1040530451320-9a6e95o4gf3smhi97qp6ktn973qe6vfv.apps.googleusercontent.com",
+        client_id: googleClientId,
         callback: (window as any).handleCredentialResponse,
       });
       google.accounts.id.renderButton(

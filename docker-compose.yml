@@ -12,7 +12,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - ./backend/auth-service/.env
+      - .env
     volumes:
       - auth-data:/app/data
       - ./ssl:/app/ssl:ro
@@ -52,9 +52,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - GOOGLE_CLIENT_ID=${CLIENT_ID}
     ports:
       - "80:80"
       - "443:443"
+    env_file:
+      - .env
     volumes:
       - ./ssl:/etc/nginx/ssl:ro
     container_name: front
