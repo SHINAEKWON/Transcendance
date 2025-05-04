@@ -10,7 +10,7 @@ import {
   getAllUsersWithFriendStatus
 } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
-import { renameAvatarVolume } from '../manageFile.js';
+import { deletePreviousAvatar, renameAvatarVolume } from '../manageFile.js';
 
 
 export async function userRoutes(app: FastifyInstance) {
@@ -184,6 +184,7 @@ export async function userRoutes(app: FastifyInstance) {
       console.log("oldName: ", oldName, " newName: ", newName);
 
       await renameAvatarVolume(oldName, newName);
+      await deletePreviousAvatar(body.newName, extension);
   
       return res.status(200).send({ message: 'Succesfully reanamed the uploaded file' });
 
