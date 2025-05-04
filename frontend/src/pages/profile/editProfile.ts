@@ -1,9 +1,11 @@
+import { JWT } from '@fastify/jwt';
 import { getTranslation } from "../../i18n/i18n.js";
 import { getLang } from "../../i18n/language.js";
 import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
 import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
 import { env } from "../../env/env.js";
+import { getTokenPayload } from '../../frontapp/tokenParser.js';
 
 export class EditProfilePage implements Page {
     render() {
@@ -117,38 +119,61 @@ export class EditProfilePage implements Page {
     
     private avatarChangeHandler() {
         const fileInput = document.getElementById("customAvatarUpload") as HTMLInputElement;
-        if (fileInput) {
+        if (fileInput)
+        {
             try {
+                
                 fileInput.addEventListener("change", async (event) => {
-                    try {
-                        const token = localStorage.getItem("authToken");
+                        console.log("fileInput print: ", fileInput);
+        
+                        const file = fileInput.files?.[0];
+                        let filename: string = "";
+                        const formData = new FormData();
 
-                        if (!token) {console.error("No Token found");}
-                        else { console.log("token: ", token);}
-
-                        const response = await fetch(`${env.backUser}/verifyUsername`, {
-                            method: "GET",
-                            headers: {
-                                "Authorization": `Bearer ${token}`,
-                            }
-                        });
-                        if (!response.ok) {
-                            const msg = await response.text();
-                            console.error("Response Not OK", response.status, msg);
-                            throw new Error(`(${response.status})) ${msg}`);
+                        if (file) {
+                            console.log("file name print: ", file.name);
+                            filename = file.name;
+                            formData.append("avatarfile", file);
+                        } else {
+                            throw new Error("File not added");
                         }
-                        const jwtReponse = await response.json();
-                        const extractedEmail = jwtReponse.user.email;
-                        console.log ("Logged in user's email: ", extractedEmail);
-                        
-                        avatarUploadHandler(event, extractedEmail);
-                    } catch (error) { 
-                        console.error ("Error: ", error);
-                    }
-                    
-                });
-            } catch(error) {
-                console.error ('error from avatarchangehandler: ', error);
+
+                        const token = localStorage.getItem("authToken");
+                        console.log("🍋 Token: ", token);
+                        let tokenPayLoad = null;
+                        if (token !== null) {
+                            tokenPayLoad = getTokenPayload(token);
+                            console.log("🥘 Token Payload: ", tokenPayLoad);
+                            const response = await fetch(`${env.backUser}/getUsername`, {
+                                method: 'POST',
+                                headers: { 'Content-Type' : 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify(tokenPayLoad),
+                            });
+
+                            if (response.ok) {
+                                const responseJson = await response.json();
+                                const username = responseJson.username;
+                                console.log("front, edit profile, username: ", username);
+
+                                // Username found. Now, file saving with this name.
+                                const responseUpload = await fetch(`${env.backUser}/upload`, {
+                                    method: 'POST',
+                                    credentials: 'include',
+                                    body: formData,
+                                });
+
+
+                            } else {
+                                console.error("An error has occured while loading username: ", response.status);
+                            }
+
+                            // Take user_id to get login.
+                        }
+                })
+
+            } catch (error) {
+                console.error("Ah mince...", error);
             }
         }
     }

@@ -13,6 +13,6 @@
     "noImplicitAny": true,
     "sourceMap": true
   },
-  "include": ["src/**/*", "public/socket"],
+  "include": ["src/**/*", "public/socket", "../backend/user-service/src/avatarUpload.ts"],
   "exclude": ["node_modules"]
 }

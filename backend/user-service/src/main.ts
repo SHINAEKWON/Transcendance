@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyMultipart from '@fastify/multipart';
+import fastifyFormbody from '@fastify/formbody';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import dotenv from 'dotenv';
@@ -30,6 +31,7 @@ dotenv.config();
 
 app.register(fastifyCookie);
 app.register(fastifyJwt, { secret: process.env.JWT_SECRET!});
+app.register(fastifyFormbody);
 app.register(userRoutes);
 
 // Launch Server

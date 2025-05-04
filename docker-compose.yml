@@ -29,7 +29,7 @@ services:
       - "4001:4001"
     volumes:
       - user-data:/app/data
-      - user-uploads:/app/uploads
+      - avatar-uploads:/app/uploads
 
   game-service:
     build:
@@ -66,6 +66,8 @@ services:
     container_name: front
     networks:
       - transnet
+    volumes:
+      - avatar-uploads:/app/uploads
 
 networks:
   transnet:
@@ -74,6 +76,6 @@ networks:
 volumes:
   auth-data:
   user-data:
-  user-uploads:
   game-data:
   chat-data: 
+  avatar-uploads:

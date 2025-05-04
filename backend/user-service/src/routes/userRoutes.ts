@@ -1,15 +1,15 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend } from '../userModel.js';
-import { avatarUpload } from '../avatarUpload.js';
-import { verifyUsername } from '../verifyUserInfo.js';
-import { fileErrorCode } from '../fileErrorCode.js';
+// import { avatarUpload } from '../avatarUpload.js';
+// import { verifyUsername } from '../verifyUserInfo.js';
 import {
   sendFriendRequest,
   acceptFriendRequest,
   removeFriend,
   getAllUsersWithFriendStatus
 } from '../userModel.js';
+import { avatarUpload } from '../avatarUpload.js';
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -133,25 +133,42 @@ export async function userRoutes(app: FastifyInstance) {
 
     /**** Avatar Upload App (requested from editProfile of Frontend) ****/
 
+
+    app.post('/getUsername', async (req, res) => {
+      try {
+        console.log("Inside /getUsername");
+
+        console.log("req.body:", req.body);
+
+        const body = req.body as { id : number };
+        const id: number = body.id;
+
+        console.log("extracted user_id : ", id);
+
+        // chercher username and return it with status response
+        const query = await getUser(id);
+        const username = query.username;
+
+        return res.status(200).send({ username });
+
+      } catch (error) {
+
+        console.error("500 Error has occured: ", error);
+        return res.status(500).send({ message: 'Failed to extract username'});
+
+      }
+    });
+
+
   app.post('/upload', async (req, res) => {
     try {
-      console.log("from Upload");
-      const avatarUploaded: number = await avatarUpload(res, req);
-
-      if (avatarUploaded == fileErrorCode.SUCCESS) {
-        return res.status(200).send({message: 'Successfully uploaded'});
-      } else {
-        return res.status(400).send({message: 'Upload failed'});
-      }
+        console.log("from Upload");
+        avatarUpload(res, req);
+        return res.status(200).send({ message: 'Successfully uploaded' });
     } catch (error) {
       console.error(error);
       return res.status(500).send({ error: 'Internal Server Error'});
     }
-  });
-
-  app.get('/verifyUsername', async (req, res) => {
-    console.log("inside get/verifyUsername");
-    return verifyUsername(req, res);
   });
 
   // Envoyer une demande d'amitié

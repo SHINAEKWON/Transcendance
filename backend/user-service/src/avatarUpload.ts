@@ -2,26 +2,31 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { fileErrorCode } from './fileErrorCode.js';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { MultipartFile } from '@fastify/multipart';
+import { pipeline } from 'stream/promises';
 
 
-export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Promise<number> {
+export async function avatarUpload(res: FastifyReply, req: FastifyRequest) {
     console.log("from avatarUpload");
 
     const parts = req.parts();
+    console.log("from avatarUpload2");
 
     for await (const part of parts) {
 
+        console.log("from avatarUpload3");
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
         const uploadDir = path.join(__dirname, '../uploads');
+
+        console.log("from avatarUpload4");
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive : true });
         }
 
         // console.log(part); // What does part look like ?
+        console.log("from avatarUpload5");
         
         const validFileTypes = ['image/jpeg', 'image/gif', 'image/png'];
 
@@ -33,30 +38,23 @@ export async function avatarUpload(res: FastifyReply, req: FastifyRequest): Prom
         } else if (part.mimetype == 'image/png') {
             extension = 'png';
         } else {
-            return fileErrorCode.MIMETYPE_ERROR; }
+            console.log("from avatarUpload6");
+            throw new Error("Extension not allowed"); }
         
         console.log ('Found extension: ', extension);
-
-        if (!validFileTypes.includes(part.mimetype)) {
-            return fileErrorCode.MIMETYPE_ERROR;
-        }
+        console.log("from avatarUpload7");
 
         // Creating File in Our Server
 
-        // !! filename Must be replaced by user's login later !! //
-        const filename = 'testUploadAvatar'; 
-        // Suppression logic here for the files containing same login name //
-        const fullFilename = filename + "." + extension;
-        const filepath = path.join(uploadDir, fullFilename);
-        const writeStream = fs.createWriteStream(filepath);
-
         if (part.type === 'file') {
+
+            console.log("from avatarUpload8");
+            const filename = part.filename; 
+            const fullFilename = filename + "." + extension;
+            const filepath = path.join(uploadDir, fullFilename);
+            const writeStream = fs.createWriteStream(filepath);
             const filePart = part as MultipartFile;
             await part.file.pipe(writeStream);
-        }
-
-        // IMPORTANT //
-        // Ici mise a jour de DB ? Faire une autre app au lieu de tout traiter ici ?
+        } else { throw new Error("Failes to save the file")};
     }
-    return fileErrorCode.SUCCESS;
 }

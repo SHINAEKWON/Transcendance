@@ -1,6 +1,7 @@
 import { connectDB } from './db.js';
 import { FriendUser } from './friendUser.js';
 import { User } from './user.js';
+
 export async function getAllUsers() {
   const db = await connectDB();
   return await db.all('SELECT * FROM users');
