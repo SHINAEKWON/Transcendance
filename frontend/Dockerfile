@@ -11,7 +11,7 @@ RUN apt update && \
 
 WORKDIR /app
 
-VOLUME ["/app/uploads"]
+VOLUME ["/var/www/transcendence/uploads"]
 
 COPY package.json ./
 COPY tsconfig.json ./

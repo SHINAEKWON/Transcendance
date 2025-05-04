@@ -71,15 +71,15 @@ export async function getUserByUsername(username: string)
   return row.id; 
 }
 
-
-
-
-
-
-// export async function renameAvatarPath
-
-
-
+export async function updateAvatarPath(id: number, newPath: string)
+{
+  try {
+    const db = await connectDB();
+    const result = await db.run('UPDATE users SET avatar = ? WHERE id = ?', newPath, id);
+  } catch (error) {
+    throw new Error("Error has occured while updating avatar path");
+  }
+}
 
 
 

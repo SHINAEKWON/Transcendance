@@ -131,12 +131,15 @@ export class EditProfilePage implements Page {
 
                         let oldFilename: string = "";
                         let newFilename: string = "";
+                        let extension: string = "";
                         const formData = new FormData();
 
                         if (file) {
                             console.log("file name print: ", file.name);
                             oldFilename = file.name;
+                            extension = oldFilename.substring(oldFilename.lastIndexOf('.') + 1);
                             formData.append('avatarfile', file);
+
                         } else {
                             console.log("No file selected");
                             return ;
@@ -150,6 +153,7 @@ export class EditProfilePage implements Page {
                             tokenPayLoad = getTokenPayload(token);
                             console.log("🥘 Token Payload: ", tokenPayLoad);
 
+                            // Extract username from db using [id] of token
                             const response = await fetch(`${env.backUser}/getUsername`, {
                                 method: 'POST',
                                 headers: { 'Content-Type' : 'application/json' },
@@ -160,7 +164,6 @@ export class EditProfilePage implements Page {
                             if (response.ok) {
                                 const responseJson = await response.json();
                                 const username = responseJson.username;
-                                console.log("front, edit profile, username: ", username);
 
                                 // Username found. Now, file saving with this name.
                                 const responseUpload = await fetch(`${env.backUser}/upload`, {
@@ -170,7 +173,7 @@ export class EditProfilePage implements Page {
                                 });
                                 console.log("Upload response:", await responseUpload.text());
 
-                                // Rename request
+                                // Rename request & delete previous avatar
                                 newFilename = username;
                                 const reponseRename = await fetch(`${env.backUser}/renameUpload`, {
                                     method: 'POST',
@@ -181,7 +184,26 @@ export class EditProfilePage implements Page {
                                     body: JSON.stringify({ oldName: oldFilename, newName: newFilename })
                                 });
 
+                                // Get ID to Update avatar path
+                                const responseID = await fetch(`${env.backUser}/getID`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    credentials: 'include',
+                                    body: JSON.stringify(tokenPayLoad),
+                                });
 
+                                // Update avatar path in DB
+                                const responseIDJson = await responseID.json();
+                                const id = responseIDJson.id;
+                                console.log("front, check id = ", id);
+                                newFilename = newFilename + "." + extension;
+                                const newAvatarPath = "./uploads/" + newFilename;
+                                const responsePath = await fetch(`${env.backUser}/updateAvatarPath`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json'},
+                                    credentials: 'include',
+                                    body: JSON.stringify({ id: id, newPath: newAvatarPath })
+                                });
 
                             } else {
                                 console.error("An error has occured while loading username: ", response.status);

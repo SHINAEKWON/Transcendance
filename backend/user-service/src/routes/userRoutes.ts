@@ -1,8 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend } from '../userModel.js';
-// import { avatarUpload } from '../avatarUpload.js';
-// import { verifyUsername } from '../verifyUserInfo.js';
 import {
   sendFriendRequest,
   acceptFriendRequest,
@@ -11,7 +9,7 @@ import {
 } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
 import { deletePreviousAvatar, renameAvatarVolume } from '../manageFile.js';
-
+import { updateAvatarPath } from '../userModel.js';
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -133,8 +131,8 @@ export async function userRoutes(app: FastifyInstance) {
       }
     });
 
-    /**** Avatar Upload App (requested from editProfile of Frontend) ****/
-
+  
+    /******** Avatar Upload Applications (requested from editProfile of Frontend) ********/
 
   app.post('/getUsername', async (req, res) => {
     try {
@@ -157,6 +155,23 @@ export async function userRoutes(app: FastifyInstance) {
 
       console.error("500 Error has occured: ", error);
       return res.status(500).send({ message: 'Failed to extract username'});
+
+    }
+  });
+
+  app.post('/getID', async (req, res) => {
+    try {
+      console.log("from /getID");
+      console.log(req.body);
+      const body = req.body as { id : number };
+      const id:number = body.id;
+
+      return res.status(200).send({ id });
+
+    } catch (error) {
+
+      console.error("500 Error has occured: ", error);
+      return res.status(500).send({ message: 'Failed to extract id'});
 
     }
   });
@@ -193,6 +208,26 @@ export async function userRoutes(app: FastifyInstance) {
       return res.status(500).send({ message: 'Failed to rename the uploaded file' });
     }
   });
+
+  app.post('/updateAvatarPath', async (req, res) => {
+    console.log("Inside Update Avatar Path");
+    try {
+      const body = req.body as { id: number, newPath: string };
+      const id = body.id;
+      const newPath = body.newPath;
+
+      console.log (id, " ", newPath);
+      
+      await updateAvatarPath(id, newPath);
+
+      return res.status(200).send({ message: 'Succesfully updated avatar path' });
+      // DB manipulation needed
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: 'Failed to update avatar path' });
+    }
+  });
+
   
   // Accepter une demande d'amitié
   app.put('/users/:id/friends/:targetId', async (req, res) => {

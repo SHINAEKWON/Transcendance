@@ -67,7 +67,7 @@ services:
     networks:
       - transnet
     volumes:
-      - avatar-uploads:/app/uploads
+      - avatar-uploads:/var/www/transcendence/uploads
 
 networks:
   transnet:
