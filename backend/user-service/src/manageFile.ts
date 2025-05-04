@@ -4,44 +4,37 @@ import { dirname } from 'path';
 import path from 'path';
 
 export async function deletePreviousAvatar (newName:string, extension:string) {
-    try {
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = dirname(__filename);
-        const uploadDir = path.join(__dirname, '../uploads');
-        let filePath1 = "";
-        let filePath2 = "";
 
-        if (extension == "png") {
-            filePath1 = path.join(uploadDir, newName) + ".jpg";
-            filePath2 = path.join(uploadDir, newName) + ".gif";
-            await fs.access(filePath1);
-            await fs.access(filePath2);
-            await fs.unlink(filePath1);
-            await fs.unlink(filePath2);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const uploadDir = path.join(__dirname, '../uploads');
 
-        } else if (extension == "jpg") {
-            filePath1 = path.join(uploadDir, newName) + ".png";
-            filePath2 = path.join(uploadDir, newName) + ".gif";
-            await fs.access(filePath1);
-            await fs.access(filePath2);
-            await fs.unlink(filePath1);
-            await fs.unlink(filePath2);
+    const toDelete: string[] = [];
 
-        } else {
-            filePath1 = path.join(uploadDir, newName) + ".jpg";
-            filePath2 = path.join(uploadDir, newName) + ".png";
-            await fs.access(filePath1);
-            await fs.access(filePath2);
-            await fs.unlink(filePath1);
-            await fs.unlink(filePath2);
-        }
+    if (extension == "png") {
+        toDelete.push(`${newName}.jpg`);
+        toDelete.push(`${newName}.gif`);
+    } else if (extension == "jpg") {
+        toDelete.push(`${newName}.png`);
+        toDelete.push(`${newName}.gif`);
+    } else {
+        toDelete.push(`${newName}.png`);
+        toDelete.push(`${newName}.jpg`);
+    }
 
-    } catch (error: any) {
-        if (error.code === 'ENOENT') {
-            console.log("No file to delete");
-          } else {
-            console.error("Error deleting file:", error);
-            throw error;
+    for (const filename of toDelete) {
+        const filePath = path.join(uploadDir, filename);
+        try {
+            await fs.access(filePath);
+            await fs.unlink(filePath);
+            console.log (`${filename} deleted`);
+        } catch (error: any) {
+            if (error.code === 'ENOENT') {
+                console.log("No file to delete");
+                } else {
+                console.error("Error deleting file:", error);
+                throw error;
+            }
         }
     }
 }
