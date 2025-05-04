@@ -10,6 +10,8 @@ import {
   getAllUsersWithFriendStatus
 } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
+import { renameAvatarVolume } from '../manageFile.js';
+
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -174,12 +176,21 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.post('/renameUpload', async (req, res) => {
     console.log("Inside renameUpload");
-    const body = req.body as { newName: string, oldName: string };
-    const oldName = body.oldName;
-    const newName = body.newName;
-    console.log("oldName: ", oldName, " newName: ", newName);
-    
-    return res.status(200).send({ message: 'renameupload, end of function' });
+    try {
+      const body = req.body as { newName: string, oldName: string };
+      const oldName = body.oldName;
+      const extension = oldName.substring(oldName.lastIndexOf('.') + 1);
+      const newName = body.newName + "." + extension;
+      console.log("oldName: ", oldName, " newName: ", newName);
+
+      await renameAvatarVolume(oldName, newName);
+  
+      return res.status(200).send({ message: 'Succesfully reanamed the uploaded file' });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: 'Failed to rename the uploaded file' });
+    }
   });
   
   // Accepter une demande d'amitié
