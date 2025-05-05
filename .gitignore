@@ -1,4 +1,3 @@
-.env
 frontend/node_modules
 frontend/build
 frontend/styles/tailwind_out.css

@@ -6,12 +6,26 @@ services:
         container_name: frontend 
         env_file:
           -  .env
+        volumes:
+          - frontend-build:/app/dist
+          
+    server:
+        build:
+            context: ./server
+            dockerfile: Dockerfile
+        container_name: server
+        env_file:
+          -  .env
+        depends_on:
+          - frontend
         # ports: open connection between container and host (HOST:CONTAINER)
         ports: 
           - "3000:3000"
         # connect to the network called transnet
         networks:
           - transnet 
+        volumes:
+          - frontend-build:/usr/share/nginx/html
 
     signup:
         build:
@@ -39,3 +53,4 @@ networks:
 # define volumes (and creates them if not existing)
 volumes:
     signup-data:
+    frontend-build:

@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:22-alpine
 
 # Définir le répertoire de travail
 # - https://www.geeksforgeeks.org/docker-workdir-instruction/
@@ -29,23 +29,4 @@ COPY public public/
 COPY src src/
 COPY styles styles/
 
-RUN npm run build
-
-
-FROM nginx:alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY --from=build /app/public /usr/share/nginx/html
-
-COPY nginx.conf.template /etc/nginx/nginx.conf.template
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-
-# "This container will listen for network connections on port 3000."
-# It’s a hint to the person or system running the container.
-# However, the port is not opened!
-EXPOSE 3000
-
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["npm", "run", "build"]

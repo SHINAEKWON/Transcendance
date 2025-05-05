@@ -4,13 +4,13 @@ prune:
 	docker system prune -af
 
 build:
-	docker-compose build --no-cache
+	docker compose build --no-cache
 
 up:
-	docker-compose up 
+	docker compose up 
 
 down:
-	docker-compose down 
+	docker compose down 
 
 run: build up
 
