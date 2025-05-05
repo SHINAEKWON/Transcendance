@@ -24,6 +24,7 @@ import { CreateRemoteTournamentPage } from './pages/tournament/createRemoteTourn
 import { getUserInfo } from './services/userService.js'; // à adapter selon ton path
 import { WelcomeConnectedPage } from './pages/welcomeConnected.js';
 import { Navbar } from './pages/navbar.js';
+import { CustomizationPage } from './pages/gamePage/customization.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
@@ -45,7 +46,8 @@ const router = new Router({
   createRemoteTournament: new CreateRemoteTournamentPage(),
   tournamentGameBoard: new TournamentGameBoardPage(),
   editProfile: new EditProfilePage(),
-  duelGameBoard: new DuelGameBoardPage()
+  duelGameBoard: new DuelGameBoardPage(),
+  customization: new CustomizationPage(),
 });
 
 // ✅ Rendre `router` accessible dans `window` pour d'autres scripts

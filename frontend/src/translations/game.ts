@@ -303,6 +303,13 @@ export const aiPlayTranslations = {
     ar: "العب",
     ko: "플레이"
   },
+  customizeGame: {
+    en: "Customize",
+    fr: "Personnaliser",
+    de: "Anpassen",
+    ar: "تخصيص",
+    ko: "사용자 지정"
+},
   backToGame: {
     en: "Back to Game Modes",
     fr: "Retour aux modes de jeu",

@@ -17,14 +17,20 @@ export class AIPlayPage implements Page {
 
                 </div>
 
-                <div class="mt-10 text-center">
-                    <button id="start-ai-game" disabled class="px-6 py-3 bg-neon-green text-black rounded-lg font-bold text-lg hover:bg-green-400 transition disabled:opacity-30 disabled:cursor-not-allowed">
-                        ${t("playBtn")}
-                    </button>
-                    <div class="mt-6">
+                <div class="mt-10 text-center space-y-4">
+                    <div class="flex flex-col md:flex-row justify-center gap-4">
+                        <button id="start-ai-game" disabled class="px-6 py-3 bg-neon-green text-black rounded-lg font-bold text-lg hover:bg-green-400 transition disabled:opacity-30 disabled:cursor-not-allowed">
+                            ${t("playBtn")}
+                        </button>
+                        <a href="#customization" class="px-6 py-3 bg-neon-orange text-black rounded-lg font-bold text-lg hover:bg-orange-400 transition text-center">
+                            ${t("customizeGame")}
+                        </a>
+                    </div>
+                    <div>
                         <a href="#duel" class="text-neon-blue underline hover:text-blue-300">${t("backToGame")}</a>
                     </div>
                 </div>
+
             </div>
         `;
 

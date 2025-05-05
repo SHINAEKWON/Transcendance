@@ -7,6 +7,7 @@ import { createLocalTournamentTranslations, createTournamentTranslations, tourna
 import { profileTranslations } from '../translations/profile.js';
 import { editProfileTranslations } from '../translations/editProfile.js';
 import { sidebarTranslations } from '../translations/sidebar.js';
+import { customizationTranslations } from '../translations/customization.js';
 
 
 const translationsMap = {
@@ -15,6 +16,7 @@ const translationsMap = {
   sidebar: sidebarTranslations,
   language: languageTranslations,
   game: gameTranslations,
+  customization: customizationTranslations,
   localPlay: localPlayTranslations,
   onLinePlay: onlinePlayTranslations,
   aiPlay: aiPlayTranslations,
