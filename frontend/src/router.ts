@@ -26,6 +26,13 @@ export class Router {
 
     private updatePage(page: string): void {
         console.log(`🔄 Tentative de chargement de la page: ${page}`);
+        const userLs = localStorage.getItem("transcendenceUser");
+        if(page == 'welcome' && userLs){
+            page = 'welcomeConnected'
+        }
+        if(page != 'welcome' && page != 'guest' && page != 'signup' && page != 'signin' &&  !userLs){
+            page = 'welcome'
+        }
         let [pageName, queryString] = page.split("?");
         let rpage:Page = this.routes[pageName];
         if(rpage){

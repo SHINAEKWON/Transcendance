@@ -1,8 +1,10 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
-import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend } from '../userModel.js';
+import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend, updateUserFull, getAllAcceptedFriends, updateUserStats } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
 import { fileErrorCode } from '../fileErrorCode.js';
+import https from 'https';
+import axios from 'axios';
 import {
   sendFriendRequest,
   acceptFriendRequest,
@@ -10,7 +12,7 @@ import {
   getAllUsersWithFriendStatus
 } from '../userModel.js';
 import { checkUserUniqueness } from '../userService.js';
-
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 export async function userRoutes(app: FastifyInstance) {
 
   app.get('/users', async (req, res) => {
@@ -28,14 +30,12 @@ export async function userRoutes(app: FastifyInstance) {
 
     try {
         // Supprimer les données liées dans auth-service
-        await fetch(`https://auth-service:4000/auth/user/${userId}`, {
-            method: 'DELETE'
-        });
+        await axios.delete(`https://auth-service:4000/auth/user/${userId}`,{ httpsAgent });
+
+       
 
         // Supprimer les données liées dans chat-service
-        await fetch(`https://chat-service:4003/messages/user/${userId}`, {
-            method: 'DELETE'
-        });
+        await axios.delete(`https://chat-service:4003/messages/user/${userId}`, { httpsAgent });
 
         // Supprimer les amitiés (dans user-service si c'est là où est la table friends)
         await deleteFriends(userId);
@@ -46,7 +46,7 @@ export async function userRoutes(app: FastifyInstance) {
         res.status(200).send({ message: 'Utilisateur et toutes les données associées supprimées.' });
     } catch (error) {
         console.error('Erreur lors de la suppression complète :', error);
-        res.status(500).send({ error: 'Erreur lors de la suppression.' });
+        res.status(409).send({ error: 'Erreur lors de la suppression.' });
     }
 });
 
@@ -105,6 +105,45 @@ export async function userRoutes(app: FastifyInstance) {
     }
   });
 
+
+    // ✅ Update user (firstname, lastname, avatar, status, address, telephone)
+    app.put('/users/:id', async (req, res) => {
+      const { id } = req.params as { id: string };
+      const userId = Number(id);
+  
+      const {
+        firstname,
+        lastname,
+        avatar,
+        status,
+        address,
+        telephone
+      } = req.body as {
+        firstname: string;
+        lastname: string;
+        avatar: string;
+        status: string;
+        address: string;
+        telephone: string;
+      };
+  
+      try {
+        const updatedUser = await updateUserFull(
+          userId,
+          firstname,
+          lastname,
+          avatar,
+          status,
+          address,
+          telephone
+        );
+        res.code(200).send({ message: 'User updated successfully', user: updatedUser });
+      } catch (err: any) {
+        console.error('Erreur update user:', err);
+        res.status(409).send({ error: 'Erreur lors de la mise à jour de l\'utilisateur.' });
+      }
+    });
+  
     app.post('/user/checkUser', async (req, res) => {
       console.log("request arrived to users/ckeckUser");
       const {
@@ -200,10 +239,36 @@ export async function userRoutes(app: FastifyInstance) {
       const friends = await getAllUsersWithFriendStatus(Number(id));
       res.code(200).send(friends);
     } catch (err: any) {
-      res.code(500).send({ error: err.message });
+      res.code(400).send({ error: err.message });
     }
   });
-  
+
+ 
+app.get('/users/:id/friends', async (req, res) => {
+  const { id } = req.params as { id: string };
+
+  try {
+      const friends = await getAllAcceptedFriends(Number(id));
+      res.code(200).send(friends);
+  } catch (err: any) {
+      console.error('Erreur pour récupérer la liste des amis :', err);
+      res.status(400).send({ error: 'Erreur serveur lors de la récupération des amis.' });
+  }
+});
+
+app.put('/users/:id/stats', async (req, res) => {
+  const { id } = req.params as { id: string };
+  const { didWin } = req.body as { didWin: boolean };
+
+  try {
+    const result = await updateUserStats(Number(id), didWin);
+    res.code(200).send({ message: 'Stats mises à jour', result });
+  } catch (err: any) {
+    console.error('Erreur mise à jour stats :', err);
+    res.status(400).send({ error: 'Erreur lors de la mise à jour des stats.' });
+  }
+});
+
   
   // Bloquer un ami
 app.post('/users/:id/friends/:targetId/block', async (req, res) => {

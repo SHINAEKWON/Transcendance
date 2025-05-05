@@ -34,7 +34,7 @@ app.get ("/", async (request, reply) => {
 // Global error handler
 app.setErrorHandler((err, request, reply) => {
     console.error('Global error has occured :', err);
-    reply.status(500).send({ error: 'Something went wrong !' });
+    reply.status(409).send({ error: 'Something went wrong !' });
 });
 
 // Add all routes in auth service

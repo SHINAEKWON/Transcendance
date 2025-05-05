@@ -9,7 +9,7 @@ import { Sidebar } from './pages/sidebar.js';
 import { SignupPage } from './pages/login/signup.js';
 import { SigninPage } from './pages/login/signin.js';
 import { GuestPage } from './pages/login/guest.js';
-import { Navbar } from './pages/navbar.js';
+import { NavbarConnected } from './pages/navbarConnected.js';
 import { EditProfilePage } from './pages/profile/editProfile.js';
 import { io } from "socket.io-client";
 import { env } from './env/env.js';
@@ -22,10 +22,13 @@ import { DuelGameBoardPage } from './pages/gamePage/duelGameBoard.js';
 import { CreateLocalTournamentPage } from './pages/tournament/createLocalTournament.js';
 import { CreateRemoteTournamentPage } from './pages/tournament/createRemoteTournament.js';
 import { getUserInfo } from './services/userService.js'; // à adapter selon ton path
+import { WelcomeConnectedPage } from './pages/welcomeConnected.js';
+import { Navbar } from './pages/navbar.js';
 
 // ✅ Définir `router` en dehors pour qu'il soit globalement accessible
 const router = new Router({
   welcome: new WelcomePage(),
+  welcomeConnected: new WelcomeConnectedPage(),
   profile: new ProfilePage(),
   duel: new DuelPage(),
   tournaments: new TournamentsPage(),
@@ -54,57 +57,61 @@ window.addEventListener('hashchange', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   (async () => {
-  await initSocket(); 
-  const navbar = new Navbar();
-  const appElement: HTMLElement | null = document.getElementById('navbar');
-  if (appElement) {
-    appElement.innerHTML = navbar.render();
-    navbar.afterRender();
-  }
+    await initSocket();
+    const userLs = localStorage.getItem("transcendenceUser");
 
-  function updateSidebar() {
-    const appElement: HTMLElement | null = document.getElementById('sidebar');
-    const currentPage = window.location.hash.slice(1) || 'welcome';
+    if(userLs){
+      new NavbarConnected().render();
+    }else{
+      new Navbar().render();
+    }
+   
+    
 
-    if (appElement) {
-      if (currentPage !== 'welcome') {
-        sidebar = new Sidebar();
-        sidebar.render();
-        appElement.style.display = "block"; // Assurer l'affichage
-      } else {
-        appElement.innerHTML = "";
-        appElement.style.display = "none"; // Cacher la sidebar
+    function updateSidebar() {
+      const appElement: HTMLElement | null = document.getElementById('sidebar');
+      const currentPage = window.location.hash.slice(1) || 'welcome';
+
+      if (appElement) {
+        const userLs = localStorage.getItem("transcendenceUser");
+        if (currentPage !== 'welcome' && userLs) {
+          sidebar = new Sidebar();
+          sidebar.render();
+          appElement.style.display = "block"; // Assurer l'affichage
+        } else {
+          appElement.innerHTML = "";
+          appElement.style.display = "none"; // Cacher la sidebar
+        }
       }
     }
-  }
 
-  function updateBackgroundEffect() {
-    const overlay = document.getElementById('background-overlay');
-    const currentPage = window.location.hash.slice(1) || 'welcome';
+    function updateBackgroundEffect() {
+      const overlay = document.getElementById('background-overlay');
+      const currentPage = window.location.hash.slice(1) || 'welcome';
 
-    if (overlay) {
+      if (overlay) {
 
-      if (currentPage === 'welcome') {
-        overlay.classList.remove('fade-in');
-        overlay.classList.add('fade-out'); // Disparaît en fondu
-      } else {
-        overlay.classList.remove('fade-out');
-        overlay.classList.add('fade-in'); // Apparition fluide du sombre
+        if (currentPage === 'welcome') {
+          overlay.classList.remove('fade-in');
+          overlay.classList.add('fade-out'); // Disparaît en fondu
+        } else {
+          overlay.classList.remove('fade-out');
+          overlay.classList.add('fade-in'); // Apparition fluide du sombre
+        }
       }
     }
-  }
 
-  // Appliquer l'effet au chargement et lors des changements de page
-  updateBackgroundEffect();
-  window.addEventListener('hashchange', updateBackgroundEffect);
+    // Appliquer l'effet au chargement et lors des changements de page
+    updateBackgroundEffect();
+    window.addEventListener('hashchange', updateBackgroundEffect);
 
-  // Mettre à jour la sidebar au chargement
-  updateSidebar();
-  // window.addEventListener('hashchange', updateSidebar);
+    // Mettre à jour la sidebar au chargement
+    updateSidebar();
+    // window.addEventListener('hashchange', updateSidebar);
 
-  router.init(); // ✅ Initialiser `router`
-  console.log("after router init")
-})();
+    router.init(); // ✅ Initialiser `router`
+    console.log("after router init")
+  })();
 
 });
 
@@ -125,6 +132,8 @@ async function initSocket() {
       window.location.hash = "#welcome";
       return;
     }
+    // update user 
+    localStorage.setItem("transcendenceUser", JSON.stringify(found));
 
     let socket: any = null;
     if (env.env == "docker") {
@@ -165,7 +174,11 @@ async function initSocket() {
     (window as any).socket = socket;
 
     if (!window.location.hash || window.location.hash === "#welcome") {
-      window.location.hash = "#profileGuest";
+      const userLs = localStorage.getItem("transcendenceUser");
+      if (userLs) {
+        window.location.hash = "#welcomeConnected";
+      }
+
     }
 
   } catch (err) {

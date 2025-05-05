@@ -109,7 +109,7 @@ export class GuestPage implements Page{
           const res = await fetch(`${env.backUser}/user/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}@guest.42.fr`, address: ""})
+            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}@guest.42.fr`, address: "", status: 'Online'})
           });
 
           if (!res.ok) {

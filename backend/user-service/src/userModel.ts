@@ -81,6 +81,26 @@ export async function getUserByTelephone(telephone: string)
   return row.id; 
 }
 
+export async function updateUserFull(
+  id: number,
+  firstname: string,
+  lastname: string,
+  avatar: string,
+  status: string,
+  address: string,
+  telephone: string
+) {
+  const db = await connectDB();
+  await db.run(
+    `UPDATE users 
+     SET firstname = ?, lastname = ?, avatar = ?, status = ?, address = ?, telephone = ? 
+     WHERE id = ?`,
+    [firstname, lastname, avatar, status, address, telephone, id]
+  );
+  return { id, firstname, lastname, avatar, status, address, telephone };
+}
+
+
 
 // Envoyer une demande d'ami
 export async function sendFriendRequest(userId: number, friendId: number) {
@@ -190,6 +210,46 @@ export async function getAllUsersWithFriendStatus(userId: number): Promise<Frien
 
 }
 
+export async function getAllAcceptedFriends(userId: number): Promise<FriendUser[]> {
+  const db = await connectDB();
+
+  const rows = await db.all(`
+    SELECT 
+      u.*, 
+      f.status AS friend_status, 
+      f.action_user_id
+    FROM users u
+    INNER JOIN friends f 
+      ON (
+        (f.user_id = ? AND f.friend_id = u.id)
+        OR
+        (f.friend_id = ? AND f.user_id = u.id)
+      )
+    WHERE f.status = 'accepted'
+  `, [userId, userId]);
+
+  return rows.map(row => new FriendUser(
+    new User(
+      row.id,
+      row.firstname,
+      row.lastname,
+      row.username,
+      row.avatar,
+      row.status,
+      row.email,
+      row.address,
+      row.telephone,
+      row.matches,
+      row.wins,
+      row.losses,
+      row.created_at
+    ),
+    row.friend_status ?? null,
+    row.action_user_id ?? null
+  ));
+}
+
+
 export async function blockFriend(userId: number, friendId: number) {
   const db = await connectDB();
 
@@ -226,6 +286,29 @@ export async function unblockFriend(userId: number, friendId: number) {
   }
 
   return { message: 'Utilisateur débloqué.' };
+}
+
+
+export async function updateUserStats(
+  userId: number,
+  didWin: boolean
+) {
+  const db = await connectDB();
+
+  // On récupère les stats actuelles
+  const user = await db.get('SELECT matches, wins, losses FROM users WHERE id = ?', [userId]);
+  if (!user) throw new Error('Utilisateur non trouvé');
+
+  const newMatches = (user.matches ?? 0) + 1;
+  const newWins = (user.wins ?? 0) + (didWin ? 1 : 0);
+  const newLosses = (user.losses ?? 0) + (didWin ? 0 : 1);
+
+  await db.run(
+    'UPDATE users SET matches = ?, wins = ?, losses = ? WHERE id = ?',
+    [newMatches, newWins, newLosses, userId]
+  );
+
+  return { userId, matches: newMatches, wins: newWins, losses: newLosses };
 }
 
 

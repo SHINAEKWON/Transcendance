@@ -1,5 +1,5 @@
 import { getTranslation } from "../../i18n/i18n.js";
-import { getUsersList } from "../../services/userService.js";
+import { getAllAcceptedFriends, getUsersList } from "../../services/userService.js";
 import { onlinePlayTranslations } from "../../translations/game.js";
 export class OnlinePlayPage implements Page {
     private selectedPlayer: any = null;
@@ -7,7 +7,7 @@ export class OnlinePlayPage implements Page {
     async render() {
         const t = (key: keyof typeof onlinePlayTranslations) => getTranslation("onLinePlay", key);
 
-        const users = await getUsersList();
+        const users = await getAllAcceptedFriends();
         const currentUserString = localStorage.getItem("transcendenceUser");
         if (!currentUserString) {
             console.error("Utilisateur non connecté !");

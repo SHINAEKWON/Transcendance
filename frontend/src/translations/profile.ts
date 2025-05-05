@@ -41,6 +41,7 @@ export const profileTranslations = {
       ar: " الإحصائيات",
       ko: " 통계"
     },
+    
     matches: {
       en: "🎮 Matches",
       fr: "🎮 Matchs",
@@ -48,6 +49,34 @@ export const profileTranslations = {
       ar: "🎮 المباريات",
       ko: "🎮 경기"
     },
+    firstname: {
+      en: "First Name",
+      fr: "Prénom",
+      de: "Vorname",
+      ar: "الاسم الأول",
+      ko: "이름"
+  },
+  lastname: {
+      en: "Last Name",
+      fr: "Nom de famille",
+      de: "Nachname",
+      ar: "اسم العائلة",
+      ko: "성"
+  },
+  telephone: {
+      en: "Telephone",
+      fr: "Téléphone",
+      de: "Telefon",
+      ar: "رقم الهاتف",
+      ko: "전화번호"
+  },
+  address: {
+      en: "Address",
+      fr: "Adresse",
+      de: "Adresse",
+      ar: "العنوان",
+      ko: "주소"
+  },  
     wins: {
       en: "🏆 Wins",
       fr: "🏆 Victoires",

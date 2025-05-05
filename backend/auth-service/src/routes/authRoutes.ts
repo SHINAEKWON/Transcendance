@@ -129,9 +129,9 @@ export default async function authRoutes(app: FastifyInstance) {
   
       // Autres erreurs serveur
       console.error('Erreur interne lors de l’inscription :', err);
-      return reply.status(500).send({
+      return reply.status(400).send({
         error: true,
-        code: 'SERVER_ERROR',
+        code: 'BAD_REQUEST',
         message: "Une erreur est survenue lors de l'inscription."
       });
     }

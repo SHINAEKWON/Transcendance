@@ -3,6 +3,7 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
+import { updateStats } from "../../services/userService.js";
 
 export class TournamentGameBoardPage implements Page {
   private tournamentData: any = null;
@@ -39,6 +40,9 @@ export class TournamentGameBoardPage implements Page {
     console.log("Match terminé");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
+    const looser = playerLeft.getScore() > playerRight.getScore() ? playerRight : playerLeft;
+    updateStats(winner.getId(), true);
+    updateStats(looser.getId(), false);
     console.log(`Winner: ${winner.getName()}`);
 
     this.winners.push({

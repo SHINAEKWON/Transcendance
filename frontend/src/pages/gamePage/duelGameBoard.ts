@@ -3,6 +3,7 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
+import { updateStats } from "../../services/userService.js";
 
 export class DuelGameBoardPage implements Page {
   private duelData: any = null;
@@ -112,7 +113,9 @@ export class DuelGameBoardPage implements Page {
     console.log("🏁 Duel terminé");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
-
+    const looser = playerLeft.getScore() > playerRight.getScore() ? playerRight : playerLeft;
+    updateStats(winner.getId(), true);
+    updateStats(looser.getId(), false);
     const appGame = document.getElementById("appGame");
     if (appGame) {
       appGame.innerHTML = "";

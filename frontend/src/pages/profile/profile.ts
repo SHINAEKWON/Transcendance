@@ -10,10 +10,9 @@ export class ProfilePage implements Page {
         let user;
         if(savedUser){
             user = JSON.parse(savedUser);
-        }
-        
+        } 
 
-        const winRate = ((user.wins / user.matches) * 100).toFixed(1);
+        const winRate = user.matches > 0 ? ((user.wins / user.matches) * 100).toFixed(1) : "0";
 
         const statusBadge: { [key in "online" | "offline" | "in-game"]: string } = {
             online: `<span class="flex items-center gap-2 text-green-400 font-semibold"><span class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span>${t('online')}</span>`,
@@ -23,18 +22,27 @@ export class ProfilePage implements Page {
 
         const html = `
             <div class="max-w-5xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl">
-            <div class="flex flex-col items-center mb-8 space-y-6">
-            <p class="text-neon-orange text-3xl"> << ${t('welcome')} >> </p>
-            </div>
+                <div class="flex flex-col items-center mb-8 space-y-6">
+                    <p class="text-neon-orange text-3xl"> << ${t('welcome')} >> </p>
+                </div>
+
                 <!-- Header -->
                 <div class="flex justify-between items-start mb-8">
                     <!-- Avatar + Info -->
                     <div class="flex items-center space-x-6">
-                        <img src="${user.avatar}" alt="Avatar" class="w-32 h-32 rounded-full border-4 border-neon-green cursor-pointer hover:scale-105 transition" onclick="alert('Edit avatar')">
+                        <img src="${user.avatar}" alt="Avatar" class="w-65 h-65 rounded-full border-4 border-neon-green cursor-pointer hover:scale-105 transition" onclick="alert('Edit avatar')">
                         <div>
                             <h3 class="text-2xl text-neon-green font-bold">${user.username}</h3>
                             <p class="text-gray-300">${user.email}</p>
                             <p class="mt-2">${statusBadge[user.status as "online" | "offline" | "in-game"]}</p>
+
+                            <!-- Infos additionnelles -->
+                            <div class="mt-4 space-y-1 text-gray-300">
+                                <p><span class="font-semibold text-neon-green">${t('firstname') || "First Name"}:</span> ${user.firstname || "-"}</p>
+                                <p><span class="font-semibold text-neon-green">${t('lastname') || "Last Name"}:</span> ${user.lastname || "-"}</p>
+                                <p><span class="font-semibold text-neon-green">${t('telephone') || "Telephone"}:</span> ${user.telephone || "-"}</p>
+                                <p><span class="font-semibold text-neon-green">${t('address') || "Address"}:</span> ${user.address || "-"}</p>
+                            </div>
                         </div>
                     </div>
                     <button data-page="editProfile" class="redirect-btn bg-neon-green text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition">
@@ -70,6 +78,7 @@ export class ProfilePage implements Page {
                         </div>
                     </div>
                 </div>
+            </div>
         `;
 
         const app = document.getElementById('app');

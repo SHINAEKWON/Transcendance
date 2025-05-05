@@ -18,10 +18,15 @@ export class Sidebar {
   setInitSocket(initSocket: boolean){
     this.initSocket = initSocket;
   }
+  private statusBadge: { [key in "online" | "offline" | "in-game"]: string } = {
+    online: `<span class="flex items-center gap-2 text-green-400 font-semibold mr-3" ><span class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span></span>`,
+    offline: `<span class="mr-3 flex items-center gap-2 text-gray-400 font-semibold"><span class="w-3 h-3 rounded-full bg-gray-400"></span></span>`,
+    "in-game": `<span class="mr-3 flex items-center gap-2 text-yellow-300 font-semibold"><span class="w-3 h-3 rounded-full bg-yellow-300 animate-pulse"></span></span>`,
+};
   render() {
 
     const t = (key: keyof typeof sidebarTranslations) => getTranslation("sidebar", key);
-
+    
     const html = `
       <div class="flex flex-col h-full">
         <div class="flex-1 pr-1" style="overflow: auto; max-height: 520px">
@@ -57,7 +62,6 @@ export class Sidebar {
 
     this.renderFriend(null).then(() => {
       setTimeout(() => {
-        this.chatEvents();
         if(this.initSocket){
           this.installSocket();
         }
@@ -152,6 +156,7 @@ export class Sidebar {
         result += `
          <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between ${rowStyle}">
            <div class="flex items-center">
+            ${this.statusBadge[user.status as "online" | "offline" | "in-game"]}
              <img src="${user.avatar}" class="w-12 h-12 rounded-full border border-blue-400">
              <p class="ml-4 text-white font-semibold">${user.username}</p>
            </div>
@@ -162,7 +167,7 @@ export class Sidebar {
     });
 
     if (usersHtml) usersHtml.innerHTML = result;
-    this.attachFriendActions();
+      this.attachFriendActions();
     setTimeout(() => {
       this.chatEvents();
     }, 200);
@@ -234,7 +239,7 @@ public attachFriendActions() {
           if (dropdown) {
               dropdown.classList.toggle('hidden');
           }
-          
+
       });
   });
 
