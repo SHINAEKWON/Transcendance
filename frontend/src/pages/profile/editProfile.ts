@@ -211,6 +211,7 @@ export class EditProfilePage implements Page {
                                     body: JSON.stringify({ id: id, newPath: newAvatarPath })
                                 });
 
+                                // Refresh (+) part by newly uploaded image
                                 const label = document.querySelector('label[for="customAvatarUpload"]');
                                 
                                 if (label && fileInput) {
