@@ -133,6 +133,9 @@ async function initSocket() {
       return;
     }
     // update user 
+    if(user['type'] == 'guest'){
+      found['type'] = 'guest';
+    }
     localStorage.setItem("transcendenceUser", JSON.stringify(found));
 
     let socket: any = null;
