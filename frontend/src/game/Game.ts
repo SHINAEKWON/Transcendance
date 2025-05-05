@@ -40,7 +40,7 @@ export class Game
             count_balls: 1, 
             name_left: playerLeft, 
             color_left: "yellow", 
-            keys_left: [[mode == "remote" ? "ArrowUp": "s", mode == "remote" ? "ArrowDown": "w"]], 
+            keys_left: [[mode == "remote" ? "ArrowUp": "w", mode == "remote" ? "ArrowDown": "s"]], 
             isAI_left: isAI_left,
             avatarPlayerLeft: avatarPlayerLeft,
             name_right: playerRight, 
