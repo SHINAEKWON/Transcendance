@@ -1,5 +1,12 @@
+import { jwtDecode } from "jwt-decode";
 import { env } from "../../env/env";
-
+import { getUserInfo } from "../../services/userService";
+interface JwtPayload {
+  id: number;
+  email: string;
+  iat: number;
+  exp: number;
+}
 export class GuestPage implements Page{
     render() {
       const html = `
@@ -43,6 +50,14 @@ export class GuestPage implements Page{
               Continue as Guest!
             </button>
           </div>
+
+          <!-- Popup d'erreur -->
+                <div id="signup-popup" class="hidden fixed top-6 left-1/2 transform -translate-x-1/2 bg-neon-purple text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md w-full">
+                    <div class="flex justify-between items-start">
+                        <div id="signup-popup-message" class="text-sm"></div>
+                        <button id="signup-popup-close" class="ml-4 text-white hover:text-gray-200 text-xl leading-none">&times;</button>
+                    </div>
+                </div>
         </div>
         <script>
     function checkSelection() {
@@ -62,6 +77,9 @@ export class GuestPage implements Page{
           app.innerHTML = html;
       }
       this.setup();
+      document.getElementById('signup-popup-close')?.addEventListener('click', () => {
+        document.getElementById('signup-popup')?.classList.add('hidden');
+    });
       
     }
     
@@ -106,41 +124,55 @@ export class GuestPage implements Page{
           const avatarUrl = this.getAvatarUrl(avatar);
         
         try {
-          const res = await fetch(`${env.backUser}/user/register`, {
+          
+                const timestamp = Date.now();
+                const generatedsuffix = `_g${timestamp}`;
+
+
+                const randomPart = Math.random().toString(36).slice(2, 8); 
+                const generatedpassword = `Gp${timestamp}${randomPart}!`;
+          const res = await fetch(`${env.backAuth}/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}@guest.42.fr`, address: "", status: 'Online'})
+            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}${generatedsuffix}@guest.42.fr`,password: `${generatedpassword}`, address: "", status: 'Online'})
           });
 
           if (!res.ok) {
-            // Gestion des erreurs HTTP (ex: 400, 404, 500...)
-            const errorText = await res.text();
-            throw new Error(`Erreur serveur: ${res.status} ${res.statusText} - ${errorText}`);
+            const msg = await res.text();
+            throw new Error(`(${res.status}) ${msg}`);
           }
   
-          const userResponse = await res.json();
-          console.log('userResponse ', userResponse)
-          const user = {
-            id : userResponse.user_id.id,
-            avatar: avatarUrl,
-            username: login,
-            type: "guest"
-          }
-          console.log("✅ User created:", user);
-          alert(`Welcome ${user.username} 🕹️`);
-
-           // Sauvegarde du user dans localStorage
-           localStorage.setItem("transcendenceUser", JSON.stringify(user));
- 
-           // Redirection vers la page de profil
-           window.location.hash = "#profileGuest";
-           window.location.reload();
-
-        } catch (err) {
-          console.error("❌ Failed to create user:", err);
-          alert("Something went wrong...");
-        }
-      });
+          
+          const data = await res.json();
+               
+        localStorage.setItem("authToken", data.token); // <--- sauvegarde du token
+        const decoded = jwtDecode<JwtPayload>(data.token);
+        console.log('decode ', decoded);
+        const userInfo: any = await getUserInfo(decoded.id);
+        userInfo['type'] = 'guest'
+        localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));
+                console.log("✅ User created:", userInfo);
+               alert(`Welcome ${userInfo.username} 🕹️`);
+               window.location.href = "#profileGuest";
+                window.location.reload();
+            } catch (err: any) {
+                console.error("Erreur d'inscription : ", err);
+            
+                let message = 'Échec de la création du compte.';
+                let fields = {};
+            
+                try {
+                    const errorJson = JSON.parse(err.message?.split(') ')[1]);
+                    message = errorJson.message || message;
+                    fields = errorJson.fields || {};
+                } catch (parseErr) {
+                    console.warn("Impossible d'analyser le message d'erreur JSON :", parseErr);
+                }
+            
+                this.showPopup(message, fields);
+            }
+            
+        });
     }
 
     getAvatarUrl(avatarValue: string): string {
@@ -151,6 +183,27 @@ export class GuestPage implements Page{
         };
         return avatars[avatarValue] ?? './public/images/guestAvatar1.png';
       }
+
+      private showPopup(message: string, fields?: Record<string, string>) {
+        const popup = document.getElementById('signup-popup');
+        const popupMessage = document.getElementById('signup-popup-message');
+    
+        if (!popup || !popupMessage) return;
+    
+        let html = `<p class="font-semibold mb-2">${message}</p>`;
+        if (fields) {
+            html += '<ul class="list-disc list-inside text-sm">';
+            for (const [field, msg] of Object.entries(fields)) {
+                html += `<li><strong>${field}:</strong> ${msg}</li>`;
+            }
+            html += '</ul>';
+        }
+    
+        popupMessage.innerHTML = html;
+        popup.classList.remove('hidden');
+        
+        
+    }
       
   }
   

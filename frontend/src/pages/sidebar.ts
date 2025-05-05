@@ -5,6 +5,7 @@ import { User } from "../models/user";
 import { env } from '../env/env.js';
 import { getTranslation } from "../i18n/i18n.js";
 import { sidebarTranslations } from "../translations/sidebar.js";
+import { authorizedFetch } from '../utils/authorizedFetch.js';
 
 
 declare var Socket: any;
@@ -182,7 +183,7 @@ public attachFriendActions() {
   document.querySelectorAll('.send-invite-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'POST' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'POST' });
           this.renderFriend(targetId);
       });
   });
@@ -202,7 +203,7 @@ public attachFriendActions() {
   document.querySelectorAll('.accept-invite-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'PUT' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'PUT' });
           this.renderFriend(targetId);
       });
   });
@@ -211,7 +212,7 @@ public attachFriendActions() {
   document.querySelectorAll('.reject-invite-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
           this.renderFriend(targetId);
           const chatWindow = document.getElementById("chat-window");
           let id = chatWindow?.getAttribute("data-id");
@@ -226,7 +227,7 @@ public attachFriendActions() {
   document.querySelectorAll('.cancel-invite-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}`, { method: 'DELETE' });
           this.renderFriend(targetId);
       });
   });
@@ -247,7 +248,7 @@ public attachFriendActions() {
   document.querySelectorAll('.block-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'POST' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'POST' });
           this.renderFriend(targetId);
           const chatWindow = document.getElementById("chat-window");
           let id = chatWindow?.getAttribute("data-id");
@@ -262,7 +263,7 @@ public attachFriendActions() {
   document.querySelectorAll('.unblock-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
           const targetId = (e.currentTarget as HTMLElement).getAttribute("data-id");
-          await fetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'DELETE' });
+          await authorizedFetch(`${env.backUser}/users/${myId}/friends/${targetId}/block`, { method: 'DELETE' });
           this.renderFriend(targetId);
       });
   });

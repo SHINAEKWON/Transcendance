@@ -26,6 +26,8 @@ services:
       - transnet
     expose:
       - "4001"
+    env_file:
+      - .env
     ports:
       - "4001:4001"
     volumes:
@@ -38,6 +40,8 @@ services:
       context: ./backend/chat-service
       dockerfile: Dockerfile
     container_name: chat
+    env_file:
+      - .env
     networks:
       - transnet
     expose:

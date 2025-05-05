@@ -1,9 +1,10 @@
 import { env } from "../env/env";
 import { User } from "../models/user";
+import { authorizedFetch } from "../utils/authorizedFetch";
 
 
 export async function getUsersList(){
-    const res = await fetch(`${env.backUser}/users`);
+    const res = await authorizedFetch(`${env.backUser}/users`);
     const result = await res.json() as User[];
     return result;
 }
@@ -12,7 +13,7 @@ export async function getUsersFriendsStatus(){
     const savedUser = localStorage.getItem("transcendenceUser");
     if (savedUser) {
         const user = JSON.parse(savedUser);
-        const res = await fetch(`${env.backUser}/users/${user.id}/usersFriendsStatus`);
+        const res = await authorizedFetch(`${env.backUser}/users/${user.id}/usersFriendsStatus`);
         const result = await res.json() as User[];
         return result;
      }
@@ -23,7 +24,7 @@ export async function getAllAcceptedFriends(){
     const savedUser = localStorage.getItem("transcendenceUser");
     if (savedUser) {
         const user = JSON.parse(savedUser);
-        const res = await fetch(`${env.backUser}/users/${user.id}/friends`);
+        const res = await authorizedFetch(`${env.backUser}/users/${user.id}/friends`);
         const result = await res.json() as User[];
         return result;
      }
@@ -35,7 +36,7 @@ export async function updateStats(userId: number, didWin: boolean) {
     if (savedUser) {
         const user = JSON.parse(savedUser);
         if(user.id == userId){
-            const response = await fetch(`${env.backUser}/users/${userId}/stats`, {
+            const response = await authorizedFetch(`${env.backUser}/users/${userId}/stats`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ didWin })
@@ -67,7 +68,7 @@ export async function updateStats(userId: number, didWin: boolean) {
 
 
 export async function getUserInfo(id: number){
-    const res = await fetch(`${env.backUser}/users/${id}`);
+    const res = await authorizedFetch(`${env.backUser}/users/${id}`);
     const result = await res.json() as User[];
     return result;
 }

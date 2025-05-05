@@ -3,6 +3,7 @@ import { getTranslation } from '../i18n/i18n.js';
 import { navbarTranslations } from '../translations/navbar.js';
 import { env } from '../env/env.js';
 import { getUsersFriendsStatus } from '../services/userService.js';
+import { authorizedFetch } from '../utils/authorizedFetch.js';
 
 export class NavbarConnected {
     render() {
@@ -105,7 +106,7 @@ export class NavbarConnected {
                     // Vérifier si c'est un guest
                     if (user && user['type'] === "guest") {
                         try {
-                            await fetch(`${env.backUser}/users/${user.id}`, {
+                            await authorizedFetch(`${env.backUser}/users/${user.id}`, {
                                 method: 'DELETE'
                             });
                             console.log('Guest supprimé côté serveur.');
@@ -131,6 +132,8 @@ export class NavbarConnected {
                
                 // Nettoyage du localStorage et redirection
                 localStorage.removeItem("transcendenceUser");
+                localStorage.removeItem("authToken");
+                
                 window.location.href = "#";
                 window.location.reload();
             });

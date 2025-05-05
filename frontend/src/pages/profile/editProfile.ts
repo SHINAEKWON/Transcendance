@@ -4,6 +4,7 @@ import { editProfileTranslations } from "../../translations/editProfile.js";
 import { RedirectEvents } from "../../utils/redirectEvents.js";
 import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
 import { env } from "../../env/env.js";
+import { authorizedFetch } from "../../utils/authorizedFetch.js";
 
 export class EditProfilePage implements Page {
     render() {
@@ -152,7 +153,7 @@ export class EditProfilePage implements Page {
     
                 // Envoi de la requête PUT vers le backend
                 try {
-                    const response = await fetch(`${env.backUser}/users/${userId}`, {
+                    const response = await authorizedFetch(`${env.backUser}/users/${userId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'

@@ -1,5 +1,6 @@
 
 import { env } from "../../env/env.js";
+import { authorizedFetch } from "../../utils/authorizedFetch.js";
 
 // This app will be loaded when you upload an avatar image from editProfile of the Frontend
 
@@ -32,7 +33,7 @@ export async function avatarUploadHandler(event: Event) {
     formData.append('avatarFile', file);
 
     try {
-        const response = await fetch(`${env.backUser}/upload`, {
+        const response = await authorizedFetch(`${env.backUser}/upload`, {
             method: 'POST',
             body: formData,
             credentials: 'include',
