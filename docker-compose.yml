@@ -52,22 +52,22 @@ services:
       - chat-data:/app/data
       - ./ssl:/app/ssl:ro
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - GOOGLE_CLIENT_ID=${CLIENT_ID}
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - GOOGLE_CLIENT_ID=${CLIENT_ID}
+  #   ports:
+  #     - "3000:3000"
     
-    env_file:
-      - .env
-    volumes:
-      - ./ssl:/etc/nginx/ssl:ro
-    container_name: front
-    networks:
-      - transnet
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   container_name: front
+  #   networks:
+  #     - transnet
 
 networks:
   transnet:

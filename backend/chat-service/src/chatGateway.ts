@@ -41,6 +41,24 @@ export function registerChatGateway(io: Server, db: any) {
      });
 
      // 📩 Réception message
+     socket.on("ready", async (msg) => {
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("ready", msg);
+      }
+     });
+
+     // 📩 Réception message
+     socket.on("readyYes", async (msg) => {
+      let id = msg.to;
+      const targetSocketId = userSocketMap.get(id);
+      if(targetSocketId){
+        io.to(targetSocketId).emit("readyYes", msg);
+      }
+     });
+
+     // 📩 Réception message
      socket.on("paddleRelativeMove", async (msg) => {
       let id = msg.to;
       const targetSocketId = userSocketMap.get(id);

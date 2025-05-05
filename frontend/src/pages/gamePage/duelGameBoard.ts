@@ -8,8 +8,10 @@ import { updateStats } from "../../services/userService.js";
 export class DuelGameBoardPage implements Page {
   private duelData: any = null;
   private pageMode = '';
+  private isReady = false;
 
   async render() {
+
     const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
 
     const hash = window.location.hash;
@@ -17,10 +19,10 @@ export class DuelGameBoardPage implements Page {
     const duelEncoded = urlParams.get('duel');
     const duelId = urlParams.get('id');
     const modeParam = urlParams.get('mode');
-    if(modeParam){
+    if (modeParam) {
       this.pageMode = modeParam;
     }
-    
+
     if (duelEncoded) {
       this.duelData = JSON.parse(decodeURIComponent(duelEncoded));
     }
@@ -76,13 +78,66 @@ export class DuelGameBoardPage implements Page {
     if (app) {
       app.innerHTML = html;
 
-      let socket = null;
+      let socket: any = null;
       if (mode === "remote") {
-        console.log("set socket ...fffdd");
+
         socket = getSocket();
-        console.log('soooooo ',socket);
+        if (socket) {
+          const savedUser = localStorage.getItem("transcendenceUser");
+          if (savedUser) {
+            const user = JSON.parse(savedUser);
+            const remotePlayerId = user.id == player1.id ? player2.id : player1.id;
+            console.log('send ready to ',remotePlayerId)
+            socket.emit("ready", {
+              to: "" + remotePlayerId,
+              from: "" + user.id
+            })
+
+            socket.on("readyYes", (msg: any) => {
+              console.log('receive ready yes', msg)
+              this.isReady = true;
+              this.maybeStartGame(player1, player2, mode, socket);
+            });
+
+            socket.on("ready", (msg: any) => {
+              console.log('receive ready', msg)
+              console.log('send receive readyYes', msg.from)
+              socket.emit("readyYes", { to: "" + msg.from });
+              this.isReady = true;
+              this.maybeStartGame(player1, player2, mode, socket);
+            });
+          }
+
+        } else {
+          new GameBoardPage(
+            player1.username,
+            player2.username,
+            player1.avatar,
+            player2.avatar,
+            player1.isIa,
+            player2.isIa,
+            mode,
+            player1.id,
+            player2.id,
+            socket,
+            this.handleEndGame.bind(this)
+          ).render();
+        }
       }
 
+      document.getElementById('showRulesBtn')?.addEventListener('click', () => {
+        document.getElementById('rulesModal')?.classList.remove('hidden');
+      });
+
+      document.getElementById('closeRulesBtn')?.addEventListener('click', () => {
+        document.getElementById('rulesModal')?.classList.add('hidden');
+      });
+    }
+  }
+  private maybeStartGame(player1: any, player2: any, mode: any, socket: any) {
+    if (this.isReady) {
+      // commencer le jeu ici !
+      console.log("🎮 Les deux joueurs sont prêts !");
       new GameBoardPage(
         player1.username,
         player2.username,
@@ -96,17 +151,8 @@ export class DuelGameBoardPage implements Page {
         socket,
         this.handleEndGame.bind(this)
       ).render();
-
-      document.getElementById('showRulesBtn')?.addEventListener('click', () => {
-        document.getElementById('rulesModal')?.classList.remove('hidden');
-      });
-
-      document.getElementById('closeRulesBtn')?.addEventListener('click', () => {
-        document.getElementById('rulesModal')?.classList.add('hidden');
-      });
     }
   }
-
   private handleEndGame(playerLeft: Player, playerRight: Player) {
     const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
 
@@ -145,7 +191,7 @@ export class DuelGameBoardPage implements Page {
 
       const rematchBtn = document.getElementById("rematchBtn");
       rematchBtn?.addEventListener("click", () => {
-      window.location.reload();
+        window.location.reload();
       });
     }
   }

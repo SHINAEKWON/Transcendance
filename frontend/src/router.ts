@@ -25,6 +25,16 @@ export class Router {
     }
 
     private updatePage(page: string): void {
+       const socket = getSocket();
+        if(socket){
+            socket.off("readyYes");
+            socket.off("ready");
+            socket.off("ballMove");
+            socket.off("pressSpace");
+            socket.off("paddleMove");
+            socket.off("paddleRelativeMove");
+            
+        }
         console.log(`🔄 Tentative de chargement de la page: ${page}`);
         const userLs = localStorage.getItem("transcendenceUser");
         if(page == 'welcome' && userLs){
@@ -45,3 +55,7 @@ export class Router {
     }
 
 }
+
+function getSocket(): any | undefined {
+    return (window as any).socket;
+  }
