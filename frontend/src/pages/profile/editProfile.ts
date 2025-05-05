@@ -211,6 +211,15 @@ export class EditProfilePage implements Page {
                                     body: JSON.stringify({ id: id, newPath: newAvatarPath })
                                 });
 
+                                const label = document.querySelector('label[for="customAvatarUpload"]');
+                                
+                                if (label && fileInput) {
+                                    label.innerHTML = `
+                                        <img src="${newAvatarPath}?t=${Date.now()}" 
+                                             class="w-30 h-30 rounded-full border-4 hover:scale-105 cursor-pointer transition" />
+                                    `;
+                                }
+
                             } else {
                                 console.error("An error has occured while loading username: ", response.status);
                             }
@@ -220,7 +229,7 @@ export class EditProfilePage implements Page {
                 })
 
             } catch (error) {
-                console.error("Ah mince...", error);
+                console.error("Unexpected error has occured while uploading avatar image file", error);
             }
         }
     }
