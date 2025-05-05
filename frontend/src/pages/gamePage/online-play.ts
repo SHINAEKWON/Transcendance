@@ -95,7 +95,7 @@ export class OnlinePlayPage implements Page {
                 params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
                 params.set('mode', 'onlinePlay');
                 const duelLink = `<a href="#duelGameBoard?${params.toString()}" target="_blank" >
-                Hey!👋 Duel time! Join the table 🏓
+                Hey!👋 Duel time! Join the table 🏓 (Click the message)
                 </a> `;
                 if (socket && this.selectedPlayer) {
                     socket.emit("chatMessage", {
