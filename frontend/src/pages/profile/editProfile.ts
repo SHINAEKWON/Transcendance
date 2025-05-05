@@ -6,6 +6,7 @@ import { RedirectEvents } from "../../utils/redirectEvents.js";
 import { avatarUploadHandler } from "../../frontapp/profile/profilePhotoUpload.js";
 import { env } from "../../env/env.js";
 import { getTokenPayload } from '../../frontapp/tokenParser.js';
+import { validityUpload } from '../../frontapp/validityUpload.js';
 
 export class EditProfilePage implements Page {
     render() {
@@ -142,6 +143,11 @@ export class EditProfilePage implements Page {
 
                         } else {
                             console.log("No file selected");
+                            return ;
+                        }
+
+                        // Check validity of the image file in front
+                        if (await validityUpload(file) === false){
                             return ;
                         }
 
