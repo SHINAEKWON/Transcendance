@@ -1,18 +1,17 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as checkers from './signupCheckers.js'
 
-export async function userRegisterInfoCheck( request: FastifyRequest, reply: FastifyReply ) {
-
+export async function userRegisterInfoCheck(request: FastifyRequest) {
     const query = request.body as any;
 
     if (!checkers.isNameValid(query.firstname))
-        return reply.status(400).send({ message: "Invalid firstname" });
+        throw new Error("Invalid firstname");
     if (!checkers.isNameValid(query.lastname))
-        return reply.status(400).send({ message: "Invalid lastname" });
+        throw new Error("Invalid lastname");
     if (!checkers.isusernameValid(query.username))
-        return reply.status(400).send({ message: "Invalid username(login)" });
+        throw new Error("Invalid username (login)");
     if (!checkers.isPasswordValid(query.password))
-        return reply.status(400).send({ message: "Invalid password" });
-	if (!checkers.isEmailValid(query.email))
-		return reply.status(400).send({ message: "Invalid email form" });
+        throw new Error("Invalid password");
+    if (!checkers.isEmailValid(query.email))
+        throw new Error("Invalid email form");
 }

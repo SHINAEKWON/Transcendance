@@ -68,9 +68,16 @@ export default async function authRoutes(app: FastifyInstance) {
       });
     }
   
+    
+      try {
+        await userRegisterInfoCheck(request);
+    } catch (err) {
+        return reply.status(400).send({
+            error: true,
+            message: (err as Error).message
+        });
+    }
     try {
-      await userRegisterInfoCheck(request, reply); // Ta validation custom si nécessaire
-  
       const userData = {
         username,
         firstname,
