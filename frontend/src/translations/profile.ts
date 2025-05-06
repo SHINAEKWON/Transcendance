@@ -153,6 +153,36 @@ export const profileTranslations = {
       de: "Im Spiel",
       ar: "في اللعبة",
       ko: "게임 중"
+    },
+
+    historyTitle: {
+      en: "🕒 Match / Tournament History",
+      fr: "🕒 Historique des matchs / tournois",
+      de: "🕒 Spiel- / Turnierverlauf",
+      ar: "🕒 سجل المباريات / البطولات",
+      ko: "🕒 경기 / 토너먼트 기록"
+    },
+    noHistory: {
+      en: "No history available.",
+      fr: "Aucun historique disponible.",
+      de: "Keine Historie verfügbar.",
+      ar: "لا يوجد سجل متاح.",
+      ko: "기록이 없습니다."
+    },
+    victory: {
+      en: "Victory",
+      fr: "Victoire",
+      de: "Sieg",
+      ar: "انتصار",
+      ko: "승리"
+    },
+    defeat: {
+      en: "Defeat",
+      fr: "Défaite",
+      de: "Niederlage",
+      ar: "هزيمة",
+      ko: "패배"
     }
+
   } as const;
   

@@ -32,7 +32,8 @@ export async function connectDB() {
       matches INTEGER DEFAULT 0,
       wins INTEGER DEFAULT 0,
       losses INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      type TEXT DEFAULT 'user'
     )
   `);
 await db.exec(`
@@ -45,6 +46,19 @@ await db.exec(`
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (friend_id) REFERENCES users(id)
+    );
+  `);
+
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,              
+      type TEXT NOT NULL,              -- "match" ou "tournament"
+      finished_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+      user_id INTEGER NOT NULL,        
+      isWinner BOOLEAN NOT NULL,       
+      FOREIGN KEY (user_id) REFERENCES users(id)
     );
   `);
 

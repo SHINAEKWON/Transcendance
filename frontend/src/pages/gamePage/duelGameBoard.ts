@@ -3,7 +3,7 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
-import { updateStats } from "../../services/userService.js";
+import { addHistory, updateStats } from "../../services/userService.js";
 
 export class DuelGameBoardPage implements Page {
   private duelData: any = null;
@@ -108,21 +108,21 @@ export class DuelGameBoardPage implements Page {
             });
           }
 
-        } else {
-          new GameBoardPage(
-            player1.username,
-            player2.username,
-            player1.avatar,
-            player2.avatar,
-            player1.isIa,
-            player2.isIa,
-            mode,
-            player1.id,
-            player2.id,
-            socket,
-            this.handleEndGame.bind(this)
-          ).render();
-        }
+        } 
+      }else {
+        new GameBoardPage(
+          player1.username,
+          player2.username,
+          player1.avatar,
+          player2.avatar,
+          player1.isIa,
+          player2.isIa,
+          mode,
+          player1.id,
+          player2.id,
+          socket,
+          this.handleEndGame.bind(this)
+        ).render();
       }
 
       document.getElementById('showRulesBtn')?.addEventListener('click', () => {
@@ -162,6 +162,15 @@ export class DuelGameBoardPage implements Page {
     const looser = playerLeft.getScore() > playerRight.getScore() ? playerRight : playerLeft;
     updateStats(winner.getId(), true);
     updateStats(looser.getId(), false);
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        if(user.id == winner.getId()){
+          addHistory("duel : "+playerLeft.getName() +" vs "+playerRight.getName(), "duel", true);
+        }else if(user.id == looser.getId()){
+          addHistory("duel : "+playerLeft.getName() +" vs "+playerRight.getName(), "duel", false);
+        }
+    }
     const appGame = document.getElementById("appGame");
     if (appGame) {
       appGame.innerHTML = "";

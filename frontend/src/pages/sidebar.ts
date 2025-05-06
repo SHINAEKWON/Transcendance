@@ -164,10 +164,10 @@ export class Sidebar {
             user.friend_status === 'accepted' ? `
               <img src="${user.avatar}" 
                     class="w-12 h-12 rounded-full border border-blue-400 cursor-pointer profile-link hover:brightness-110 transition duration-200" 
-                    data-id="${user.id}" 
+                    data-id="${user.id}" data-type="${user.type}" 
                     alt="Avatar">
               <p class="ml-4 text-white font-semibold cursor-pointer profile-link hover:text-blue-400 transition duration-200" 
-                  data-id="${user.id}">
+                  data-id="${user.id}" data-type="${user.type}">
                   ${user.username}
               </p>
             ` : `
@@ -247,8 +247,15 @@ export class Sidebar {
       el.addEventListener('click', (e) => {
         const target = e.currentTarget as HTMLElement;
         const targetId = target.getAttribute('data-id');
+        const userType = target.getAttribute('data-type');
         if (targetId) {
-          window.location.hash = `#profile?id=${encodeId(targetId)}`;
+          if(userType == 'guest'){
+            window.location.hash = `#profileGuest?id=${encodeId(targetId)}`;
+          }else {
+            window.location.hash = `#profile?id=${encodeId(targetId)}`;
+          }
+
+         
         }
       });
     });

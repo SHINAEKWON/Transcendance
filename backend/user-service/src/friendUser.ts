@@ -15,6 +15,7 @@ export class FriendUser extends User {
       user.email,
       user.address,
       user.telephone,
+      user.type,
       user.matches,
       user.wins,
       user.losses,

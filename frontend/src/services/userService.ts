@@ -62,6 +62,8 @@ export async function updateStats(userId: number, didWin: boolean) {
             
         }
     }
+
+    
        
 }
 
@@ -71,4 +73,72 @@ export async function getUserInfo(id: number){
     const res = await authorizedFetch(`${env.backUser}/users/${id}`);
     const result = await res.json() as User[];
     return result;
+}
+
+
+// ----------- HISTORY SERVICES -----------
+
+export async function addHistory(name: string, type: string, isWinner: boolean) {
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        const response = await authorizedFetch(`${env.backUser}/users/${user.id}/history`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, type, isWinner })
+        });
+
+        if (!response.ok) {
+            console.error('Erreur lors de l\'ajout à l\'historique');
+            return null;
+        }
+
+        const result = await response.json();
+        return result;
+    }
+    return null;
+}
+
+export async function getLocalUserHistory() {
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        const response = await authorizedFetch(`${env.backUser}/users/${user.id}/history`);
+        if (!response.ok) {
+            console.error('Erreur lors de la récupération de l\'historique');
+            return [];
+        }
+        const result = await response.json();
+        return result;
+    }
+    return [];
+}
+
+export async function getUserHistory(id: number) {
+   
+        const response = await authorizedFetch(`${env.backUser}/users/${id}/history`);
+        if (!response.ok) {
+            console.error('Erreur lors de la récupération de l\'historique');
+            return [];
+        }
+        const result = await response.json();
+        return result;
+}
+export async function deleteUserHistory() {
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        const response = await authorizedFetch(`${env.backUser}/users/${user.id}/history`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            console.error('Erreur lors de la suppression de l\'historique');
+            return null;
+        }
+
+        const result = await response.json();
+        return result;
+    }
+    return null;
 }

@@ -134,7 +134,7 @@ export class GuestPage implements Page{
           const res = await fetch(`${env.backAuth}/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}${generatedsuffix}@guest.42.fr`,password: `${generatedpassword}`, address: "", status: 'Online'})
+            body: JSON.stringify({ firstname: login, lastname: login, username: login, avatar: avatarUrl, email: `${login}${generatedsuffix}@guest.42.fr`,password: `${generatedpassword}`, address: "", status: 'Online', type: "guest"})
           });
 
           if (!res.ok) {
@@ -149,7 +149,6 @@ export class GuestPage implements Page{
         const decoded = jwtDecode<JwtPayload>(data.token);
         console.log('decode ', decoded);
         const userInfo: any = await getUserInfo(decoded.id);
-        userInfo['type'] = 'guest'
         localStorage.setItem("transcendenceUser", JSON.stringify(userInfo));
                 console.log("✅ User created:", userInfo);
                alert(`Welcome ${userInfo.username} 🕹️`);
