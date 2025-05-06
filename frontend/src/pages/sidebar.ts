@@ -169,9 +169,10 @@ export class Sidebar {
                   <img src="${user.avatar}" 
                         class="w-12 h-12 rounded-full border border-blue-400 profile-link" 
                         data-id="${user.id}" 
+                        data-type="${user.type}" 
                         alt="Avatar">
                   <p class="ml-4 text-white font-semibold profile-link" 
-                      data-id="${user.id}">
+                      data-id="${user.id}" data-type="${user.type}" >
                       ${user.username}
                   </p>
                 ` : `
