@@ -26,7 +26,9 @@ export class Paddle extends A_MovingGameElement {
         classList,
         isLocal,
         socket,
-        mode
+        mode,
+        paddleSize,
+        paddleSpeed
     }: {
         position: Position,
         player: Player,
@@ -36,11 +38,13 @@ export class Paddle extends A_MovingGameElement {
         classList: string[],
         isLocal?: boolean,
         socket?: any,
-        mode?: GameMode
+        mode?: GameMode,
+        paddleSize: number,
+        paddleSpeed: number
     }) {
         const topInitialRelative = 42.5;
         const widthFraction = 0.3;
-        const heightFraction = 15;
+        const heightFraction = paddleSize;
         const leftInitialRelative = (position === Position.Left) ? 0 : 100;
 
         super({
@@ -50,7 +54,7 @@ export class Paddle extends A_MovingGameElement {
             widthFraction: widthFraction,
             heightFraction: heightFraction,
             backgroundColor: player.getColor(),
-            speed: 1,
+            speed: paddleSpeed,
             parentElement: parentElement,
             classList: classList
         });

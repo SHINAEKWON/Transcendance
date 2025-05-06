@@ -25,16 +25,16 @@ export class CustomizationPage implements Page {
                 <div id="custom-options" class="space-y-4 opacity-50 pointer-events-none transition duration-300">
 
                     ${this.selectColors({
-                        boardColor: t("boardColor"),
-                        ballColor: t("ballColor"),
-                        paddleColor: t("paddleColor")
-                    })}
+            boardColor: t("boardColor"),
+            ballColor: t("ballColor"),
+            paddleColor: t("paddleColor")
+        })}
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${this.rangeOption("ballSpeed", t("ballSpeed"), 1, 10)}
-                        ${this.rangeOption("paddleSpeed", t("paddleSpeed"), 1, 10)}
-                        ${this.rangeOption("ballSize", t("ballSize"), 5, 20)}
-                        ${this.rangeOption("paddleSize", t("paddleSize"), 20, 100)}
+                        ${this.rangeOption("ballSpeed", t("ballSpeed"), 0.5, 3)}
+                        ${this.rangeOption("paddleSpeed", t("paddleSpeed"), 1, 4)}
+                        ${this.rangeOption("ballSize", t("ballSize"), 5, 15)}
+                        ${this.rangeOption("paddleSize", t("paddleSize"), 10, 40)}
                     </div>
 
                     <h3 class="text-2xl font-bold text-neon-green mt-6">${t("themesTitle")}</h3>
@@ -188,10 +188,13 @@ export class CustomizationPage implements Page {
         const updateOptionsState = () => {
             if (defaultRadio.checked) {
                 customOptions.classList.add("opacity-50", "pointer-events-none");
+               
+                console.log("🗑 Paramètres custom supprimés : mode par défaut activé.");
             } else {
                 customOptions.classList.remove("opacity-50", "pointer-events-none");
             }
         };
+        
 
         defaultRadio.addEventListener("change", updateOptionsState);
         customRadio.addEventListener("change", updateOptionsState);
@@ -215,26 +218,70 @@ export class CustomizationPage implements Page {
         });
 
         // 🟢 Gestion sélection du thème
+        // 🟢 Gestion sélection du thème avec pré-remplissage des couleurs
         const themeCards = document.querySelectorAll(".theme-card");
         let selectedTheme: string | null = null;
+
+        const themePresets: Record<string, { boardColor: string, ballColor: string, paddleColor: string, image: string }> = {
+            "neon-night": {
+                boardColor: "#0a0a0a",
+                ballColor: "#ff00ff",
+                paddleColor: "#00ffff",
+                image: "./public/images/Neon_Night.png"
+            },
+            "cyber-grid": {
+                boardColor: "#001f3f",
+                ballColor: "#7fdbff",
+                paddleColor: "#39cccc",
+                image: "./public/images/Cyber_Grid.png"
+            },
+            "dark-future": {
+                boardColor: "#111111",
+                ballColor: "#ff851b",
+                paddleColor: "#ff4136",
+                image: "./public/images/Dark_Future.png"
+            }
+        };
 
         themeCards.forEach(card => {
             card.addEventListener("click", () => {
                 themeCards.forEach(c => c.classList.remove("ring-4", "ring-neon-purple", "ring-neon-blue", "ring-neon-orange"));
 
-                const themeId = card.getAttribute("data-theme");
+                const themeId = card.getAttribute("data-theme")!;
+                selectedTheme = themeId;
+
                 if (themeId === "neon-night") card.classList.add("ring-4", "ring-neon-purple");
                 if (themeId === "cyber-grid") card.classList.add("ring-4", "ring-neon-blue");
                 if (themeId === "dark-future") card.classList.add("ring-4", "ring-neon-orange");
 
-                selectedTheme = themeId!;
+                // 🟢 Pré-remplir les couleurs si un thème est choisi
+                const preset = themePresets[themeId];
+                if (preset) {
+                    const boardInput = document.getElementById("boardColor") as HTMLInputElement;
+                    const ballInput = document.getElementById("ballColor") as HTMLInputElement;
+                    const paddleInput = document.getElementById("paddleColor") as HTMLInputElement;
+
+                    boardInput.value = preset.boardColor;
+                    ballInput.value = preset.ballColor;
+                    paddleInput.value = preset.paddleColor;
+
+                    // Met à jour les cercles visuellement
+                    (document.getElementById("boardColor-circle") as HTMLElement).style.backgroundColor = preset.boardColor;
+                    (document.getElementById("ballColor-circle") as HTMLElement).style.backgroundColor = preset.ballColor;
+                    (document.getElementById("paddleColor-circle") as HTMLElement).style.backgroundColor = preset.paddleColor;
+                }
+
                 console.log("🎨 Thème sélectionné :", selectedTheme);
             });
         });
 
+
+        // 🟢 Bouton Apply
         // 🟢 Bouton Apply
         applyBtn.addEventListener("click", () => {
             if (customRadio.checked) {
+                const presetImage = selectedTheme ? themePresets[selectedTheme]?.image : null;
+
                 const settings = {
                     boardColor: (document.getElementById("boardColor") as HTMLInputElement).value,
                     ballColor: (document.getElementById("ballColor") as HTMLInputElement).value,
@@ -243,16 +290,60 @@ export class CustomizationPage implements Page {
                     paddleSpeed: (document.getElementById("paddleSpeed") as HTMLInputElement).value,
                     ballSize: (document.getElementById("ballSize") as HTMLInputElement).value,
                     paddleSize: (document.getElementById("paddleSize") as HTMLInputElement).value,
-                    theme: selectedTheme
+                    theme: selectedTheme,
+                    themeImage: presetImage
                 };
                 console.log("🎯 Paramètres appliqués :", settings);
 
-                // Si tu veux sauvegarder dans localStorage :
                 localStorage.setItem("customGameSettings", JSON.stringify(settings));
-
             } else {
                 console.log("🔧 Mode par défaut sélectionné.");
+                localStorage.removeItem("customGameSettings");
             }
         });
+
+        // 🟢 Chargement des paramètres existants depuis localStorage
+const savedSettings = localStorage.getItem("customGameSettings");
+if (savedSettings) {
+    const settings = JSON.parse(savedSettings);
+
+    // Mettre le mode custom
+    customRadio.checked = true;
+    updateOptionsState();
+
+    // Couleurs
+    (document.getElementById("boardColor") as HTMLInputElement).value = settings.boardColor || "#ffffff";
+    (document.getElementById("ballColor") as HTMLInputElement).value = settings.ballColor || "#ffffff";
+    (document.getElementById("paddleColor") as HTMLInputElement).value = settings.paddleColor || "#ffffff";
+
+    (document.getElementById("boardColor-circle") as HTMLElement).style.backgroundColor = settings.boardColor || "#ffffff";
+    (document.getElementById("ballColor-circle") as HTMLElement).style.backgroundColor = settings.ballColor || "#ffffff";
+    (document.getElementById("paddleColor-circle") as HTMLElement).style.backgroundColor = settings.paddleColor || "#ffffff";
+
+    // Sliders
+    (document.getElementById("ballSpeed") as HTMLInputElement).value = settings.ballSpeed || "5";
+    (document.getElementById("paddleSpeed") as HTMLInputElement).value = settings.paddleSpeed || "5";
+    (document.getElementById("ballSize") as HTMLInputElement).value = settings.ballSize || "6";
+    (document.getElementById("paddleSize") as HTMLInputElement).value = settings.paddleSize || "50";
+
+    // Thème
+    if (settings.theme) {
+        selectedTheme = settings.theme;
+
+        themeCards.forEach(c => {
+            c.classList.remove("ring-4", "ring-neon-purple", "ring-neon-blue", "ring-neon-orange");
+            const themeId = c.getAttribute("data-theme");
+            if (themeId === selectedTheme) {
+                if (themeId === "neon-night") c.classList.add("ring-4", "ring-neon-purple");
+                if (themeId === "cyber-grid") c.classList.add("ring-4", "ring-neon-blue");
+                if (themeId === "dark-future") c.classList.add("ring-4", "ring-neon-orange");
+            }
+        });
+    }
+
+    console.log("🔄 Paramètres chargés depuis localStorage :", settings);
+}
+
+
     }
 }

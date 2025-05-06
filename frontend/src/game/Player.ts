@@ -60,11 +60,24 @@ export class Player
             isLocal = JSON.parse(storedUser).username == this.getName();
         }
        
+        let paddleSize = 15;
+        let paddleSpeed = 1;
+        let custmeGS = localStorage.getItem('customGameSettings');
+        if (custmeGS) {
+            const custmeJson = JSON.parse(custmeGS);
+            const paddleSizeC = custmeJson['paddleSize'];
+            const paddleSpeedC = custmeJson['paddleSpeed'];
+            if(paddleSizeC){
+                paddleSize = paddleSizeC;
+                paddleSpeed = paddleSpeedC;
+            }
+        }
+
        
 
         for (let i = 0; i < paddleKeys.length; ++i)
         {
-            this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], parentElement: parentElement, classList: [], isLocal, socket, mode}));
+            this.paddles.push(new Paddle({position: position, player: this, upKey: paddleKeys[i][0], downKey: paddleKeys[i][1], parentElement: parentElement, classList: [], isLocal, socket, mode, paddleSize, paddleSpeed}));
         }
         let suff = this.position == Position.Left ? "left" : "right";
 

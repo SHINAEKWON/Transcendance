@@ -185,7 +185,7 @@ export class Sidebar {
               }
             </div>
             <div class="flex items-center space-x-2">
-              ${actionButtons}s
+              ${actionButtons}
             </div>
           </li>`;
     });

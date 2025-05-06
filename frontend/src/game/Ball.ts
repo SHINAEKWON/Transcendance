@@ -8,11 +8,14 @@ export class Ball extends A_MovingGameElement
 {
 
     private readonly maxSpeed = 1.2;
-    constructor({ballId, onBoard, classList}:
+    constructor({ballId, onBoard, classList, ballColor, ballSize, speed}:
     {
         ballId: string, 
         onBoard: A_GameElement,   
-        classList: string[]
+        classList: string[],
+        ballColor: string,
+        ballSize: number,
+        speed: number
     })
     { 
         super(
@@ -20,10 +23,10 @@ export class Ball extends A_MovingGameElement
             elementId: ballId, 
             leftNewRelative: 48.5, 
             topNewRelative: 48.5, 
-            widthFraction: 1.5, 
+            widthFraction: ballSize, 
             heightFraction: null, 
-            backgroundColor: "white", 
-            speed: 0.85, 
+            backgroundColor: ballColor, 
+            speed: speed, 
             parentElement: onBoard, 
             classList: classList
         });

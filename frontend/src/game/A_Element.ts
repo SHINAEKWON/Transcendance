@@ -144,7 +144,7 @@ export abstract class A_Element<T extends HTMLElement>
         this.element.style.color = newColor;
     }
     
-    changeBackgroundColor(newColor: string): void
+    protected changeBackgroundColor(newColor: string): void
     {
         this.element.style.backgroundColor = newColor;
     }
