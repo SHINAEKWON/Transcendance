@@ -97,18 +97,18 @@ export const customizationTranslations = {
         ar: "مستقبل مظلم",
         ko: "어두운 미래"
     },
-    playBtn: {
-        en: "Play",
-        fr: "Jouer",
-        de: "Spielen",
-        ar: "العب",
-        ko: "플레이"
+    applyBtn: {
+        en: "Apply",
+        fr: "Appliquer",
+        de: "Anwenden",
+        ar: "تطبيق",
+        ko: "적용"
     },
-    backToAI: {
-        en: "Back to AI Play",
-        fr: "Retour au mode IA",
-        de: "Zurück zum KI-Spiel",
-        ar: "العودة إلى اللعب ضد الذكاء الاصطناعي",
-        ko: "AI 플레이로 돌아가기"
-    }
+    backBtn: {
+        en: "Back",
+        fr: "Retour",
+        de: "Zurück",
+        ar: "عودة",
+        ko: "뒤로"
+    }    
 } as const;

@@ -111,6 +111,11 @@ export class Sidebar {
       let rowStyle = hasBlockedMe ? 'opacity-50 grayscale pointer-events-none' : '';
       let actionButtons = '';
 
+      const liStyle = isFriend 
+    ? 'bg-gradient-to-r from-purple-900 to-purple-700 border-2 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.7)] p-3 rounded-lg hover:brightness-110 transition duration-300 cursor-pointer' 
+    : 'bg-gray-700 p-3 rounded-lg';
+
+
       if (isFriend) {
         actionButtons += `
            <button class="open-chat relative bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-md" data-id="${user.id}" data-user="${user.username}" data-avatar="${user.avatar}">
@@ -156,35 +161,33 @@ export class Sidebar {
       }
 
       result += `
-         <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between ${rowStyle}">
-         <div class="flex items-center space-x-2">
-         ${this.statusBadge[user.status as "online" | "offline" | "in-game"]}
-     
-         ${
-            user.friend_status === 'accepted' ? `
-              <img src="${user.avatar}" 
-                    class="w-12 h-12 rounded-full border border-blue-400 cursor-pointer profile-link hover:brightness-110 transition duration-200" 
-                    data-id="${user.id}" 
-                    alt="Avatar">
-              <p class="ml-4 text-white font-semibold cursor-pointer profile-link hover:text-blue-400 transition duration-200" 
-                  data-id="${user.id}">
-                  ${user.username}
-              </p>
-            ` : `
-              <img src="${user.avatar}" 
-                    class="w-12 h-12 rounded-full border border-blue-400 opacity-50" 
-                    alt="Avatar">
-              <p class="ml-4 text-white font-semibold text-gray-400">
-                  ${user.username}
-              </p>
-            `
-           }
-         </div>
-     
-           <div class="flex items-center space-x-2">
-             ${actionButtons}
-           </div>
-         </li>`;
+            <li class="flex items-center bg-gray-700 p-3 rounded-lg justify-between ${liStyle} ${rowStyle}">
+            <div class="flex items-center space-x-2">
+              ${this.statusBadge[user.status as "online" | "offline" | "in-game"]}
+              ${
+                user.friend_status === 'accepted' ? `
+                  <img src="${user.avatar}" 
+                        class="w-12 h-12 rounded-full border border-blue-400 profile-link" 
+                        data-id="${user.id}" 
+                        alt="Avatar">
+                  <p class="ml-4 text-white font-semibold profile-link" 
+                      data-id="${user.id}">
+                      ${user.username}
+                  </p>
+                ` : `
+                  <img src="${user.avatar}" 
+                        class="w-12 h-12 rounded-full border border-blue-400 opacity-50" 
+                        alt="Avatar">
+                  <p class="ml-4 text-white font-semibold text-gray-400">
+                      ${user.username}
+                  </p>
+                `
+              }
+            </div>
+            <div class="flex items-center space-x-2">
+              ${actionButtons}
+            </div>
+          </li>`;
     });
 
     if (usersHtml) usersHtml.innerHTML = result;
