@@ -94,7 +94,7 @@ export class Sidebar {
     // Afficher moi-même
     if (me) {
       result += `
-       <li class="flex flex-col items-center bg-gray-800 px-2 py-1 rounded-lg animate-pulse">
+       <li class="flex flex-col items-center bg-gray-800 px-3 py-1 rounded-lg animate-pulse">
          <img src="${me.avatar}" class="w-12 h-12 rounded-full border border-neon-green shadow-md">
          <p class="mt-1 text-neon-green text-center font-bold text-lg leading-none">${me.username}</p>
        </li> `;
