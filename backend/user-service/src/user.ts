@@ -10,6 +10,7 @@ export class User {
       public email: string,
       public address: string | null = null,
       public telephone: string | null = null,
+      public type: string,
       public matches: number = 0,
       public wins: number = 0,
       public losses: number = 0,

@@ -185,7 +185,7 @@ export class Sidebar {
               }
             </div>
             <div class="flex items-center space-x-2">
-              ${actionButtons}
+              ${actionButtons}s
             </div>
           </li>`;
     });
@@ -250,8 +250,15 @@ export class Sidebar {
       el.addEventListener('click', (e) => {
         const target = e.currentTarget as HTMLElement;
         const targetId = target.getAttribute('data-id');
+        const userType = target.getAttribute('data-type');
         if (targetId) {
-          window.location.hash = `#profile?id=${encodeId(targetId)}`;
+          if(userType == 'guest'){
+            window.location.hash = `#profileGuest?id=${encodeId(targetId)}`;
+          }else {
+            window.location.hash = `#profile?id=${encodeId(targetId)}`;
+          }
+
+         
         }
       });
     });

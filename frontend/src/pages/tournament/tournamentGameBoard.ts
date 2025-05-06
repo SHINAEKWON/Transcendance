@@ -3,7 +3,7 @@ import { getTranslation } from "../../i18n/i18n.js";
 import { gameTranslations } from "../../translations/game.js";
 import { GameBoardPage } from "../../game/GameBoard";
 import { Player } from "../../game/Player";
-import { updateStats } from "../../services/userService.js";
+import { addHistory } from "../../services/userService.js";
 
 export class TournamentGameBoardPage implements Page {
   private tournamentData: any = null;
@@ -41,8 +41,15 @@ export class TournamentGameBoardPage implements Page {
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
     const looser = playerLeft.getScore() > playerRight.getScore() ? playerRight : playerLeft;
-    updateStats(winner.getId(), true);
-    updateStats(looser.getId(), false);
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        if(user.id == winner.getId()){
+          addHistory(this.tournamentData.name, "duel", true);
+        }else if(user.id == looser.getId()){
+          addHistory(this.tournamentData.name, "duel", false);
+        }
+    }
     console.log(`Winner: ${winner.getName()}`);
 
     this.winners.push({
@@ -122,7 +129,16 @@ export class TournamentGameBoardPage implements Page {
     console.log("Finale terminée");
 
     const winner = playerLeft.getScore() > playerRight.getScore() ? playerLeft : playerRight;
-
+    const looser = playerLeft.getScore() > playerRight.getScore() ? playerRight : playerLeft;
+    const savedUser = localStorage.getItem("transcendenceUser");
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        if(user.id == winner.getId()){
+          addHistory(this.tournamentData.name, "tournament", true);
+        }else if(user.id == looser.getId()){
+          addHistory(this.tournamentData.name, "tournament", false);
+        }
+    }
     this.finalWinner = {
       username: winner.getName(),
       avatar: winner.getAvatar()

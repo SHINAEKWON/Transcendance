@@ -15,8 +15,8 @@ export async function createUser(user: User) {
   const db = await connectDB();
   const result = await db.run(`INSERT INTO users (
     firstname, lastname, username, avatar, status,
-    email, address, telephone, matches, wins, losses, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
+    email, address, telephone, matches, wins, losses, created_at, type
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
       user.firstname,
       user.lastname,
       user.username,
@@ -28,7 +28,8 @@ export async function createUser(user: User) {
       user.matches,
       user.wins,
       user.losses,
-      user.created_at
+      user.created_at,
+      user.type
     ]);
   return { id: result.lastID };
 }
@@ -199,6 +200,7 @@ export async function getAllUsersWithFriendStatus(userId: number): Promise<Frien
       row.email,
       row.address,
       row.telephone,
+      row.type,
       row.matches,
       row.wins,
       row.losses,
@@ -239,6 +241,7 @@ export async function getAllAcceptedFriends(userId: number): Promise<FriendUser[
       row.email,
       row.address,
       row.telephone,
+      row.type,
       row.matches,
       row.wins,
       row.losses,
@@ -310,5 +313,41 @@ export async function updateUserStats(
 
   return { userId, matches: newMatches, wins: newWins, losses: newLosses };
 }
+
+// ---------- HISTORY SERVICE ----------
+
+export async function addHistoryEntry(
+  name: string,
+  type: string,
+  user_id: number,
+  isWinner: boolean
+) {
+  const db = await connectDB();
+  const result = await db.run(`
+    INSERT INTO history (name, type, user_id, isWinner)
+    VALUES (?, ?, ?, ?)
+  `, [name, type, user_id, isWinner ? 1 : 0]);
+
+  return { id: result.lastID };
+}
+
+export async function getUserHistory(user_id: number) {
+  const db = await connectDB();
+  const rows = await db.all(`
+    SELECT * FROM history WHERE user_id = ? ORDER BY finished_at DESC
+  `, [user_id]);
+
+  return rows;
+}
+
+export async function deleteUserHistory(user_id: number) {
+  const db = await connectDB();
+  const result = await db.run(`
+    DELETE FROM history WHERE user_id = ?
+  `, [user_id]);
+
+  return { deleted: result.changes };
+}
+
 
 

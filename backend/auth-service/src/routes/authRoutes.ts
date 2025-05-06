@@ -47,7 +47,8 @@ export default async function authRoutes(app: FastifyInstance) {
       email,
       address,
       telephone,
-      avatar
+      avatar,
+      type
     } = request.body as {
       username: string,
       firstname: string,
@@ -56,7 +57,8 @@ export default async function authRoutes(app: FastifyInstance) {
       email: string,
       address: string | null,
       telephone: string | null,
-      avatar: string | null
+      avatar: string | null,
+      type: string
     };
   
     // Vérification champs obligatoires
@@ -86,7 +88,8 @@ export default async function authRoutes(app: FastifyInstance) {
         email,
         address,
         telephone,
-        avatar
+        avatar,
+        type
       };
   
       console.log('before register (inside auth/signup)');

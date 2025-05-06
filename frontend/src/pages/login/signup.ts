@@ -113,7 +113,9 @@ export class SignupPage implements Page{
                 password: (document.getElementById('password') as HTMLInputElement).value,
                 address: (document.getElementById('postalAddress') as HTMLInputElement).value,
                 telephone: (document.getElementById('phoneNumber') as HTMLInputElement).value,
-                avatar : "./public/images/profile.jpg"
+                avatar : "./public/images/profile.jpg",
+                type: "user"
+
             };
 
             try {

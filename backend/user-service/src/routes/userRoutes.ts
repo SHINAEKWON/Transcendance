@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { User } from '../user.js';
-import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend, updateUserFull, getAllAcceptedFriends, updateUserStats } from '../userModel.js';
+import { getAllUsers, getUser, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, deleteFriends, unblockFriend, blockFriend, updateUserFull, getAllAcceptedFriends, updateUserStats, addHistoryEntry, getUserHistory, deleteUserHistory } from '../userModel.js';
 import { avatarUpload } from '../avatarUpload.js';
 import { fileErrorCode } from '../fileErrorCode.js';
 import https from 'https';
@@ -94,6 +94,7 @@ export async function userRoutes(app: FastifyInstance) {
       email,
       address,
       telephone,
+      type
     } = req.body as {
       firstname: string;
       lastname: string;
@@ -102,6 +103,7 @@ export async function userRoutes(app: FastifyInstance) {
       email: string;
       address?: string;
       telephone?: string;
+      type: string;
     };
 
     const user = new User(
@@ -113,9 +115,9 @@ export async function userRoutes(app: FastifyInstance) {
       'offline',
       email,
       address ?? null,
-      telephone ?? null
+      telephone ?? null,
+      type
     );
-
     // Étape 1 : Check validations
     const validationErrors = await checkUserUniqueness({ username, email, telephone });
 
@@ -452,6 +454,53 @@ export async function userRoutes(app: FastifyInstance) {
       res.code(400).send({ error: err.message });
     }
   });
+
+
+
+/** Ajouter une entrée dans l'historique */
+app.post('/users/:id/history', async (req, res) => {
+  const { id } = req.params as { id: string };
+  const { name, type, isWinner } = req.body as {
+    name: string;
+    type: string;
+    isWinner: boolean;
+  };
+
+  try {
+    const result = await addHistoryEntry(name, type, Number(id), isWinner);
+    res.code(201).send({ message: 'Historique ajouté', result });
+  } catch (err: any) {
+    console.error('Erreur ajout historique :', err);
+    res.status(400).send({ error: err.message });
+  }
+});
+
+/** Récupérer l'historique d'un utilisateur */
+app.get('/users/:id/history', async (req, res) => {
+  const { id } = req.params as { id: string };
+
+  try {
+    const history = await getUserHistory(Number(id));
+    res.code(200).send(history);
+  } catch (err: any) {
+    console.error('Erreur récupération historique :', err);
+    res.status(400).send({ error: err.message });
+  }
+});
+
+/** Supprimer tout l'historique d'un utilisateur */
+app.delete('/users/:id/history', async (req, res) => {
+  const { id } = req.params as { id: string };
+
+  try {
+    const result = await deleteUserHistory(Number(id));
+    res.code(200).send({ message: 'Historique supprimé', result });
+  } catch (err: any) {
+    console.error('Erreur suppression historique :', err);
+    res.status(400).send({ error: err.message });
+  }
+});
+
 
 
 }
