@@ -11,6 +11,7 @@ export class DuelGameBoardPage implements Page {
   private isReady = false;
 
   async render() {
+    this.reset();
 
     const t = (key: keyof typeof gameTranslations) => getTranslation("game", key);
 
@@ -197,6 +198,10 @@ export class DuelGameBoardPage implements Page {
         spread: 70,
         origin: { y: 0.6 }
       });
+      setTimeout(()=>{
+        this.reset();
+      }, 500);
+      
 
       const rematchBtn = document.getElementById("rematchBtn");
       rematchBtn?.addEventListener("click", () => {
@@ -225,7 +230,22 @@ export class DuelGameBoardPage implements Page {
       </div>
     `;
   }
+
+  reset(){
+    this.isReady = false;
+    let socket = getSocket();
+    if (socket) {
+        socket.off("readyYes");
+        socket.off("ready");
+        socket.off("ballMove");
+        socket.off("pressSpace");
+        socket.off("paddleMove");
+        socket.off("paddleRelativeMove");
+
+    }
 }
+}
+
 
 function getSocket(): any | undefined {
   return (window as any).socket;
