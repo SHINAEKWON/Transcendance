@@ -81,7 +81,7 @@ export class Board extends A_GameElement {
         };
         let ballSize = 1.5;
         let ballBackgroundColor = "white";
-        let speed = 0.85;
+        let speed = 0.8;
         let custmeGS = localStorage.getItem('customGameSettings');
         if (custmeGS) {
             const custmeJson = JSON.parse(custmeGS);

@@ -187,7 +187,14 @@ export const gameTranslations = {
     de: "Wenn der Ball ohne Berührung das Spielfeld verlässt.",
     ar: "إذا خرجت الكرة بدون تلامس.",
     ko: "공이 닿지 않고 밖으로 나가면 점수를 잃습니다."
-  }
+  },
+  customizeGame: {
+    en: "Customize",
+    fr: "Personnaliser",
+    de: "Anpassen",
+    ar: "تخصيص",
+    ko: "사용자 지정"
+},
 } as const;
 
 export const localPlayTranslations = {
@@ -284,7 +291,14 @@ export const onlinePlayTranslations = {
     de: "⬅ Zurück",
     ar: "⬅ رجوع",
     ko: "⬅ 뒤로"
-  }
+  },
+  duelInvite: {
+    en: "Hey!👋 Duel time! Join the table 🏓 (Click to accept!!)",
+    fr: "Hey !👋 C'est l'heure du duel ! Rejoins la table 🏓 (Clique pour accepter !!)",
+    de: "Hey!👋 Duell-Zeit! Komm an den Tisch 🏓 (Klicke, um anzunehmen!!)",
+    ar: "مرحباً!👋 حان وقت التحدي! انضم إلى الطاولة 🏓 (انقر للقبول!!)",
+    ko: "안녕!👋 듀얼 시간이에요! 탁자에 참여하세요 🏓 (클릭해서 수락하세요!!)"
+}
 } as const;
 
 
@@ -303,13 +317,6 @@ export const aiPlayTranslations = {
     ar: "العب",
     ko: "플레이"
   },
-  customizeGame: {
-    en: "Customize",
-    fr: "Personnaliser",
-    de: "Anpassen",
-    ar: "تخصيص",
-    ko: "사용자 지정"
-},
   backToGame: {
     en: "Back to Game Modes",
     fr: "Retour aux modes de jeu",

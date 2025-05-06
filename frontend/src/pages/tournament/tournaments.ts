@@ -36,6 +36,11 @@ export class TournamentsPage implements Page {
                     </div>                
 
                 </div>
+                <div class="flex flex-col items-center  gap-4 mt-6">
+                    <a href="#customization" class="px-6 py-3 bg-neon-orange text-black rounded-lg font-bold text-lg hover:bg-orange-400 transition text-center">
+                    <span class="text-2xl">⚙️</span> ${t("customizeGame")}
+                        </a>
+                </div>
             </div>
         `;
 

@@ -61,7 +61,14 @@ export const tournamentsTranslations = {
       de: "Kommt bald ..",
       ar: ".. قريبا",
       ko: "곧 출시 .."
-  }  
+  } ,
+  customizeGame: {
+    en: "Customize",
+    fr: "Personnaliser",
+    de: "Anpassen",
+    ar: "تخصيص",
+    ko: "사용자 지정"
+    }
   } as const;
 
   export const createTournamentTranslations = {
@@ -187,7 +194,6 @@ export const tournamentsTranslations = {
       ar: "⬅ رجوع",
       ko: "⬅ 뒤로"
     }
-    
   } as const;
   
   

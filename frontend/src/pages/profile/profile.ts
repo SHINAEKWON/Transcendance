@@ -85,10 +85,11 @@ export class ProfilePage implements Page {
             <table class="min-w-full bg-gray-700 rounded-lg shadow-md">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 text-left text-neon-green">Nom</th>
-                        <th class="py-2 px-4 text-left text-neon-green">Type</th>
-                        <th class="py-2 px-4 text-left text-neon-green">Date</th>
-                        <th class="py-2 px-4 text-left text-neon-green">Résultat</th>
+                    <th class="py-2 px-4 text-left text-neon-green">${t('name')}</th>
+                    <th class="py-2 px-4 text-left text-neon-green">${t('type')}</th>
+                    <th class="py-2 px-4 text-left text-neon-green">${t('date')}</th>
+                    <th class="py-2 px-4 text-left text-neon-green">${t('result')}</th>
+                    
                     </tr>
                 </thead>
                 <tbody>
@@ -98,7 +99,7 @@ export class ProfilePage implements Page {
                             <td class="py-2 px-4">${entry.type}</td>
                             <td class="py-2 px-4">${new Date(entry.finished_at).toLocaleString()}</td>
                             <td class="py-2 px-4 font-bold ${entry.isWinner ? 'text-green-400' : 'text-red-400'}">
-                                ${entry.isWinner ? 'Victoire' : 'Défaite'}
+                            ${entry.isWinner ? t('victory') : t('defeat')}
                             </td>
                         </tr>
                     `).join('')}

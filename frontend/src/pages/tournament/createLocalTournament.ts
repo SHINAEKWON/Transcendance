@@ -60,7 +60,7 @@ export class CreateLocalTournamentPage implements Page {
       </div>
 
       <div class="text-center">
-        <button id="startTournament" class="bg-neon-orange text-black px-8 py-4 rounded-lg font-bold hover:scale-105 transition animate-float">
+        <button id="startTournament" class="bg-neon-green text-black px-8 py-4 rounded-lg font-bold hover:scale-105 transition animate-float">
           🚀 ${t("startTournament")}
         </button>
         <a href="#tournaments" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition animate-float">

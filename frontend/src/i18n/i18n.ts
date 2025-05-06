@@ -8,10 +8,12 @@ import { profileTranslations } from '../translations/profile.js';
 import { editProfileTranslations } from '../translations/editProfile.js';
 import { sidebarTranslations } from '../translations/sidebar.js';
 import { customizationTranslations } from '../translations/customization.js';
+import { authTranslations } from '../translations/auth.js';
 
 
 const translationsMap = {
   welcome: welcomeTranslations,
+  auth: authTranslations,
   navbar: navbarTranslations,
   sidebar: sidebarTranslations,
   language: languageTranslations,

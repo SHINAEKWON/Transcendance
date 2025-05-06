@@ -39,7 +39,7 @@ export class EditProfilePage implements Page {
         const avatarOptions = normalAvatars.map((avatar) => `
             <div class="flex flex-col items-center space-y-2">
                 <img src="${avatar.src}" style="border-color: ${avatar.borderColor}" 
-                class="${avatar.isSelected ? 'avatar-option w-30 h-30 rounded-full border-4 hover:scale-105 cursor-pointer transition selected-avatar scale-110 border-yellow-400 ring-4 ring-yellow-300 shadow-xl' : 'avatar-option w-30 h-30 rounded-full border-4 hover:scale-105 cursor-pointer transition'}">
+                class="${avatar.isSelected ? 'avatar-option w-25 h-25 rounded-full border-4 hover:scale-105 cursor-pointer transition selected-avatar scale-110 border-yellow-400 ring-4 ring-yellow-300 shadow-xl' : 'avatar-option w-25 h-25 rounded-full border-4 hover:scale-105 cursor-pointer transition'}">
                 <p class="text-sm font-semibold" style="color: ${avatar.textColor}">${avatar.label}</p>
             </div>
         `).join("");
@@ -48,7 +48,7 @@ export class EditProfilePage implements Page {
         const uploadOption = `
             <div class="flex flex-col items-center space-y-2">
                 <label for="customAvatarUpload" class="cursor-pointer">
-                    <div class="w-30 h-30 bg-gray-700 rounded-full flex items-center justify-center border-4 border-dashed border-gray-500 hover:scale-110 transition">
+                    <div class="w-25 h-25 bg-gray-700 rounded-full flex items-center justify-center border-4 border-dashed border-gray-500 hover:scale-110 transition">
                         <span class="text-gray-400 text-4xl font-bold">+</span>
                     </div>
                 </label>
@@ -63,13 +63,13 @@ export class EditProfilePage implements Page {
         const html = `
         <div class="max-w-3xl mx-auto bg-gray-800 p-8 ounded-2xl shadow-xl">
             <!-- Header -->
-            <div class="mb-8 text-center">
+            <div class="mb-2 text-center">
                 <h2 class="text-3xl font-bold text-neon-green">${t("editProfile")}</h2>
             </div>
     
             <!-- Avatar Options -->
-            <div class="mb-10 max-h-100 overflow-auto">
-                <h4 class="text-center text-sm font-medium mb-8">
+            <div class="mb-4 max-h-90 overflow-auto">
+                <h4 class="text-center text-sm font-medium mb-6">
                 <span class="inline-block text-2xl animate-float align-middle">🛸</span>
                 <span class="inline-block text-neon-purple animate-float">${t("chooseAvatar") || "Choose an Avatar"}</span>
                 <span class="inline-block text-2xl animate-float align-middle">🛸</span>
@@ -80,8 +80,8 @@ export class EditProfilePage implements Page {
             </div>
     
             <!-- First line: Firstname + Lastname -->
-            <div class="flex flex-col md:flex-row md:space-x-6 mb-6">
-                <div class="flex-1 mb-4 md:mb-0">
+            <div class="flex flex-col md:flex-row md:space-x-6 mb-2">
+                <div class="flex-1 mb-2 md:mb-0">
                     <label class="block text-sm font-medium text-neon-blue mb-2">${t("firstname") || "First Name"}</label>
                     <input type="text" value="${user.firstname}" class="firstname w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green" />
                 </div>
@@ -92,8 +92,8 @@ export class EditProfilePage implements Page {
             </div>
     
             <!-- Second line: Telephone + Status -->
-            <div class="flex flex-col md:flex-row md:space-x-6 mb-6">
-                <div class="flex-1 mb-4 md:mb-0">
+            <div class="flex flex-col md:flex-row md:space-x-6 mb-2">
+                <div class="flex-1 mb-2 md:mb-0">
                     <label class="block text-sm font-medium text-neon-blue mb-2">${t("telephone") || "Telephone"}</label>
                     <input type="tel" value="${user.telephone}" class="telephone w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green" />
                 </div>
@@ -108,13 +108,13 @@ export class EditProfilePage implements Page {
             </div>
     
             <!-- Third line: Address -->
-            <div class="mb-6">
+            <div class="mb-2">
                 <label class="block text-sm font-medium text-neon-blue mb-2">${t("address") || "Address"}</label>
                 <input type="text" value="${user.address}" class="address w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neon-green" />
             </div>
     
             <!-- Buttons -->
-            <div class="flex justify-between mt-10">
+            <div class="flex justify-between mt-4">
                 <a href="#profile" class="bg-neon-purple text-gray-900 px-6 py-3 rounded-lg text-lg font-bold hover:bg-purple-400 transition animate-float">
                     ${t("cancel")}
                 </a>
@@ -218,7 +218,7 @@ export class EditProfilePage implements Page {
                     const img = document.createElement("img");
                     img.src = base64;
                     img.style.borderColor = "#FFD700";
-                    img.className = "selected-avatar avatar-option w-30 h-30 rounded-full border-4 hover:scale-105 cursor-pointer transition";
+                    img.className = "selected-avatar avatar-option w-25 h-25 rounded-full border-4 hover:scale-105 cursor-pointer transition";
     
                     const label = document.createElement("p");
                     label.textContent = "Upload";

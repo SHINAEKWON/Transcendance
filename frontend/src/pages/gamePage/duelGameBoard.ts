@@ -69,7 +69,7 @@ export class DuelGameBoardPage implements Page {
       </div>
 
       <div class="ml-15 mr-15 mt-0 justify-center relative">
-        <div id="appGame" class="relative w-full h-160 rounded-lg border-white shadow-2xl overflow-visible">
+        <div id="appGame" class="relative w-full h-180 rounded-lg border-white shadow-2xl overflow-visible">
         </div>
       </div>
     `;

@@ -25,20 +25,18 @@ export class CustomizationPage implements Page {
                 <div id="custom-options" class="space-y-4 opacity-50 pointer-events-none transition duration-300">
 
                     ${this.selectColors({
-            boardColor: t("boardColor"),
-            ballColor: t("ballColor"),
-            paddleColor: t("paddleColor")
-        })}
+                        boardColor: t("boardColor"),
+                        ballColor: t("ballColor")
+                    })}
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${this.rangeOption("ballSpeed", t("ballSpeed"), 0.5, 3)}
-                        ${this.rangeOption("paddleSpeed", t("paddleSpeed"), 1, 4)}
-                        ${this.rangeOption("ballSize", t("ballSize"), 5, 15)}
-                        ${this.rangeOption("paddleSize", t("paddleSize"), 10, 40)}
+                        ${this.rangeOption("ballSpeed", t("ballSpeed"), 0, 3)}
+                        ${this.rangeOption("ballSize", t("ballSize"), 0.5, 10)}
+                        ${this.rangeOption("paddleSize", t("paddleSize"), 10, 20)}
                     </div>
 
-                    <h3 class="text-2xl font-bold text-neon-green mt-6">${t("themesTitle")}</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <h3 class="text-2xl font-bold text-neon-green mt-6 text-center">${t("themesTitle")}</h3>
+                    <div class="flex justify-center gap-4 flex-wrap">
                         ${this.themeCard("neon-night", t("theme1"))}
                         ${this.themeCard("cyber-grid", t("theme2"))}
                         ${this.themeCard("dark-future", t("theme3"))}
@@ -47,9 +45,8 @@ export class CustomizationPage implements Page {
 
                 <div class="mt-10 text-center space-x-4">
                     <button id="apply-btn" class="px-6 py-3 bg-neon-green text-black rounded-lg font-bold text-lg">${t("applyBtn")}</button>
-                    <a href="#ai-play" id="back-btn" class="px-6 py-3 bg-neon-purple text-white rounded-lg font-bold text-lg hover:bg-purple-400 transition">
-                        ${t("backBtn")}
-                    </a>
+                    <button onclick="history.back()" id="apply-btn" class="px-6 py-3 bg-neon-purple text-white rounded-lg font-bold text-lg hover:bg-purple-400 transition">${t("backBtn")}</button>
+                   
                 </div>
             </div>
 
@@ -61,7 +58,6 @@ export class CustomizationPage implements Page {
                 font-weight: bold;
                 color: white;
                 cursor: pointer;
-                position: relative;
                 font-size: 1.2rem;
             }
             .custom-radio input[type="radio"] {
@@ -72,45 +68,59 @@ export class CustomizationPage implements Page {
                 height: 20px;
                 border: 2px solid #00ffff;
                 border-radius: 50%;
-                position: relative;
-                transition: 0.3s;
             }
             .custom-radio input[type="radio"]:checked + .radio-btn {
                 box-shadow: 0 0 10px #00ffff;
                 background-color: #00ffff;
             }
+
             input[type="range"] {
                 width: 100%;
                 height: 8px;
                 border-radius: 5px;
                 background: linear-gradient(90deg, #9333ea, #3b82f6);
-                cursor: pointer;
             }
 
             .custom-color-circle {
-                width: 48px;
-                height: 48px;
+                width: 64px;
+                height: 64px;
                 border-radius: 50%;
                 border: 2px solid white;
                 box-shadow: 0 0 5px rgba(255,255,255,0.3);
                 cursor: pointer;
+            }
+
+            .hidden-color-input {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .theme-card {
+                padding: 8px;
+                border-radius: 12px;
+                height: 260px;
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
                 transition: 0.3s;
             }
-
-            .custom-color-circle:hover {
-                box-shadow: 0 0 12px #00ffff;
-            }
-
-            /* Styles pour thèmes */
             .theme-card img {
                 width: 100%;
-                height: 160px;
-                object-cover: cover;
-                border-radius: 8px;
-                box-shadow: 0 0 10px #333;
+                height: 90%;
+                object-fit: contain;
+                border-radius: 0;
             }
-            .hidden-color-input {
-                display: none;
+            .theme-card h4 {
+                margin-top: 4px;
+                font-size: 1.2rem;
+                white-space: nowrap;
+                overflow: hidden;
             }
             </style>
         `;
@@ -121,19 +131,18 @@ export class CustomizationPage implements Page {
         this.setupEvents();
     }
 
-    selectColors(labels: { boardColor: string, ballColor: string, paddleColor: string }) {
+    selectColors(labels: { boardColor: string, ballColor: string }) {
         return `
-            <div class="flex items-center gap-8 justify-center mb-4">
+            <div class="flex items-center gap-10 justify-center mb-4">
                 ${this.colorSelector("boardColor", labels.boardColor)}
                 ${this.colorSelector("ballColor", labels.ballColor)}
-                ${this.colorSelector("paddleColor", labels.paddleColor)}
             </div>
         `;
     }
 
     colorSelector(id: string, label: string) {
         return `
-            <div class="flex flex-col items-center gap-2">
+            <div class="flex flex-col items-center gap-2 relative">
                 <span class="text-gray-300 text-sm">${label}</span>
                 <div class="custom-color-circle bg-white" id="${id}-circle"></div>
                 <input type="color" id="${id}" class="hidden-color-input">
@@ -172,9 +181,9 @@ export class CustomizationPage implements Page {
         }
 
         return `
-            <div class="theme-card bg-gray-900 p-4 rounded-lg shadow-md border-2 ${borderColor} hover:ring-2 cursor-pointer text-center space-y-2 transition duration-300" data-theme="${themeId}">
+            <div class="theme-card bg-gray-900 rounded-xl border-2 ${borderColor} hover:ring-2 cursor-pointer text-center" data-theme="${themeId}">
                 <img src="${imageSrc}" alt="${themeName}">
-                <h4 class="text-lg font-bold ${titleColor}">${themeName}</h4>
+                <h4 class="font-bold ${titleColor}">${themeName}</h4>
             </div>
         `;
     }
@@ -185,64 +194,70 @@ export class CustomizationPage implements Page {
         const customOptions = document.getElementById("custom-options")!;
         const applyBtn = document.getElementById("apply-btn")!;
 
+        const themeCards = document.querySelectorAll(".theme-card");
+        let selectedTheme: string | null = null;
+
+        const themePresets: Record<string, {
+            boardColor: string,
+            ballColor: string,
+            image: string,
+            ballSpeed: string,
+            ballSize: string,
+            paddleSize: string
+        }> = {
+            "neon-night": {
+                boardColor: "#0a0a0a",
+                ballColor: "#ff00ff",
+                image: "./public/images/Neon_Night.png",
+                ballSpeed: "0.5",
+                ballSize: "8",
+                paddleSize: "18"
+            },
+            "cyber-grid": {
+                boardColor: "#001f3f",
+                ballColor: "#7fdbff",
+                image: "./public/images/Cyber_Grid.png",
+                ballSpeed: "1.2",
+                ballSize: "2",
+                paddleSize: "12"
+            },
+            "dark-future": {
+                boardColor: "#111111",
+                ballColor: "#ff851b",
+                image: "./public/images/Dark_Future.png",
+                ballSpeed: "2.5",
+                ballSize: "1",
+                paddleSize: "15"
+            }
+        };
+
         const updateOptionsState = () => {
             if (defaultRadio.checked) {
                 customOptions.classList.add("opacity-50", "pointer-events-none");
-               
-                console.log("🗑 Paramètres custom supprimés : mode par défaut activé.");
+                
             } else {
                 customOptions.classList.remove("opacity-50", "pointer-events-none");
             }
         };
-        
 
         defaultRadio.addEventListener("change", updateOptionsState);
         customRadio.addEventListener("change", updateOptionsState);
         updateOptionsState();
 
-        // 🟢 Gestion des couleurs
-        ["boardColor", "ballColor", "paddleColor"].forEach(id => {
+        // 🎯 Initialiser les couleurs
+        ["boardColor", "ballColor"].forEach(id => {
             const input = document.getElementById(id) as HTMLInputElement;
             const circle = document.getElementById(`${id}-circle`) as HTMLElement;
 
             input.value = "#ffffff";
             circle.style.backgroundColor = input.value;
 
-            circle.addEventListener("click", () => {
-                input.click();
-            });
-
             input.addEventListener("input", () => {
                 circle.style.backgroundColor = input.value;
             });
         });
 
-        // 🟢 Gestion sélection du thème
-        // 🟢 Gestion sélection du thème avec pré-remplissage des couleurs
-        const themeCards = document.querySelectorAll(".theme-card");
-        let selectedTheme: string | null = null;
-
-        const themePresets: Record<string, { boardColor: string, ballColor: string, paddleColor: string, image: string }> = {
-            "neon-night": {
-                boardColor: "#0a0a0a",
-                ballColor: "#ff00ff",
-                paddleColor: "#00ffff",
-                image: "./public/images/Neon_Night.png"
-            },
-            "cyber-grid": {
-                boardColor: "#001f3f",
-                ballColor: "#7fdbff",
-                paddleColor: "#39cccc",
-                image: "./public/images/Cyber_Grid.png"
-            },
-            "dark-future": {
-                boardColor: "#111111",
-                ballColor: "#ff851b",
-                paddleColor: "#ff4136",
-                image: "./public/images/Dark_Future.png"
-            }
-        };
-
+        // 🎯 Sélection des thèmes
         themeCards.forEach(card => {
             card.addEventListener("click", () => {
                 themeCards.forEach(c => c.classList.remove("ring-4", "ring-neon-purple", "ring-neon-blue", "ring-neon-orange"));
@@ -254,30 +269,22 @@ export class CustomizationPage implements Page {
                 if (themeId === "cyber-grid") card.classList.add("ring-4", "ring-neon-blue");
                 if (themeId === "dark-future") card.classList.add("ring-4", "ring-neon-orange");
 
-                // 🟢 Pré-remplir les couleurs si un thème est choisi
                 const preset = themePresets[themeId];
                 if (preset) {
-                    const boardInput = document.getElementById("boardColor") as HTMLInputElement;
-                    const ballInput = document.getElementById("ballColor") as HTMLInputElement;
-                    const paddleInput = document.getElementById("paddleColor") as HTMLInputElement;
-
-                    boardInput.value = preset.boardColor;
-                    ballInput.value = preset.ballColor;
-                    paddleInput.value = preset.paddleColor;
-
-                    // Met à jour les cercles visuellement
+                    // Couleurs
+                    (document.getElementById("boardColor") as HTMLInputElement).value = preset.boardColor;
+                    (document.getElementById("ballColor") as HTMLInputElement).value = preset.ballColor;
                     (document.getElementById("boardColor-circle") as HTMLElement).style.backgroundColor = preset.boardColor;
                     (document.getElementById("ballColor-circle") as HTMLElement).style.backgroundColor = preset.ballColor;
-                    (document.getElementById("paddleColor-circle") as HTMLElement).style.backgroundColor = preset.paddleColor;
+                    // Valeurs gameplay
+                    (document.getElementById("ballSpeed") as HTMLInputElement).value = preset.ballSpeed;
+                    (document.getElementById("ballSize") as HTMLInputElement).value = preset.ballSize;
+                    (document.getElementById("paddleSize") as HTMLInputElement).value = preset.paddleSize;
                 }
-
-                console.log("🎨 Thème sélectionné :", selectedTheme);
             });
         });
 
-
-        // 🟢 Bouton Apply
-        // 🟢 Bouton Apply
+        // 🎯 Apply
         applyBtn.addEventListener("click", () => {
             if (customRadio.checked) {
                 const presetImage = selectedTheme ? themePresets[selectedTheme]?.image : null;
@@ -285,65 +292,50 @@ export class CustomizationPage implements Page {
                 const settings = {
                     boardColor: (document.getElementById("boardColor") as HTMLInputElement).value,
                     ballColor: (document.getElementById("ballColor") as HTMLInputElement).value,
-                    paddleColor: (document.getElementById("paddleColor") as HTMLInputElement).value,
                     ballSpeed: (document.getElementById("ballSpeed") as HTMLInputElement).value,
-                    paddleSpeed: (document.getElementById("paddleSpeed") as HTMLInputElement).value,
                     ballSize: (document.getElementById("ballSize") as HTMLInputElement).value,
                     paddleSize: (document.getElementById("paddleSize") as HTMLInputElement).value,
                     theme: selectedTheme,
                     themeImage: presetImage
                 };
-                console.log("🎯 Paramètres appliqués :", settings);
-
                 localStorage.setItem("customGameSettings", JSON.stringify(settings));
-            } else {
-                console.log("🔧 Mode par défaut sélectionné.");
+                window.history.back();
+            }else {
                 localStorage.removeItem("customGameSettings");
+                window.history.back();
             }
         });
 
-        // 🟢 Chargement des paramètres existants depuis localStorage
-const savedSettings = localStorage.getItem("customGameSettings");
-if (savedSettings) {
-    const settings = JSON.parse(savedSettings);
+        // 🎯 Charger settings du localStorage si présents
+        const savedSettings = localStorage.getItem("customGameSettings");
+        if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
 
-    // Mettre le mode custom
-    customRadio.checked = true;
-    updateOptionsState();
+            customRadio.checked = true;
+            updateOptionsState();
 
-    // Couleurs
-    (document.getElementById("boardColor") as HTMLInputElement).value = settings.boardColor || "#ffffff";
-    (document.getElementById("ballColor") as HTMLInputElement).value = settings.ballColor || "#ffffff";
-    (document.getElementById("paddleColor") as HTMLInputElement).value = settings.paddleColor || "#ffffff";
+            // Couleurs
+            (document.getElementById("boardColor") as HTMLInputElement).value = settings.boardColor || "#ffffff";
+            (document.getElementById("ballColor") as HTMLInputElement).value = settings.ballColor || "#ffffff";
+            (document.getElementById("boardColor-circle") as HTMLElement).style.backgroundColor = settings.boardColor || "#ffffff";
+            (document.getElementById("ballColor-circle") as HTMLElement).style.backgroundColor = settings.ballColor || "#ffffff";
 
-    (document.getElementById("boardColor-circle") as HTMLElement).style.backgroundColor = settings.boardColor || "#ffffff";
-    (document.getElementById("ballColor-circle") as HTMLElement).style.backgroundColor = settings.ballColor || "#ffffff";
-    (document.getElementById("paddleColor-circle") as HTMLElement).style.backgroundColor = settings.paddleColor || "#ffffff";
+            // Valeurs gameplay
+            (document.getElementById("ballSpeed") as HTMLInputElement).value = settings.ballSpeed || "1";
+            (document.getElementById("ballSize") as HTMLInputElement).value = settings.ballSize || "2";
+            (document.getElementById("paddleSize") as HTMLInputElement).value = settings.paddleSize || "50";
 
-    // Sliders
-    (document.getElementById("ballSpeed") as HTMLInputElement).value = settings.ballSpeed || "5";
-    (document.getElementById("paddleSpeed") as HTMLInputElement).value = settings.paddleSpeed || "5";
-    (document.getElementById("ballSize") as HTMLInputElement).value = settings.ballSize || "6";
-    (document.getElementById("paddleSize") as HTMLInputElement).value = settings.paddleSize || "50";
-
-    // Thème
-    if (settings.theme) {
-        selectedTheme = settings.theme;
-
-        themeCards.forEach(c => {
-            c.classList.remove("ring-4", "ring-neon-purple", "ring-neon-blue", "ring-neon-orange");
-            const themeId = c.getAttribute("data-theme");
-            if (themeId === selectedTheme) {
-                if (themeId === "neon-night") c.classList.add("ring-4", "ring-neon-purple");
-                if (themeId === "cyber-grid") c.classList.add("ring-4", "ring-neon-blue");
-                if (themeId === "dark-future") c.classList.add("ring-4", "ring-neon-orange");
-            }
-        });
-    }
-
-    console.log("🔄 Paramètres chargés depuis localStorage :", settings);
-}
-
-
+            // Appliquer le bon thème visuellement
+            selectedTheme = settings.theme;
+            themeCards.forEach(c => {
+                c.classList.remove("ring-4", "ring-neon-purple", "ring-neon-blue", "ring-neon-orange");
+                const themeId = c.getAttribute("data-theme");
+                if (themeId === selectedTheme) {
+                    if (themeId === "neon-night") c.classList.add("ring-4", "ring-neon-purple");
+                    if (themeId === "cyber-grid") c.classList.add("ring-4", "ring-neon-blue");
+                    if (themeId === "dark-future") c.classList.add("ring-4", "ring-neon-orange");
+                }
+            });
+        }
     }
 }

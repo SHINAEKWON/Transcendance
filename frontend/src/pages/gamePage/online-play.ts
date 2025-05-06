@@ -88,14 +88,14 @@ export class OnlinePlayPage implements Page {
                     player2: this.selectedPlayer,
                     mode: "remote"
                 };
-
+                const t = (key: keyof typeof onlinePlayTranslations) => getTranslation("onLinePlay", key);
                 const socket = getSocket()!;
                 const params = new URLSearchParams();
                 params.set('id', duelId);
                 params.set('duel', encodeURIComponent(JSON.stringify(duelData)));
                 params.set('mode', 'onlinePlay');
                 const duelLink = `<a href="#duelGameBoard?${params.toString()}" target="_blank" >
-                Hey!👋 Duel time! Join the table 🏓 (Click the message)
+                ${t('duelInvite')}
                 </a> `;
                 if (socket && this.selectedPlayer) {
                     socket.emit("chatMessage", {

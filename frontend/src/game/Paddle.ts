@@ -54,7 +54,7 @@ export class Paddle extends A_MovingGameElement {
             widthFraction: widthFraction,
             heightFraction: heightFraction,
             backgroundColor: player.getColor(),
-            speed: paddleSpeed,
+            speed: 1,
             parentElement: parentElement,
             classList: classList
         });
